@@ -1116,7 +1116,7 @@ async function loginStudent(code){
     const r = await call('studentLogin', code);
     if (!r.ok) { S.err = r.error; S.mode = 'login'; store.del('hv_code'); }
     else { S.me = r; S.code = r.student.code; store.set('hv_code', S.code); S.mode = 'student'; S.view = 'home'; S.preview = false;
-      call('boardStatus').then(b => { if (!!b.open !== B.open) { B.open = !!b.open; render(); } }).catch(() => {}); }
+      bcall('boardStatus').then(b => { if (!!b.open !== B.open) { B.open = !!b.open; render(); } }).catch(() => {}); }
   } catch(e){ S.err = 'Không kết nối được: ' + errMsg(e); S.mode = 'login'; }
   S.busy = false; render();
 }
@@ -1124,6 +1124,7 @@ async function loginTeacher(pw){
   S.busy = true; S.err = null; render();
   try {
     S.T = await call('teacherData', pw); S.pw = pw; store.set('gv_pw', pw); S.mode = 'teacher'; S.view = 'home';
+    if (typeof fbTeacherLogin === 'function') fbTeacherLogin(pw).catch(e => toast(errMsg(e)));
   } catch(e){ S.err = errMsg(e); S.mode = 'tlogin'; store.del('gv_pw'); }
   S.busy = false; render();
 }
@@ -1153,7 +1154,7 @@ $app.addEventListener('click', e => {
     case 'to-login': go({mode:'login', err:null}); break;
     case 'tlogin': { const p = document.getElementById('pw').value; if (p) loginTeacher(p); break; }
     case 'logout':
-      if (S.mode === 'teacher') { store.del('gv_pw'); S.pw = null; } else { store.del('hv_code'); S.code = null; }
+      if (S.mode === 'teacher') { store.del('gv_pw'); S.pw = null; if (typeof fbLogout === 'function') fbLogout(); } else { store.del('hv_code'); S.code = null; }
       if (typeof stopBoard === 'function') stopBoard();
       go({mode:'login', me:null, T:null, view:'home', err:null}); break;
     case 'open': { const les = L(+d.n); if (+d.n > 0) loadLesson(+d.n); go({view:'lesson', n:+d.n, ltab:(les.review || les.srs) ? 'quiz' : (+d.n === 1 ? 'abc' : 'vocab'), ag:null, ng:null, spell:null, card:0, flip:false, quiz:null, preview:S.mode === 'teacher', showEn:false, showVi:false, dqAns:{}, pg:null}); break; }
@@ -1374,6 +1375,112 @@ const B = {open:false, epoch:0, seq:0, items:new Map(), deleted:new Set(), pendi
 function bAuth(){ return S.mode === 'teacher' ? {pw:S.pw} : {code:S.code}; }
 function bMe(){ return S.mode === 'teacher' ? 'GV' : S.code; }
 
+/* ================== Bảng lớp chạy qua Firebase (realtime thật, ~0,1 giây) ==================
+   Có cấu hình dưới đây thì bảng đi qua Firebase; không có thì bảng vẫn chạy qua Apps Script như cũ.
+   Học viên ghi nét khi giáo viên đang mở bảng; chỉ tài khoản giáo viên được mở/đóng/xoá bảng. */
+const FB_CFG = {
+  apiKey: 'AIzaSyCOKp1_vMn5r0rbzoT82G1NUvoXn_2MVi4',
+  authDomain: 'optical-precept-472202-f4.firebaseapp.com',
+  databaseURL: 'https://optical-precept-472202-f4-default-rtdb.asia-southeast1.firebasedatabase.app',
+  projectId: 'optical-precept-472202-f4',
+  appId: '1:374442203042:web:3d1c3335d2c355632004fb'
+};
+const FB_VER = '12.6.0', FB_ROOM = 'rooms/k1', FB_TEACHER = 'giaovien@sieumatgoc.app';
+const FBB = {on:false, m:null, db:null, auth:null, state:{open:false, epoch:1, prompt:null}, items:[], ids:new Set(), subEpoch:null, unsub:null, connected:false, teacher:false, kickT:null};
+function bcall(fn, ...args){ return FBB.on ? Promise.resolve().then(() => FBB.api[fn](...args)) : call(fn, ...args); }
+function fbKick(){
+  if (FBB.kickT) return;
+  FBB.kickT = setTimeout(() => { FBB.kickT = null; if (S.view === 'board') { B.lastChange = Date.now(); pollBoard(); } }, 0);
+}
+function fbSubItems(){
+  const {m, db} = FBB, E = FBB.state.epoch || 1, can = FBB.state.open || FBB.teacher;
+  if (!can) { if (FBB.unsub) { FBB.unsub(); FBB.unsub = null; } FBB.subEpoch = null; return; }
+  if (FBB.unsub && FBB.subEpoch === E) return;
+  if (FBB.unsub) FBB.unsub();
+  FBB.items = []; FBB.ids = new Set(); FBB.subEpoch = E;
+  FBB.unsub = m.onChildAdded(m.ref(db, `${FB_ROOM}/items/${E}`), snap => {
+    if (FBB.ids.has(snap.key)) return;
+    const v = snap.val() || {};
+    FBB.ids.add(snap.key);
+    FBB.items.push({...v, id:snap.key, p: typeof v.p === 'string' ? v.p.split(',').map(Number) : v.p});
+    fbKick();
+  }, () => { FBB.unsub = null; FBB.subEpoch = null; });
+}
+async function fbTeacherLogin(pw){
+  if (!FBB.on || !pw) return false;
+  const {m, auth} = FBB;
+  if (auth.currentUser && auth.currentUser.email === FB_TEACHER) return true;
+  try { await m.signInWithEmailAndPassword(auth, FB_TEACHER, String(pw)); return true; }
+  catch(e){
+    if (!/invalid-credential|user-not-found|invalid-login/.test(e.code || '')) throw e;
+    /* lần đầu: tự tạo tài khoản bảng cho giáo viên, mật khẩu = mật khẩu giáo viên của app */
+    try { await m.createUserWithEmailAndPassword(auth, FB_TEACHER, String(pw)); return true; }
+    catch(e2){ if (/email-already-in-use/.test(e2.code || '')) throw new Error('Mật khẩu bảng lớp chưa khớp mật khẩu giáo viên.'); throw e2; }
+  }
+}
+function fbLogout(){ if (FBB.on && FBB.auth.currentUser) FBB.m.signOut(FBB.auth).catch(() => {}); }
+async function fbNeedTeacher(){
+  if (FBB.teacher) return;
+  await fbTeacherLogin(S.pw);
+  if (!FBB.teacher) throw new Error('Chưa đăng nhập được bảng lớp, hãy thử lại.');
+}
+FBB.api = {
+  boardStatus(){ return {open:!!FBB.state.open}; },
+  async boardOpen(pw, open){ await fbNeedTeacher(); await FBB.m.update(FBB.m.ref(FBB.db, FB_ROOM + '/state'), {open:!!open, epoch:FBB.state.epoch || 1, at:Date.now()}); return {open:!!open}; },
+  async boardPrompt(pw, prompt){ await fbNeedTeacher(); await FBB.m.update(FBB.m.ref(FBB.db, FB_ROOM + '/state'), {prompt:prompt || null}); return true; },
+  async boardClear(pw){
+    await fbNeedTeacher();
+    const old = FBB.state.epoch || 1, {m, db} = FBB;
+    await m.update(m.ref(db, FB_ROOM), {'state/epoch':old + 1, ['items/' + old]:null});
+    return true;
+  },
+  boardState(since, epoch, auth){
+    const st = FBB.state, E = st.epoch || 1;
+    if (!st.open && !FBB.teacher) return {open:false};
+    const list = FBB.subEpoch === E ? FBB.items : [], from = epoch === E ? Math.min(since, list.length) : 0;
+    return {open:!!st.open, epoch:E, seq:list.length, items:list.slice(from), full:from === 0, prompt:st.prompt || null};
+  },
+  async boardAdd(auth, item){
+    const T = S.mode === 'teacher';
+    if (T) await fbNeedTeacher(); else if (!FBB.state.open) throw new Error('Giáo viên đã đóng bảng.');
+    let p = item.p;
+    while (p && p.length > 600) p = p.filter((v, i) => (i >> 1) % 2 === 0 || i >= p.length - 2);  /* gọn nét quá dài */
+    const doc = {...item, who:T ? 'GV' : String(S.code || '?').slice(0, 12), name:T ? 'Giáo viên' : String((S.me && S.me.student.name) || '').slice(0, 60)};
+    if (p) doc.p = p.map(v => Math.round(v)).join(',');
+    if (doc.text) doc.text = String(doc.text).slice(0, 120);
+    Object.keys(doc).forEach(k => doc[k] === undefined && delete doc[k]);
+    const r = FBB.m.push(FBB.m.ref(FBB.db, `${FB_ROOM}/items/${FBB.state.epoch || 1}`));
+    await FBB.m.set(r, doc);
+    return r.key;
+  }
+};
+(async () => {
+  if (!REAL || !FB_CFG || !FB_CFG.databaseURL) return;
+  try {
+    const base = `https://www.gstatic.com/firebasejs/${FB_VER}/firebase-`;
+    const [A, D, U] = await Promise.all(['app', 'database', 'auth'].map(x => import(base + x + '.js')));
+    const m = {...D, ...U};
+    const app = A.initializeApp(FB_CFG);
+    FBB.m = m; FBB.db = D.getDatabase(app); FBB.auth = U.getAuth(app);
+    U.onAuthStateChanged(FBB.auth, u => { FBB.teacher = !!(u && u.email === FB_TEACHER); fbSubItems(); fbKick(); });
+    D.onValue(D.ref(FBB.db, '.info/connected'), s => {
+      FBB.connected = !!s.val();
+      const el = document.getElementById('bstatus'); if (el) el.textContent = FBB.connected ? '● Đang kết nối' : '○ Mất kết nối, đang thử lại…';
+    });
+    D.onValue(D.ref(FBB.db, FB_ROOM + '/state'), s => {
+      const v = s.val() || {}, wasOpen = FBB.state.open;
+      const fresh = !v.at || Date.now() - v.at < 3 * 3600e3;     /* bảng tự coi là đóng sau 3 giờ */
+      FBB.state = {open:!!v.open && fresh, epoch:v.epoch || 1, prompt:v.prompt || null};
+      FBB.on = true;
+      fbSubItems();
+      if (S.mode === 'student' && S.view === 'home' && B.open !== FBB.state.open) { B.open = FBB.state.open; if (!S.msg) render(); }
+      if (S.mode === 'teacher' && S.view === 'home' && wasOpen !== FBB.state.open) { B.open = FBB.state.open; render(); }
+      fbKick();
+    });
+    if (S.mode === 'teacher' && S.pw) fbTeacherLogin(S.pw).catch(e => toast(errMsg(e)));
+  } catch(e){ console.warn('Firebase chưa dùng được, bảng chạy qua Apps Script', e); FBB.on = false; }
+})();
+
 function startBoard(){
   stopBoard();
   B.lastChange = Date.now();
@@ -1381,7 +1488,7 @@ function startBoard(){
     if (S.view !== 'board') return;
     const quiet = Date.now() - B.lastChange;
     /* hỏi máy chủ liên tục khi bảng đang có người viết, thưa dần khi bảng yên */
-    const wait = document.hidden ? 4000 : quiet < 30000 ? 250 : quiet < 120000 ? 800 : 2500;
+    const wait = FBB.on ? 1500 : document.hidden ? 4000 : quiet < 30000 ? 250 : quiet < 120000 ? 800 : 2500;
     B.timer = setTimeout(async () => { await pollBoard(); tick(); }, wait);
   };
   pollBoard().then(tick);
@@ -1390,7 +1497,7 @@ function stopBoard(){ if (B.timer) clearTimeout(B.timer); B.timer = null; }
 async function pollBoard(){
   if (B.busy) return; B.busy = true;
   try {
-    const r = await call('boardState', B.seq, B.epoch, bAuth());
+    const r = await bcall('boardState', B.seq, B.epoch, bAuth());
     const wasOpen = B.open; B.open = !!r.open;
     if (!r.open && S.mode !== 'teacher') { B.busy = false; stopBoard(); B.textAt = null; go({view:'home'}); toast('Giáo viên đã đóng bảng lớp.'); return; }
     if (S.mode === 'teacher' && wasOpen !== B.open) render();
@@ -1404,14 +1511,14 @@ async function pollBoard(){
     B.prompt = r.prompt;
     if (pid !== old || revealChanged) { B.lastChange = Date.now(); render(); if (pid !== old && pid && S.mode !== 'teacher') playPrompt(); }
     else if (changed) drawBoard();
-    const st = document.getElementById('bstatus'); if (st) st.textContent = '● Đang kết nối';
+    const st = document.getElementById('bstatus'); if (st) st.textContent = (FBB.on && !FBB.connected) ? '○ Mất kết nối, đang thử lại…' : '● Đang kết nối';
   } catch(e){ const st = document.getElementById('bstatus'); if (st) st.textContent = '○ Mất kết nối, đang thử lại…'; }
   B.busy = false;
 }
 async function addItem(item){
   const local = {...item, who:bMe(), name:'', _local:true};
   B.pending.push(local); drawBoard(); B.lastChange = Date.now();
-  try { local.id = await call('boardAdd', bAuth(), item); pollBoard(); }
+  try { local.id = await bcall('boardAdd', bAuth(), item); pollBoard(); }
   catch(e){ B.pending = B.pending.filter(p => p !== local); drawBoard(); toast(errMsg(e)); }
 }
 
@@ -1567,19 +1674,19 @@ $app.addEventListener('click', e => {
     case 'b-text-cancel': B.textAt = null; B.textVal = ''; render(); break;
     case 'b-text-add': commitText(); break;
     case 'b-undo': {
-      const mine = [...B.pending.filter(p => !p.id), ...[...B.items.values()].filter(it => it.who === bMe() && it.type !== 'd' && !B.deleted.has(it.id)).sort((x, y) => y.id - x.id)];
+      const mine = [...B.pending.filter(p => !p.id), ...[...B.items.values()].filter(it => it.who === bMe() && it.type !== 'd' && !B.deleted.has(it.id)).sort((x, y) => (y.id > x.id ? 1 : y.id < x.id ? -1 : 0))];
       const last = mine.find(it => it.id); if (!last) { toast('Bạn chưa có nét nào trên bảng'); break; }
       B.deleted.add(last.id); drawBoard(); addItem({type:'d', target:last.id}); break;
     }
     case 'b-play': playPrompt(); break;
-    case 'b-gate': { const want = !B.open; B.open = want; render(); call('boardOpen', S.pw, want).then(r => { B.open = !!r.open; render(); toast(B.open ? 'Đã mở bảng cho cả lớp' : 'Đã đóng bảng'); }).catch(x => toast(errMsg(x))); break; }
+    case 'b-gate': { const want = !B.open; B.open = want; render(); bcall('boardOpen', S.pw, want).then(r => { B.open = !!r.open; render(); toast(B.open ? 'Đã mở bảng cho cả lớp' : 'Đã đóng bảng'); }).catch(x => toast(errMsg(x))); break; }
     case 'b-kind': B.kind = d.k; render(); break;
-    case 'b-new': { const pr = makePrompt(B.kind, B.lesson); B.prompt = pr; render(); call('boardPrompt', S.pw, pr).catch(x => toast(errMsg(x))); if (pr.say || pr.spell) playPrompt(); break; }
-    case 'b-reveal': { const pr = {...B.prompt, reveal:!B.prompt.reveal}; B.prompt = pr; render(); call('boardPrompt', S.pw, pr).catch(x => toast(errMsg(x))); break; }
+    case 'b-new': { const pr = makePrompt(B.kind, B.lesson); B.prompt = pr; render(); bcall('boardPrompt', S.pw, pr).catch(x => toast(errMsg(x))); if (pr.say || pr.spell) playPrompt(); break; }
+    case 'b-reveal': { const pr = {...B.prompt, reveal:!B.prompt.reveal}; B.prompt = pr; render(); bcall('boardPrompt', S.pw, pr).catch(x => toast(errMsg(x))); break; }
     case 'b-clear':
       if (!B.clearAsk) { B.clearAsk = true; render(); break; }
       B.clearAsk = false; B.items = new Map(); B.deleted = new Set(); B.pending = []; render();
-      call('boardClear', S.pw).then(() => pollBoard()).catch(x => toast(errMsg(x))); break;
+      bcall('boardClear', S.pw).then(() => pollBoard()).catch(x => toast(errMsg(x))); break;
   }
 });
 $app.addEventListener('change', e => {
@@ -1595,7 +1702,7 @@ $app.addEventListener('input', e => { if (e.target.id === 'btext') B.textVal = e
 /* Trang chủ học viên: hỏi xem giáo viên đã mở bảng chưa (8 giây một lần) */
 setInterval(async () => {
   if (S.mode !== 'student' || S.view !== 'home' || document.hidden) return;
-  try { const r = await call('boardStatus'); if (!!r.open !== B.open) { B.open = !!r.open; if (S.view === 'home' && !S.msg) render(); } } catch(e){}
+  try { const r = await bcall('boardStatus'); if (!!r.open !== B.open) { B.open = !!r.open; if (S.view === 'home' && !S.msg) render(); } } catch(e){}
 }, 8000);
 </script>
 </body>
