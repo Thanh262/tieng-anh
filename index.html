@@ -1105,7 +1105,8 @@ function remindText(){
   return `📢 Nhắc học ${S.T.className}\nCả lớp nhớ hoàn thành bài trên app trước buổi sau nhé (đạt từ ${PASS}%). Các bạn sau cần làm bài:\n${lines.join('\n')}\nCố lên nha! 💪`;
 }
 function shareText(){
-  const url = S.T.appUrl || '[dán link app vào đây]';
+  /* trang đang mở trên web riêng (GitHub Pages) thì gửi đúng link đó; còn không thì dùng link máy chủ */
+  const url = /github\.io$/.test(location.hostname) ? location.origin + location.pathname : (S.T.appUrl || '[dán link app vào đây]');
   return `📚 ${S.T.className}\nLink app học: ${url}\nMở link, nhập mã của mình để vào học:\n${S.T.students.map(s => `• ${s.name}: ${s.code}`).join('\n')}`;
 }
 
