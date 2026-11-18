@@ -151,6 +151,48 @@ body.wide #app{max-width:1100px}
 .btext input{border:0;min-height:36px;padding:4px 8px;font-size:16px;font-weight:600;width:170px;outline:none}
 .btext button{border:0;width:34px;height:34px;border-radius:8px;font-size:17px;cursor:pointer;flex:none}
 .bt-ok{background:var(--pri);color:#fff}.bt-x{background:#F1EDE5;color:var(--ink)}
+
+/* ---- Bảng lớp: to nhất có thể, vừa khít màn hình ---- */
+body.boardv #app{max-width:none;padding:0 10px 8px;min-height:0}
+body.boardv .nav{display:none}
+.bview{display:flex;flex-direction:column;gap:8px}
+.bmain{min-width:0;flex:1;display:flex;flex-direction:column;gap:6px}
+.btop{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0 2px}
+.btop .back{width:36px;height:36px;font-size:18px}
+.btitle{display:flex;flex-direction:column;line-height:1.15;margin-right:auto;min-width:0}
+.btitle b{font-size:16px}
+.btop .pen{width:30px;height:30px}
+.bsm{min-height:34px !important;padding:5px 11px !important;font-size:14px}
+.bgate.on{box-shadow:0 0 0 1.5px var(--ok);color:var(--ok)}
+.bprompt{padding:8px 12px !important}
+.bprompt .bq{font-weight:700;font-size:16px;line-height:1.3}
+.bfit{display:flex;justify-content:center}
+.bfit .board{width:100%;flex:none}
+.bside{display:flex;flex-direction:column;gap:8px}
+.bhelp{margin:0 2px}
+@media (min-width:1000px) and (orientation:landscape){
+  .bview.t{flex-direction:row;align-items:flex-start}
+  .bview.t .bside{width:280px;flex:none;padding-top:10px;max-height:100vh;overflow:auto}
+  .bview.t .bbtns{flex-direction:column;align-items:stretch}
+}
+.brot{display:none;text-align:center;margin:2px 0 0}
+@media (orientation:portrait) and (max-width:600px){ .brot{display:block} }
+/* Điện thoại xoay ngang: thanh công cụ dựng dọc bên trái để bảng cao hết màn hình */
+@media (orientation:landscape) and (max-height:520px){
+  body.boardv #app{padding:0 6px 4px}
+  .bmain{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr;column-gap:8px;row-gap:4px}
+  .btop{grid-row:1 / span 2;flex-direction:column;flex-wrap:nowrap;padding:4px 0;gap:5px;align-items:center}
+  .btop .bl,.btitle b{display:none}
+  .btitle{margin:0;align-items:center}
+  .btitle #bstatus{font-size:0}
+  .btitle #bstatus::first-letter{font-size:13px}
+  .btop .pen{width:26px;height:26px;border-width:2px}
+  .btop .back{width:32px;height:32px}
+  .bsm{min-height:30px !important;padding:3px 8px !important}
+  .bprompt{grid-column:2;padding:5px 10px !important}
+  .bprompt .bq{font-size:14px}
+  .bfit{grid-column:2}
+}
 </style>
 </head>
 <body>
@@ -299,7 +341,7 @@ g:"Bài kiểm tra cuối khóa gồm 30 câu lấy ngẫu nhiên từ toàn b�
    pr: t = âm trọng tâm, g = mẹo, w = từ luyện, pairs = cặp từ dễ nhầm (dùng cho câu hỏi "nghe và phân biệt")
    d: các lượt thoại "A|tiếng Anh|tiếng Việt"; dq: câu hỏi nghe hiểu [câu hỏi, "đáp án|...", chỉ số đúng] */
 const EXTRAS = {
-1:{pr:{t:"Tên chữ cái hay nhầm: E – I, G – J",g:"E đọc 'i', I đọc 'ai'. G đọc 'gi', J đọc 'giây'. A đọc 'ây' (không phải 'a'). Khi đánh vần tên, đọc chậm từng chữ, nghỉ một nhịp giữa các chữ.",w:["A","E","I","G","J","R","Y","W"],pairs:[["G","J"],["E","I"],["A","I"]]},
+1:{pr:{t:"Tên chữ cái hay nhầm: E – I, G – J",g:"A đọc /eɪ/, không phải 'a'. E đọc /iː/ còn I đọc /aɪ/: hai chữ này người Việt hay đọc ngược. G đọc /dʒiː/, J đọc /dʒeɪ/. Bấm loa nghe giọng bản xứ rồi nhại lại; đánh vần tên thì đọc chậm, nghỉ một nhịp giữa các chữ.",w:["A","E","I","G","J","R","Y","W"],pairs:[["G","J"],["E","I"],["A","I"]]},
  d:["A|Hello. What's your name?|Xin chào. Bạn tên là gì?","B|My name is Lan.|Tôi tên là Lan.","A|How do you spell it?|Bạn đánh vần thế nào?","B|L, A, N. Lan.|L, A, N. Lan.","A|Thank you, Lan.|Cảm ơn bạn, Lan."],
  dq:[["Bạn nữ tên là gì?","Lan|Lam|Linh",0],["Cuối cùng người hỏi nói gì?","Cảm ơn|Xin lỗi|Tạm biệt",0]]},
 2:{pr:{t:"-teen hay -ty: nhấn đúng âm",g:"13–19 nhấn âm sau và kéo dài 'tiin': thir-TEEN. 30–90 nhấn âm đầu, đuôi đọc nhẹ 'ti': THIR-ty. Đọc sai nhấn âm là người nghe hiểu nhầm con số.",w:["thirteen","thirty","fourteen","forty","fifteen","fifty","eighteen","eighty"],pairs:[["thirteen","thirty"],["fourteen","forty"],["fifteen","fifty"],["sixteen","sixty"]]},
@@ -368,7 +410,7 @@ const EXTRAS = {
 };
 LESSONS.forEach(l => Object.assign(l, EXTRAS[l.n] || {}));
 /* Bảng chữ cái cho Buổi 1: chữ, cách đọc gần đúng, từ ví dụ */
-const ALPHA = [["A","ây","apple"],["B","bi","book"],["C","xi","cup"],["D","đi","doctor"],["E","i","egg"],["F","ép","fish"],["G","gi","green"],["H","ây-ch","house"],["I","ai","ice"],["J","giây","job"],["K","kây","key"],["L","eo","lamp"],["M","em","milk"],["N","en","name"],["O","âu","orange"],["P","pi","pen"],["Q","kiu","question"],["R","a(r)","rice"],["S","ét","sister"],["T","thi","teacher"],["U","iu","umbrella"],["V","vi","Vietnam"],["W","đắp-bồ-liu","water"],["X","éc-x","box"],["Y","goai","yellow"],["Z","zi","zero"]];
+const ALPHA = [["A","/eɪ/","apple"],["B","/biː/","book"],["C","/siː/","cup"],["D","/diː/","doctor"],["E","/iː/","egg"],["F","/ɛf/","fish"],["G","/dʒiː/","green"],["H","/eɪtʃ/","house"],["I","/aɪ/","ice"],["J","/dʒeɪ/","job"],["K","/keɪ/","key"],["L","/ɛl/","lamp"],["M","/ɛm/","milk"],["N","/ɛn/","name"],["O","/oʊ/","orange"],["P","/piː/","pen"],["Q","/kjuː/","question"],["R","/ɑːr/","rice"],["S","/ɛs/","sister"],["T","/tiː/","teacher"],["U","/juː/","umbrella"],["V","/viː/","Vietnam"],["W","/ˈdʌbəl.juː/","water"],["X","/ɛks/","box"],["Y","/waɪ/","yellow"],["Z","/ziː/","zero"]];
 const VOWELS = "AEIOU", TRICKY = "EIGJ";
 const LOOKALIKE = {b:"dpq",d:"bpq",p:"qbd",q:"pbd",m:"nwu",n:"muh",u:"nvw",i:"jlt",j:"igy",l:"itf",e:"coa",c:"eoa",g:"qjy",h:"nkb",v:"wuy",w:"vmu",o:"ace",a:"oeq",t:"lfi",f:"tlk",k:"hxy",y:"vjg",r:"nvt",s:"zce",x:"kyz",z:"sxn"};
 const SOUNDALIKE = {A:"EIR",E:"IAY",I:"EAY",G:"JZE",J:"GYK",B:"DPV",D:"BTE",P:"BTV",T:"DPC",V:"BZD",Z:"CVG",C:"SZE",S:"XCF",X:"SKF",F:"SXH",K:"QAJ",Q:"KUW",U:"QWY",W:"UVQ",Y:"IWU",R:"AOL",O:"RUA",L:"ENM",M:"NLH",N:"MLE",H:"AEK"};
@@ -709,10 +751,10 @@ function render(){
   else if (v === 'tlogin') h = vTLogin();
   else if (v === 'student' || v === 'teacher') h = S.view === 'board' ? vBoard() : (S.view === 'lesson') ? vLesson() : (v === 'student' ? vStudentHome() : vTeacher());
   if (S.msg) h += vModal();
-  document.body.classList.toggle('wide', S.view === 'board' && v === 'teacher');
+  document.body.classList.toggle('boardv', S.view === 'board' && (v === 'teacher' || v === 'student'));
   const hadFocus = document.activeElement && document.activeElement.id === 'btext';
   $app.innerHTML = h;
-  if (S.view === 'board') { drawBoard(); const bi = document.getElementById('btext'); if (bi && B.textAt && (hadFocus || !bi.dataset.seen)) { bi.dataset.seen = 1; bi.focus(); try { bi.setSelectionRange(bi.value.length, bi.value.length); } catch(e){} } }
+  if (S.view === 'board') { fitBoard(); drawBoard(); const bi = document.getElementById('btext'); if (bi && B.textAt && (hadFocus || !bi.dataset.seen)) { bi.dataset.seen = 1; bi.focus(); try { bi.setSelectionRange(bi.value.length, bi.value.length); } catch(e){} } }
   if (S._scrollTop) { S._scrollTop = false; try { window.scrollTo(0, 0); } catch(e){} }
 }
 function go(changes){ Object.assign(S, changes); S._scrollTop = true; render(); }
@@ -1604,7 +1646,7 @@ function commitText(keepOpen){
 }
 $app.addEventListener('pointerup', endStroke);
 $app.addEventListener('pointercancel', endStroke);
-window.addEventListener('resize', () => { if (S.view === 'board') drawBoard(); });
+window.addEventListener('resize', () => { if (S.view === 'board') { fitBoard(); drawBoard(); } });
 
 /* ---- Đề bài lấy từ bài học ---- */
 const BKINDS = [['tu','Viết từ'],['nghe','Nghe – viết'],['cau','Viết câu'],['nghia','Ghi nghĩa'],['chu','Chữ thường'],['van','Đánh vần tên']];
@@ -1630,16 +1672,14 @@ async function playPrompt(){
 function vBoard(){
   const T = S.mode === 'teacher', pr = B.prompt;
   if (B.lesson === null) B.lesson = T ? Math.min(24, S.T.unlocked) : 1;
-  const promptBar = pr ? `<div class="card" style="padding:12px 14px">
-      <div class="row"><div class="grow"><p class="xs mut">Đề bài · Buổi ${pr.n}</p><p style="font-weight:700;font-size:17px">${esc(pr.text)}</p></div>
+  const promptBar = pr ? `<div class="card bprompt">
+      <div class="row"><div class="grow"><p class="xs mut">Đề bài · Buổi ${pr.n}</p><p class="bq">${esc(pr.text)}</p></div>
       ${(pr.say || pr.spell) ? `<button class="speak" data-act="b-play" aria-label="Nghe đề">🔊</button>` : ''}</div>
-      ${pr.reveal ? `<div class="fb ok" style="margin:10px 0 0">Đáp án: ${esc(pr.answer)}${pr.sayAns ? ` <button class="linkbtn" style="padding:0 0 0 6px" data-act="say" data-t="${esc(pr.sayAns)}">🔊</button>` : ''}</div>` : ''}
-    </div>` : `<div class="card sm mut">${T ? 'Chọn kiểu đề bên dưới rồi bấm “Đề mới”, hoặc dùng bảng tự do.' : 'Chờ giáo viên ra đề, hoặc cứ viết, vẽ tự do.'}</div>`;
-  const tools = `<div class="row" style="gap:8px;flex-wrap:wrap;margin:10px 0">
-      ${PENS.map(c => `<button class="pen ${B.mode === 'pen' && B.pen === c ? 'on' : ''}" style="background:${c}" data-act="b-pen" data-c="${c}" aria-label="Bút màu"></button>`).join('')}
-      <button class="btn ${B.mode === 'text' ? '' : 'ghost'}" style="min-height:38px;padding:6px 12px" data-act="b-text">Aa Gõ chữ</button>
-      <button class="btn ghost" style="min-height:38px;padding:6px 12px" data-act="b-undo">↩ Xóa nét của tôi</button>
-    </div>`;
+      ${pr.reveal ? `<div class="fb ok" style="margin:6px 0 0;padding:6px 10px">Đáp án: ${esc(pr.answer)}${pr.sayAns ? ` <button class="linkbtn" style="padding:0 0 0 6px" data-act="say" data-t="${esc(pr.sayAns)}">🔊</button>` : ''}</div>` : ''}
+    </div>` : '';
+  const tools = `${PENS.map(c => `<button class="pen ${B.mode === 'pen' && B.pen === c ? 'on' : ''}" style="background:${c}" data-act="b-pen" data-c="${c}" aria-label="Bút màu"></button>`).join('')}
+      <button class="btn ${B.mode === 'text' ? '' : 'ghost'} bsm" data-act="b-text" aria-label="Gõ chữ">Aa<span class="bl"> Gõ chữ</span></button>
+      <button class="btn ghost bsm" data-act="b-undo" aria-label="Xóa nét của tôi">↩<span class="bl"> Xóa nét</span></button>`;
   const textBox = B.textAt ? `<div class="btext" style="left:max(4px, min(${B.textAt.x / BW * 100}%, calc(100% - 262px)));top:min(${B.textAt.y / BH * 100}%, calc(100% - 50px))">
       <input id="btext" maxlength="120" placeholder="Gõ chữ…" value="${esc(B.textVal || '')}" style="color:${B.pen}" autocomplete="off">
       <button class="bt-ok" data-act="b-text-add" aria-label="Thêm chữ">✓</button><button class="bt-x" data-act="b-text-cancel" aria-label="Hủy">✕</button></div>` : '';
@@ -1647,19 +1687,29 @@ function vBoard(){
       <div class="row"><label for="blesson" style="margin:0" class="grow">Lấy đề từ buổi</label>
         <select id="blesson" data-act="b-lesson" style="width:auto">${LESSONS.map(l => `<option value="${l.n}" ${l.n === B.lesson ? 'selected' : ''}>Buổi ${l.n}</option>`).join('')}</select></div>
       <div class="chips">${BKINDS.filter(([k]) => B.lesson === 1 || (k !== 'chu' && k !== 'van')).map(([k, t]) => `<button class="tok ${B.kind === k ? 'on' : ''}" style="font-size:14px;padding:7px 11px" data-act="b-kind" data-k="${k}">${t}</button>`).join('')}</div>
-      <div class="row" style="flex-wrap:wrap"><button class="btn grow" data-act="b-new">Đề mới</button>
+      <div class="row bbtns" style="flex-wrap:wrap"><button class="btn grow" data-act="b-new">Đề mới</button>
         <button class="btn soft grow" data-act="b-reveal" ${pr ? '' : 'disabled'}>${pr && pr.reveal ? 'Ẩn đáp án' : 'Hiện đáp án'}</button>
         <button class="btn ${B.clearAsk ? 'warn' : 'ghost'} grow" data-act="b-clear">${B.clearAsk ? 'Bấm lần nữa để xóa' : 'Xóa bảng'}</button></div>
     </div>` : '';
-  const gate = T ? `<div class="card row" style="padding:12px 14px;${B.open ? 'background:var(--ok-2);box-shadow:none' : 'background:var(--acc-2);box-shadow:none'}">
-      <div class="grow"><b>${B.open ? 'Bảng đang MỞ cho học viên' : 'Bảng đang ĐÓNG với học viên'}</b><p class="xs mut">${B.open ? 'Học viên vào được từ trang chủ. Tự đóng sau 3 giờ.' : 'Chỉ bạn thấy bảng. Mở khi bắt đầu buổi học.'}</p></div>
-      <button class="btn ${B.open ? 'ghost' : ''}" data-act="b-gate">${B.open ? 'Đóng bảng' : 'Mở cho lớp'}</button></div>` : '';
-  return `<div class="top"><button class="back" data-act="b-close" aria-label="Quay lại">←</button>
-      <div class="grow"><p class="xs mut" id="bstatus">○ Đang kết nối…</p><h2>Bảng lớp</h2></div></div>
-    ${gate}${promptBar}${tools}
-    <div class="board"><canvas id="bd"></canvas>${textBox}</div>
-    <p class="xs mut" style="margin:8px 2px 14px"><b>Chạm 2 lần</b> vào chỗ bất kỳ trên bảng để gõ chữ; gõ xong bấm <b>Enter</b> là chữ lên bảng và ô gõ tự xuống dòng để gõ tiếp. Cả lớp cùng thấy bảng này. Nét mới hiện trên máy người khác sau 1–2 giây.${REAL ? '' : DBB.db ? ' Bản xem thử: đồng bộ giữa các máy đang mở trang này bằng tài khoản Claude có quyền sửa (vd. tài khoản của bạn trên điện thoại và máy tính).' : ' Bản xem thử: chỉ đồng bộ giữa các tab trên cùng máy.'}</p>
-    ${teacher}`;
+  const gate = T ? `<button class="btn ${B.open ? 'ghost' : ''} bsm bgate ${B.open ? 'on' : ''}" data-act="b-gate">${B.open ? '●<span class="bl"> Đang mở · Đóng bảng</span>' : '○<span class="bl"> Mở bảng cho lớp</span>'}</button>` : '';
+  const help = `<p class="xs mut bhelp"><b>Chạm 2 lần</b> lên bảng để gõ chữ, <b>Enter</b> là chữ lên bảng và tự xuống dòng gõ tiếp.${T ? ' Bảng tự đóng sau 3 giờ.' : ''}${REAL ? '' : DBB.db ? ' Bản xem thử: đồng bộ giữa các máy đang mở trang này bằng tài khoản Claude có quyền sửa.' : ' Bản xem thử: chỉ đồng bộ giữa các tab trên cùng máy.'}</p>`;
+  return `<div class="bview ${T ? 't' : ''}"><div class="bmain">
+    <div class="btop"><button class="back" data-act="b-close" aria-label="Quay lại">←</button>
+      <div class="btitle"><b>Bảng lớp</b><span class="xs mut" id="bstatus">○ Đang kết nối…</span></div>
+      ${tools}${gate}</div>
+    ${promptBar}
+    <div class="bfit"><div class="board" id="bbox"><canvas id="bd"></canvas>${textBox}</div></div>
+    <p class="xs mut brot">📱 Xoay ngang điện thoại để bảng to hơn</p>
+    </div>
+    <aside class="bside">${teacher}${help}</aside></div>`;
+}
+/* Bảng to nhất có thể mà vẫn nằm gọn trong màn hình (giữ tỉ lệ 4:3) */
+function fitBoard(){
+  const box = document.getElementById('bbox'); if (!box) return;
+  const fit = box.parentElement, W = fit.clientWidth;
+  const top = box.getBoundingClientRect().top + (window.scrollY || 0);
+  const H = Math.max(200, window.innerHeight - top - 10);
+  box.style.width = Math.floor(Math.max(240, Math.min(W, H * 4 / 3))) + 'px';
 }
 
 $app.addEventListener('click', e => {
