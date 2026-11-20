@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tiếng Anh Siêu Mất Gốc</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0E6B5C">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tiếng Anh">
 <style>
 :root{
   --bg:#F7F4EE; --card:#FFFFFF; --ink:#1C2430; --mut:#6B7280; --line:#E7E1D6;
@@ -956,6 +963,7 @@ function render(){
   if (S._scrollTop) { S._scrollTop = false; try { window.scrollTo(0, 0); } catch(e){} }
   if (typeof renderCall === 'function') renderCall();
   if (typeof liveAfterRender === 'function') { liveAfterRender(); renderLive(); }
+  if (typeof pushAfterRender === 'function') pushAfterRender();
 }
 function go(changes){ Object.assign(S, changes); S._scrollTop = true; render(); }
 
@@ -1039,6 +1047,7 @@ function vStudentHome(){
         <div class="stat"><b>${m.attendance.held ? m.attendance.present + '/' + m.attendance.held : '–'}</b><span class="xs mut">buổi có mặt</span></div>
       </div>
     </div>
+    ${pushCard()}
     ${B.open ? `<div class="card row" style="box-shadow:0 0 0 2px var(--ok)"><div style="font-size:30px">🖊️</div><div class="grow"><b>Bảng lớp đang mở</b><p class="xs mut">Giáo viên đang dùng bảng, vào viết cùng cả lớp</p></div>
       <button class="btn" data-act="b-open">Vào bảng</button></div>` : ''}
     <div class="card row"><div style="font-size:30px">🔁</div><div class="grow"><b>Ôn từ cũ</b><p class="xs mut">${weakCount() ? weakCount() + ' từ bạn hay sai đang chờ ôn' : '15 câu, mỗi ngày một lượt'}${m.reviews ? ' · đã ôn ' + m.reviews + ' lượt' : ''}</p></div>
@@ -1286,6 +1295,7 @@ function vTClass(){
         <div class="stat"><b style="color:${alerts.length ? 'var(--bad)' : 'var(--ok)'}">${alerts.length}</b><span class="xs mut">cần nhắc</span></div>
       </div>
     </div>
+    ${pushTeacherCard()}
     ${alerts.length ? `<button class="btn acc full" data-act="remind">💬 Soạn tin nhắc học (dán vào Zalo)</button>` : ''}
     <div class="sect">Từng học viên</div>
     ${sorted.length ? sorted.map(s => `<div class="card stu ${s.alert ? 'alert' : ''}" data-act="detail" data-c="${esc(s.code)}">
@@ -1296,6 +1306,7 @@ function vTClass(){
         <span class="chip">Có mặt ${s.held ? s.present + '/' + s.held : '–'}</span>
         <span class="chip">Ôn từ ${s.reviews || 0} lượt</span>
         ${s.owe ? `<span class="chip bad">Nợ ${s.owe} bài</span>` : ''}
+        ${REAL ? ((S.T.push || []).includes(s.code) ? '<span class="chip ok">🔔 Bật thông báo</span>' : '<span class="chip">🔕 Chưa bật thông báo</span>') : ''}
         ${s.idle ? `<span class="chip bad">${s.lastActive ? '3+ ngày chưa học' : 'Chưa vào app'}</span>` : ''}
       </div></div>`).join('') : `<div class="card mut sm">Chưa có học viên. Vào tab <b>Học viên</b> để thêm và lấy mã.</div>`}
     ${demoBanner()}`;
@@ -1651,6 +1662,7 @@ const FB_CFG = {
   authDomain: 'optical-precept-472202-f4.firebaseapp.com',
   databaseURL: 'https://optical-precept-472202-f4-default-rtdb.asia-southeast1.firebasedatabase.app',
   projectId: 'optical-precept-472202-f4',
+  messagingSenderId: '374442203042',
   appId: '1:374442203042:web:3d1c3335d2c355632004fb'
 };
 const FB_VER = '12.6.0', FB_ROOM = 'rooms/k1', FB_TEACHER = 'giaovien@sieumatgoc.app';
@@ -2039,6 +2051,7 @@ async function callStart(){
     await fbNeedTeacher();
     const id = Date.now().toString(36);
     await FBB.m.set(callRef('state'), {on:true, id, at:Date.now(), muteAt:0});
+    if (typeof pushRing === 'function') pushRing('call').then(r => { if (r && r.sent) toast(`Đã báo chuông đến ${r.sent} máy học viên 🔔`); }).catch(() => {});
     await callJoin();
   } catch(e){ toast(errMsg(e)); }
 }
@@ -2442,6 +2455,134 @@ function liveInit(force){
   FBB.m.onValue(liveRef('poll/cur'), s => pollOnCur(s.val()));
 }
 liveInit();
+
+/* ================== Cài app ra màn hình chính + thông báo đẩy ==================
+   Trang có manifest + service worker (sw.js) nên cài được như app (Android: Chrome "Cài đặt ứng dụng";
+   iPhone: Safari → Chia sẻ → Thêm vào MH chính). Thông báo đi qua Firebase Cloud Messaging:
+   máy học viên lấy "mã thông báo" (token) rồi gửi lên Apps Script (trang ThongBao);
+   giáo viên bấm Gọi lớp / Gửi nhắc → Apps Script gửi tới từng token. */
+const PUSH = {reg:null, deferred:null, busy:false, synced:'', last:null};
+const IS_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function isStandalone(){ try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch(e){ return false; } }
+function pushWho(){ return S.mode === 'teacher' ? 'GV' : S.code; }
+function pushKey(){ return 'push_' + pushWho(); }
+function pushDevice(){
+  const u = navigator.userAgent;
+  const os = /android/i.test(u) ? 'Android' : IS_IOS ? 'iPhone/iPad' : /windows/i.test(u) ? 'Windows' : /mac/i.test(u) ? 'Mac' : 'Máy khác';
+  return os + (isStandalone() ? ' · app' : ' · trình duyệt');
+}
+function pushState(){
+  if (!REAL || !FB_CFG) return 'none';
+  if (IS_IOS && !isStandalone() && !('PushManager' in window)) return 'ios-add';
+  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return 'none';
+  if (Notification.permission === 'denied') return 'denied';
+  if (Notification.permission === 'granted' && store.get(pushKey())) return 'on';
+  return 'off';
+}
+
+if (REAL && 'serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js').then(r => { PUSH.reg = r; }).catch(() => {});
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data && e.data.t === 'notif' && typeof callInit === 'function') { try { callInit(true); } catch(_){} }
+  });
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); PUSH.deferred = e; if (S.mode === 'student' || S.mode === 'teacher') render(); });
+window.addEventListener('appinstalled', () => { PUSH.deferred = null; render(); });
+
+async function pushToken(){
+  const reg = PUSH.reg || await navigator.serviceWorker.register('sw.js');
+  const base = `https://www.gstatic.com/firebasejs/${FB_VER}/firebase-`;
+  const [A, M] = await Promise.all([import(base + 'app.js'), import(base + 'messaging.js')]);
+  if (!(await M.isSupported())) throw new Error('Máy này chưa nhận được thông báo.');
+  const app = A.getApps().length ? A.getApp() : A.initializeApp(FB_CFG);
+  return await M.getToken(M.getMessaging(app), {serviceWorkerRegistration: reg});
+}
+async function pushEnable(silent){
+  if (PUSH.busy) return;
+  PUSH.busy = true; if (!silent) render();
+  try {
+    const p = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+    if (p !== 'granted') throw new Error(p === 'denied' ? 'Bạn đã chặn thông báo. Mở cài đặt trang web của trình duyệt để cho phép lại.' : 'Bạn chưa cho phép thông báo.');
+    const tok = await pushToken();
+    if (!tok) throw new Error('Chưa lấy được mã thông báo, thử lại nhé.');
+    if (store.get(pushKey()) !== tok || !silent) await call('savePush', pushWho(), tok, pushDevice(), S.mode === 'teacher' ? S.pw : '');
+    store.set(pushKey(), tok); PUSH.synced = pushWho();
+    if (!silent) toast(S.mode === 'teacher' ? 'Đã bật thông báo trên máy này.' : 'Đã bật thông báo. Cô gọi lớp là máy bạn báo ngay 🔔');
+    return true;
+  } catch(e){ if (!silent) toast(errMsg(e)); return false; }
+  finally { PUSH.busy = false; if (!silent) render(); }
+}
+/* mỗi lần vào app: nếu đã cho phép thì làm mới token (token có thể đổi) */
+function pushAfterRender(){
+  if ((S.mode !== 'student' && S.mode !== 'teacher') || PUSH.synced === pushWho()) return;
+  PUSH.synced = pushWho();
+  if (pushState() === 'on') setTimeout(() => pushEnable(true), 1500);
+}
+/* giáo viên: gửi thông báo. kind = 'call' | 'msg' | 'test' */
+async function pushRing(kind, text){
+  const r = await call('ringPush', S.pw, kind, text || '');
+  PUSH.last = r;
+  return r;
+}
+function pushResultMsg(r, what){
+  if (!r) return '';
+  if (!r.total) return 'Chưa có máy nào bật thông báo.';
+  if (!r.sent) return 'Chưa gửi được thông báo' + (r.err ? ': ' + r.err.slice(0, 120) : '.');
+  return `${what} đến ${r.sent}/${r.total} máy.`;
+}
+
+/* ---------- giao diện ---------- */
+function pushCard(){
+  const st = pushState(), inst = !isStandalone() && PUSH.deferred;
+  let h = '';
+  if (st === 'off') h = `<div class="card row" style="box-shadow:0 0 0 2px var(--acc)"><div style="font-size:30px">🔔</div><div class="grow"><b>Bật thông báo</b>
+      <p class="xs mut">Cô gọi lớp hay nhắc giờ học là máy bạn rung, kể cả khi đang tắt app.</p></div>
+      <button class="btn acc" data-act="push-on" ${PUSH.busy ? 'disabled' : ''}>${PUSH.busy ? '…' : 'Bật'}</button></div>`;
+  else if (st === 'ios-add') h = `<div class="card" style="box-shadow:0 0 0 2px var(--acc)"><div class="row"><div style="font-size:30px">📲</div><div class="grow"><b>Cài app vào iPhone để nhận thông báo</b></div></div>
+      <p class="sm" style="margin-top:8px">1. Bấm nút <b>Chia sẻ</b> <span style="font-size:18px">⬆️</span> ở thanh dưới Safari<br>2. Chọn <b>Thêm vào MH chính</b><br>3. Mở app <b>Tiếng Anh</b> ở màn hình chính, nhập lại mã, rồi bấm <b>Bật thông báo</b></p>
+      <p class="xs mut" style="margin-top:6px">Cần iOS 16.4 trở lên.</p></div>`;
+  else if (st === 'denied') h = `<div class="card row"><div style="font-size:30px">🔕</div><div class="grow"><b>Thông báo đang bị chặn</b>
+      <p class="xs mut">Vào cài đặt trình duyệt → Cài đặt trang web → Thông báo → cho phép trang này, rồi mở lại app.</p></div></div>`;
+  if (inst) h += `<div class="card row"><div style="font-size:30px">📲</div><div class="grow"><b>Cài app vào máy</b><p class="xs mut">Có biểu tượng ngoài màn hình, mở nhanh như app thật.</p></div>
+      <button class="btn soft" data-act="push-install">Cài</button></div>`;
+  return h;
+}
+function pushTeacherCard(){
+  const T = S.T || {}, on = (T.push || []).length, total = (T.students || []).length;
+  const st = pushState();
+  return `<div class="card">
+    <div class="row"><div style="font-size:28px">🔔</div><div class="grow"><b>Thông báo đến máy học viên</b>
+      <p class="xs mut">${on}/${total} bạn đã bật. Bấm 📞 Gọi lớp là máy các bạn ấy tự rung.</p></div></div>
+    <div class="row" style="margin-top:10px"><input id="pushtxt" maxlength="200" placeholder="Ví dụ: 20h tối nay học buổi ${Math.min(24, (T.unlocked || 1))} nhé!">
+      <button class="btn" data-act="push-send" ${PUSH.busy ? 'disabled' : ''}>Gửi</button></div>
+    <div class="row" style="margin-top:6px;gap:16px">
+      ${st === 'off' || st === 'on' ? `<button class="linkbtn sm" data-act="push-test">${st === 'on' ? 'Gửi thử đến máy này' : 'Bật trên máy này để thử'}</button>` : ''}
+      ${!isStandalone() && PUSH.deferred ? '<button class="linkbtn sm" data-act="push-install">📲 Cài app vào máy này</button>' : ''}
+    </div></div>`;
+}
+
+document.addEventListener('click', async e => {
+  const t = e.target.closest('[data-act^="push-"]'); if (!t) return;
+  const a = t.dataset.act;
+  if (a === 'push-on') pushEnable(false);
+  else if (a === 'push-install') {
+    const d = PUSH.deferred; if (!d) return; PUSH.deferred = null;
+    try { d.prompt(); await d.userChoice; } catch(_){}
+    render();
+  }
+  else if (a === 'push-send') {
+    const el = document.getElementById('pushtxt'), txt = el ? el.value.trim() : '';
+    if (!txt) { toast('Nhập nội dung nhắc trước nhé'); return; }
+    PUSH.busy = true; render();
+    try { const r = await pushRing('msg', txt); toast(pushResultMsg(r, 'Đã gửi nhắc')); if (r && r.sent) { const el2 = document.getElementById('pushtxt'); if (el2) el2.value = ''; } }
+    catch(err){ toast(errMsg(err)); }
+    finally { PUSH.busy = false; render(); }
+  }
+  else if (a === 'push-test') {
+    if (pushState() !== 'on' && !(await pushEnable(false))) return;
+    try { toast(pushResultMsg(await pushRing('test'), 'Đã gửi thử')); } catch(err){ toast(errMsg(err)); }
+  }
+});
 </script>
 </body>
 </html>
