@@ -197,6 +197,26 @@ body.boardv .nav{display:none}
 .rbtn{border:0;background:var(--pri-2);color:var(--pri);border-radius:10px;padding:6px 10px;font:inherit;font-size:13.5px;font-weight:650;cursor:pointer}
 .rbtn.on{background:var(--bad);color:#fff;animation:recpulse 1s infinite}
 @keyframes recpulse{50%{opacity:.6}}
+
+/* ---- Gọi thoại cả lớp ---- */
+#callui{position:fixed;left:0;right:0;bottom:calc(74px + env(safe-area-inset-bottom));z-index:60;display:flex;justify-content:center;pointer-events:none;padding:0 10px}
+body.boardv #callui{bottom:8px}
+.callbar{pointer-events:auto;width:100%;max-width:560px;background:#1C2430;color:#fff;border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.25);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.callbar.ring{flex-direction:row;align-items:center;gap:10px;animation:callpulse 1.6s infinite}
+@keyframes callpulse{50%{box-shadow:0 0 0 6px rgba(232,163,61,.45),0 8px 28px rgba(0,0,0,.25)}}
+.callbar .cico{font-size:24px}
+.callbar .xs{color:#C9D2DC}
+.callbar .mut{color:#AEB8C4}
+.crow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cinfo{background:none;border:0;color:#fff;font:inherit;font-size:14px;padding:6px 2px;cursor:pointer;flex:1;text-align:left;min-width:120px}
+.cbtn{border:0;border-radius:10px;padding:9px 12px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;background:#33404F;color:#fff;min-height:40px}
+.cbtn.go{background:#0E6B5C}.cbtn.mut{background:#E8A33D;color:#1C2430}.cbtn.end{background:#C2412D}
+.cbtn[disabled]{opacity:.6}
+.cdot{width:10px;height:10px;border-radius:50%;background:#56616E;flex:none;transition:background .15s,box-shadow .15s}
+.cdot.live{background:#3DDC84}
+.cdot.talk{background:#3DDC84;box-shadow:0 0 0 4px rgba(61,220,132,.3)}
+.cplist{display:flex;flex-direction:column;gap:6px;max-height:40vh;overflow:auto;padding:4px 2px 8px;border-bottom:1px solid #33404F}
+.cprow{display:flex;align-items:center;gap:10px;font-size:14px}
 </style>
 </head>
 <body>
@@ -916,6 +936,7 @@ function render(){
   $app.innerHTML = h;
   if (S.view === 'board') { fitBoard(); drawBoard(); const bi = document.getElementById('btext'); if (bi && B.textAt && (hadFocus || !bi.dataset.seen)) { bi.dataset.seen = 1; bi.focus(); try { bi.setSelectionRange(bi.value.length, bi.value.length); } catch(e){} } }
   if (S._scrollTop) { S._scrollTop = false; try { window.scrollTo(0, 0); } catch(e){} }
+  if (typeof renderCall === 'function') renderCall();
 }
 function go(changes){ Object.assign(S, changes); S._scrollTop = true; render(); }
 
@@ -1229,7 +1250,7 @@ function vTeacher(){
   return `<div class="top"><div class="grow"><p class="xs mut">Giáo viên</p><h2>${esc(T.className)}</h2></div>
     <button class="linkbtn sm" data-act="refresh">Tải lại</button><button class="linkbtn sm" data-act="logout">Thoát</button></div>
     ${body}
-    <nav class="nav"><div class="in">${nav.map(([k, ic, t]) => `<button class="${S.tab === k ? 'on' : ''}" data-act="ttab" data-k="${k}"><span class="ic">${ic}</span>${t}</button>`).join('')}<button data-act="b-open"><span class="ic">🖊️</span>Bảng lớp</button></div></nav>`;
+    <nav class="nav"><div class="in">${nav.map(([k, ic, t]) => `<button class="${S.tab === k ? 'on' : ''}" data-act="ttab" data-k="${k}"><span class="ic">${ic}</span>${t}</button>`).join('')}<button data-act="b-open"><span class="ic">🖊️</span>Bảng lớp</button><button data-act="call-start"><span class="ic">📞</span>Gọi lớp</button></div></nav>`;
 }
 function vTClass(){
   const T = S.T, st = tStats();
@@ -1940,6 +1961,228 @@ setInterval(async () => {
   if (S.mode !== 'student' || S.view !== 'home' || document.hidden) return;
   try { const r = await bcall('boardStatus'); if (!!r.open !== B.open) { B.open = !!r.open; if (S.view === 'home' && !S.msg) render(); } } catch(e){}
 }, 8000);
+
+/* ================== Gọi thoại cả lớp (WebRTC, chỉ tiếng) ==================
+   Firebase (đã dùng cho bảng lớp) làm "tổng đài": giáo viên bấm Gọi lớp → máy học viên đổ chuông.
+   Các máy nối thẳng với nhau (mỗi máy nối tới từng máy), chỉ truyền âm thanh nên nhẹ.
+   Học viên vào cuộc gọi với mic TẮT sẵn, muốn nói thì bấm bật. */
+const CALL = {state:null, joined:false, joining:false, id:null, me:null, joinAt:0, local:null, muted:true,
+  peers:{}, list:{}, unsubs:[], ice:null, ctx:null, meter:null, levels:{}, open:false, ringed:null, presRef:null};
+const CALL_STUN = [{urls:['stun:stun.cloudflare.com:3478', 'stun:stun.l.google.com:19302']}];
+const callRef = p => FBB.m.ref(FBB.db, FB_ROOM + '/call' + (p ? '/' + p : ''));
+const callT = () => S.mode === 'teacher';
+let $call = null;
+
+function callMyName(){ return callT() ? 'Giáo viên' : String((S.me && S.me.student.name) || 'Học viên').slice(0, 60); }
+async function callIce(){
+  if (CALL.ice) return CALL.ice;
+  try {   /* máy chủ chuyển tiếp (TURN) nếu đã cài trong Apps Script; chưa có thì chỉ dùng STUN */
+    const r = await Promise.race([call('getIce'), new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 4000))]);
+    if (r && r.length) { CALL.ice = r; return r; }
+  } catch(e){}
+  CALL.ice = CALL_STUN; return CALL.ice;
+}
+
+/* ---------- theo dõi trạng thái cuộc gọi (chạy khi Firebase sẵn sàng) ---------- */
+function callInit(force){
+  if (!force && (!REAL || typeof FB_CFG === 'undefined' || !FB_CFG)) return;
+  if (!FBB.m || !FBB.db) return setTimeout(() => callInit(force), 400);
+  FBB.m.onValue(callRef('state'), s => {
+    const st = s.val() || {}, was = CALL.state;
+    const fresh = !st.at || Date.now() - st.at < 4 * 3600e3;
+    CALL.state = st.on && fresh ? st : null;
+    if (CALL.joined && (!CALL.state || CALL.state.id !== CALL.id)) { callLeave(true); toast('Cuộc gọi lớp đã kết thúc.'); }
+    if (CALL.joined && CALL.state && !callT() && st.muteAt && st.muteAt > CALL.joinAt && st.muteAt !== CALL.lastMuteAt) {
+      CALL.lastMuteAt = st.muteAt; if (!CALL.muted) { callSetMute(true); toast('Giáo viên đã tắt mic cả lớp.'); }
+    }
+    if (CALL.state && !CALL.joined && !callT() && CALL.ringed !== CALL.state.id) { CALL.ringed = CALL.state.id; callRing(); }
+    renderCall();
+  });
+}
+callInit();
+
+function callRing(){
+  try { if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 300]); } catch(e){}
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const ctx = new C(), t0 = ctx.currentTime + 0.05;
+    [0, 0.35, 1.2, 1.55].forEach(d => { const o = ctx.createOscillator(), g = ctx.createGain();
+      o.frequency.value = d % 1.2 < 0.3 ? 880 : 660; g.gain.setValueAtTime(0.0001, t0 + d);
+      g.gain.exponentialRampToValueAtTime(0.25, t0 + d + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d + 0.28);
+      o.connect(g).connect(ctx.destination); o.start(t0 + d); o.stop(t0 + d + 0.3); });
+    setTimeout(() => ctx.close(), 2500);
+  } catch(e){}
+}
+
+/* ---------- giáo viên ---------- */
+async function callStart(){
+  try {
+    await fbNeedTeacher();
+    const id = Date.now().toString(36);
+    await FBB.m.set(callRef('state'), {on:true, id, at:Date.now(), muteAt:0});
+    await callJoin();
+  } catch(e){ toast(errMsg(e)); }
+}
+async function callEnd(){
+  const id = CALL.id || (CALL.state && CALL.state.id);
+  callLeave(true);
+  try { await fbNeedTeacher(); const up = {state:{on:false, at:Date.now()}}; if (id) { up['peers/' + id] = null; up['sig/' + id] = null; } await FBB.m.update(callRef(), up); }
+  catch(e){ toast(errMsg(e)); }
+  renderCall();
+}
+async function callMuteAll(){
+  try { await fbNeedTeacher(); await FBB.m.update(callRef('state'), {muteAt:Date.now()}); toast('Đã tắt mic cả lớp.'); } catch(e){ toast(errMsg(e)); }
+}
+
+/* ---------- vào / rời cuộc gọi ---------- */
+async function callJoin(){
+  if (CALL.joined || CALL.joining || !CALL.state) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.RTCPeerConnection) { toast('Trình duyệt này chưa gọi được. Hãy mở bằng Chrome hoặc Safari bản mới.'); return; }
+  CALL.joining = true; renderCall();
+  try {
+    const ice = await callIce();
+    CALL.local = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:true, autoGainControl:true}, video:false});
+    const C = window.AudioContext || window.webkitAudioContext; if (C) { CALL.ctx = new C(); try { await CALL.ctx.resume(); } catch(e){} }
+    CALL.id = CALL.state.id; CALL.joinAt = Date.now(); CALL.lastMuteAt = CALL.state.muteAt || 0;
+    CALL.me = (callT() ? 'gv-' : 'hv-') + Math.random().toString(36).slice(2, 10);
+    CALL.joined = true; CALL.peers = {}; CALL.list = {};
+    callSetMute(!callT());                        /* giáo viên mở mic sẵn, học viên tắt sẵn */
+    callMeter('me', CALL.local);
+    const m = FBB.m;
+    CALL.presRef = callRef(`peers/${CALL.id}/${CALL.me}`);
+    await m.set(CALL.presRef, {name:callMyName(), who:callT() ? 'GV' : String(S.code || '?').slice(0, 12), t:Date.now(), mic:!CALL.muted});
+    m.onDisconnect(CALL.presRef).remove();
+    const pr = callRef('peers/' + CALL.id);
+    CALL.unsubs.push(m.onChildAdded(pr, s => { if (s.key === CALL.me) return; CALL.list[s.key] = s.val(); if (CALL.me < s.key) callPeer(s.key, true, ice); renderCall(); }));
+    CALL.unsubs.push(m.onChildChanged(pr, s => { if (s.key !== CALL.me) { CALL.list[s.key] = s.val(); renderCall(); } }));
+    CALL.unsubs.push(m.onChildRemoved(pr, s => { delete CALL.list[s.key]; callDrop(s.key); renderCall(); }));
+    const inbox = callRef(`sig/${CALL.id}/${CALL.me}`);
+    CALL.unsubs.push(m.onChildAdded(inbox, s => { const v = s.val(); m.remove(s.ref).catch(() => {}); callSignal(v, ice).catch(e => console.warn('call signal', e)); }));
+    CALL.meterT = setInterval(callMeterTick, 250);
+    CALL.open = true;
+  } catch(e){
+    const msg = e && (e.name === 'NotAllowedError' || e.name === 'SecurityError') ? 'Chưa có quyền dùng micro. Hãy cho phép micro cho trang này rồi bấm vào lại.' : errMsg(e);
+    callLeave(true); toast(msg);
+  } finally { CALL.joining = false; renderCall(); }
+}
+function callLeave(silent){
+  Object.keys(CALL.peers).forEach(callDrop);
+  CALL.unsubs.forEach(u => { try { u(); } catch(e){} }); CALL.unsubs = [];
+  if (CALL.presRef) { try { FBB.m.remove(CALL.presRef).catch(() => {}); FBB.m.onDisconnect(CALL.presRef).cancel(); } catch(e){} CALL.presRef = null; }
+  if (CALL.local) { CALL.local.getTracks().forEach(t => t.stop()); CALL.local = null; }
+  clearInterval(CALL.meterT); if (CALL.ctx) { try { CALL.ctx.close(); } catch(e){} CALL.ctx = null; }
+  CALL.levels = {}; CALL.meters = {}; CALL.joined = false; CALL.list = {}; CALL.id = null;
+  if (!silent) renderCall();
+}
+function callSetMute(on){
+  CALL.muted = on;
+  if (CALL.local) CALL.local.getAudioTracks().forEach(t => { t.enabled = !on; });
+  if (CALL.presRef) FBB.m.update(CALL.presRef, {mic:!on}).catch(() => {});
+  renderCall();
+}
+
+/* ---------- kết nối từng cặp máy ---------- */
+function callSend(to, msg){ return FBB.m.push(callRef(`sig/${CALL.id}/${to}`), {...msg, from:CALL.me}); }
+function callPeer(pid, initiator, ice){
+  if (CALL.peers[pid]) return CALL.peers[pid];
+  const pc = new RTCPeerConnection({iceServers:ice});
+  const P = CALL.peers[pid] = {pc, q:[], st:'connecting'};
+  CALL.local.getTracks().forEach(t => pc.addTrack(t, CALL.local));
+  pc.onicecandidate = e => { if (e.candidate) callSend(pid, {t:'ice', c:JSON.stringify(e.candidate)}).catch(() => {}); };
+  pc.ontrack = e => {
+    const st = e.streams[0] || new MediaStream([e.track]);
+    if (!P.audio) { P.audio = document.createElement('audio'); P.audio.autoplay = true; P.audio.setAttribute('playsinline', ''); callAudioBox().appendChild(P.audio); }
+    P.audio.srcObject = st; const pl = P.audio.play(); if (pl) pl.catch(() => toast('Bấm vào màn hình một lần để nghe tiếng.'));
+    callMeter(pid, st);
+  };
+  pc.onconnectionstatechange = () => {
+    P.st = pc.connectionState === 'connected' ? 'ok' : (pc.connectionState === 'failed' ? 'fail' : (pc.connectionState === 'disconnected' ? 'lost' : 'connecting'));
+    if (pc.connectionState === 'failed' && initiator) { try { pc.restartIce(); callOffer(pid, P, true); } catch(e){} }
+    renderCall();
+  };
+  if (initiator) callOffer(pid, P, false);
+  return P;
+}
+async function callOffer(pid, P, restart){
+  const o = await P.pc.createOffer(restart ? {iceRestart:true} : {});
+  await P.pc.setLocalDescription(o);
+  await callSend(pid, {t:'offer', sdp:P.pc.localDescription.sdp});
+}
+async function callSignal(v, ice){
+  if (!v || !v.from || !CALL.joined) return;
+  if (v.t === 'offer') {
+    const P = CALL.peers[v.from] || callPeer(v.from, false, ice);
+    await P.pc.setRemoteDescription({type:'offer', sdp:v.sdp});
+    const a = await P.pc.createAnswer(); await P.pc.setLocalDescription(a);
+    await callSend(v.from, {t:'answer', sdp:P.pc.localDescription.sdp});
+    P.q.splice(0).forEach(c => P.pc.addIceCandidate(c).catch(() => {}));
+  } else if (v.t === 'answer') {
+    const P = CALL.peers[v.from]; if (!P) return;
+    await P.pc.setRemoteDescription({type:'answer', sdp:v.sdp});
+    P.q.splice(0).forEach(c => P.pc.addIceCandidate(c).catch(() => {}));
+  } else if (v.t === 'ice') {
+    const P = CALL.peers[v.from]; let c; try { c = JSON.parse(v.c); } catch(e){ return; }
+    if (!P || !P.pc.remoteDescription) { (P ? P.q : []).push(c); return; }
+    P.pc.addIceCandidate(c).catch(() => {});
+  }
+}
+function callDrop(pid){
+  const P = CALL.peers[pid]; if (!P) return;
+  try { P.pc.close(); } catch(e){}
+  if (P.audio) { P.audio.srcObject = null; P.audio.remove(); }
+  delete CALL.peers[pid]; if (CALL.meters) delete CALL.meters[pid]; delete CALL.levels[pid];
+}
+function callAudioBox(){
+  let b = document.getElementById('callaudio');
+  if (!b) { b = document.createElement('div'); b.id = 'callaudio'; b.style.display = 'none'; document.body.appendChild(b); }
+  return b;
+}
+
+/* ---------- ai đang nói ---------- */
+function callMeter(id, stream){
+  if (!CALL.ctx) return; CALL.meters = CALL.meters || {};
+  try { const src = CALL.ctx.createMediaStreamSource(stream), an = CALL.ctx.createAnalyser(); an.fftSize = 512; src.connect(an); CALL.meters[id] = {an, buf:new Uint8Array(an.fftSize)}; } catch(e){}
+}
+function callMeterTick(){
+  Object.entries(CALL.meters || {}).forEach(([id, M]) => {
+    M.an.getByteTimeDomainData(M.buf); let s = 0; for (let i = 0; i < M.buf.length; i++) { const x = (M.buf[i] - 128) / 128; s += x * x; }
+    const talk = Math.sqrt(s / M.buf.length) > 0.035 && !(id === 'me' && CALL.muted);
+    const el = document.querySelector(`#callui [data-cp="${id}"]`); if (el) el.classList.toggle('talk', talk);
+  });
+}
+
+/* ---------- giao diện (nằm ngoài khung app để không bị vẽ lại mất) ---------- */
+function renderCall(){
+  if (!$call) { $call = document.createElement('div'); $call.id = 'callui'; document.body.appendChild($call); $call.addEventListener('click', callClick); }
+  const st = CALL.state, T = callT();
+  if (!(S.mode === 'teacher' || S.mode === 'student') || (!st && !CALL.joined)) { $call.innerHTML = ''; return; }
+  if (!CALL.joined) {
+    $call.innerHTML = `<div class="callbar ring"><span class="cico">📞</span><div class="grow"><b>${T ? 'Cuộc gọi lớp đang mở' : 'Giáo viên đang gọi lớp'}</b><div class="xs">${CALL.joining ? 'Đang kết nối…' : (T ? 'Bạn chưa ở trong cuộc gọi' : 'Bấm vào nghe, mic của bạn tắt sẵn')}</div></div>
+      <button class="cbtn go" data-act="call-join" ${CALL.joining ? 'disabled' : ''}>${T ? 'Vào lại' : 'Vào nghe'}</button>${T ? '<button class="cbtn end" data-act="call-end">Kết thúc</button>' : ''}</div>`;
+    return;
+  }
+  const others = Object.entries(CALL.list), n = others.length + 1;
+  const stTxt = pid => { const P = CALL.peers[pid]; return !P ? 'đang nối…' : P.st === 'ok' ? '' : P.st === 'fail' ? 'không nối được' : P.st === 'lost' ? 'mất kết nối' : 'đang nối…'; };
+  const row = (id, name, mic, note) => `<div class="cprow"><span class="cdot" data-cp="${id}"></span><span class="grow">${esc(name)}${note ? ` <span class="xs mut">· ${note}</span>` : ''}</span><span class="xs">${mic ? '🎤' : '<span class="mut">mic tắt</span>'}</span></div>`;
+  const list = CALL.open ? `<div class="cplist">${row('me', callMyName() + ' (bạn)', !CALL.muted, '')}${others.sort((a, b) => (a[1].who === 'GV' ? -1 : b[1].who === 'GV' ? 1 : String(a[1].name).localeCompare(b[1].name))).map(([pid, v]) => row(pid, v.name, v.mic, stTxt(pid))).join('')}</div>` : '';
+  $call.innerHTML = `<div class="callbar on">${list}<div class="crow"><span class="cdot live"></span><button class="cinfo" data-act="call-list"><b>Đang gọi</b> · ${n} người ${CALL.open ? '▾' : '▸'}</button>
+    <button class="cbtn ${CALL.muted ? 'mut' : 'go'}" data-act="call-mic" aria-label="${CALL.muted ? 'Bật mic' : 'Tắt mic'}">${CALL.muted ? '🎤 Bật mic' : '🎤 Tắt mic'}</button>
+    ${T ? '<button class="cbtn" data-act="call-muteall">Tắt mic lớp</button><button class="cbtn end" data-act="call-end">Kết thúc</button>' : '<button class="cbtn end" data-act="call-leave">Rời</button>'}</div></div>`;
+}
+function callClick(e){
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act;
+  if (a === 'call-join') callJoin();
+  else if (a === 'call-leave') { callLeave(); }
+  else if (a === 'call-end') { if (confirmEnd()) callEnd(); }
+  else if (a === 'call-mic') callSetMute(!CALL.muted);
+  else if (a === 'call-muteall') callMuteAll();
+  else if (a === 'call-list') { CALL.open = !CALL.open; renderCall(); }
+}
+function confirmEnd(){ CALL._endT = CALL._endT && Date.now() - CALL._endT < 3000 ? 0 : Date.now(); if (CALL._endT) { toast('Bấm Kết thúc lần nữa để tắt cuộc gọi cho cả lớp.'); return false; } return true; }
+/* nút "Gọi lớp" ở thanh dưới của giáo viên nằm trong khung app */
+document.addEventListener('click', e => { const b = e.target.closest('#app [data-act="call-start"]'); if (!b) return; e.stopPropagation(); if (!REAL || !FBB.on) { toast('Gọi lớp chỉ dùng được trên app thật.'); return; } if (CALL.joined) { CALL.open = true; renderCall(); } else if (CALL.state) callJoin(); else callStart(); }, true);
+window.addEventListener('pagehide', () => { if (CALL.joined) callLeave(true); });
 </script>
 </body>
 </html>
