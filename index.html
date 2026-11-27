@@ -242,145 +242,158 @@ body.boardv #callui{bottom:8px}
 .pollcard input:not([type]),.pollcard input[name=pq],.pollcard input[name=po],.pollcard select{width:100%;box-sizing:border-box;border:1.5px solid #E2DBCF;border-radius:10px;padding:10px;font:inherit;font-size:15px}
 .prow{display:flex;align-items:center;gap:10px;font-size:15px;padding:4px 0}
 .prow input[type=checkbox],.prow input[type=radio]{width:20px;height:20px;flex:none}
+
+/* hội thoại thay từ */
+.dlg{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.dlgk{background:var(--pri-2);border-radius:12px;padding:10px 12px;margin-bottom:10px;line-height:1.45}
+.dlgv{border-left:3px solid var(--line);padding:4px 0 4px 10px;margin:8px 0}
+.dlgl{display:flex;gap:8px;align-items:flex-start;margin:6px 0;border-radius:10px;padding:2px 4px}
+.dlgl .who{flex:0 0 22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;background:var(--pri);margin-top:2px}
+.dlgl .who.B{background:var(--acc)}
+.dlgl .en{font-weight:600}
+mark.slot{background:#FFE7A8;color:inherit;border-radius:5px;padding:0 3px}
+.speak.sm{width:32px;height:32px;font-size:15px}
+.winput{width:100%;font:inherit;font-size:18px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);resize:none}
+.winput:focus{outline:none;border-color:var(--pri)}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
-const HUMAN = {"a":["Dvortygirl","Association Shtooka, Judith Franck","TheDaveRoss","recorded by TheDaveRoss","Steve Shives","Commander Keane","EncycloPetey","Wikimedia Commons","Muke","Neskaya","Dominic","Mx. Granger","TaxRebate","Dvortybot","Sylvanmoon","TreeMama","Xonique","Celestianpower","Xnux","Speaker: Flame, not lame Recorder: Flame","Logictheo","Twocs","Denelson83","Vealhurl (Lingua Libre)","Arlo Barnes (Lingua Libre)","Grendelkhan (Lingua Libre)","Flame, not lame (Lingua Libre)","Wodencafe (Lingua Libre)","Back ache (Lingua Libre)"],"l":["CC BY-SA 3.0","CC BY 3.0 us","Public domain","CC0","CC BY-SA 4.0"],"m":{"name":["c/ce/En-us-name.ogg",0,0],"spell":["8/84/En-us-spell.ogg",0,0],"letter":["a/a4/En-us-letter.ogg",0,0],"teacher":["7/74/En-us-teacher.ogg",0,0],"student":["9/98/En-us-student.ogg",0,0],"book":["3/3d/En-us-book.ogg",0,0],"pen":["8/86/En-us-pen.ogg",0,0],"yes":["b/b1/En-us-yes.ogg",0,0],"no":["1/19/En-us-no.ogg",0,0],"please":["5/54/En-us-please.ogg",0,0],"thank you":["9/96/En-uk-thank_you.ogg",1,1],"sorry":["4/47/En-us-sorry.ogg",0,0],"classroom":["d/d8/En-uk-classroom.ogg",1,1],"question":["1/1d/En-us-question.ogg",0,0],"answer":["b/bb/En-us-answer.ogg",0,0],"listen":["b/b2/En-us-listen.ogg",0,0],"repeat":["f/fc/En-us-repeat.ogg",0,0],"again":["a/ad/En-us-again.ogg",0,0],"understand":["5/52/En-us-understand.ogg",0,0],"zero":["6/61/En-us-zero.ogg",2,0],"three":["d/d4/En-us-three.ogg",0,0],"five":["c/cf/En-us-five.ogg",0,2],"eight":["1/16/En-us-eight.ogg",3,0],"ten":["4/4c/En-us-ten.ogg",2,0],"twelve":["d/d1/En-us-twelve.ogg",2,0],"thirteen":["0/06/En-us-thirteen.ogg",2,0],"thirty":["6/6f/En-us-thirty.ogg",2,0],"fifteen":["a/a4/En-us-fifteen.ogg",2,0],"fifty":["9/91/En-us-fifty.ogg",2,0],"phone number":["a/af/En-us-phone_number.ogg",4,3],"one":["1/1f/En-us-one.ogg",0,0],"two":["4/47/En-us-two.ogg",0,0],"four":["8/88/En-us-four.ogg",0,2],"six":["e/eb/En-us-six.ogg",2,0],"seven":["7/77/En-us-seven.ogg",0,0],"nine":["9/9b/En-us-nine.ogg",2,0],"twenty":["c/c9/En-us-twenty.ogg",0,0],"ninety":["f/f2/En-us-ninety.ogg",2,0],"hello":["5/52/En-us-hello.ogg",0,2],"hi":["f/f4/En-us-hi.ogg",0,0],"good morning":["e/e8/En-us-good_morning.ogg",0,0],"good afternoon":["7/7d/En-us-good_afternoon.ogg",0,0],"good evening":["f/f0/En-us-good_evening.ogg",0,0],"goodbye":["3/32/En-us-goodbye.ogg",0,0],"see you":["6/6b/En-uk-see_you.ogg",1,1],"fine":["7/7e/En-us-fine.ogg",0,0],"friend":["8/89/En-us-friend.ogg",0,0],"how are you":["0/0a/En-us-how_are_you.ogg",0,0],"nice to meet you":["6/62/En-uk-nice_to_meet_you.ogg",1,1],"great":["f/ff/En-us-great.ogg",0,2],"not bad":["c/c5/En-au-not_bad.ogg",5,4],"everyone":["1/15/En-us-everyone.ogg",0,0],"welcome":["9/96/En-us-welcome.ogg",0,0],"good night":["1/11/En-us-good_night.ogg",0,2],"doctor":["0/0d/En-us-doctor.ogg",0,0],"engineer":["2/20/En-us-engineer.ogg",0,0],"nurse":["8/84/En-us-nurse.ogg",0,0],"driver":["8/81/En-us-driver.ogg",0,0],"Vietnam":["e/e8/En-us-Vietnam.ogg",6,0],"Vietnamese":["8/81/En-us-Vietnamese.ogg",7,2],"Japan":["b/bb/En-us-Japan.ogg",6,0],"Japanese":["0/05/En-us-Japanese.ogg",7,2],"from":["7/70/En-us-from.ogg",0,0],"city":["9/92/En-us-city.ogg",7,2],"worker":["0/00/En-us-worker.ogg",0,0],"farmer":["2/21/En-us-farmer.ogg",0,0],"businessman":["8/82/En-us-businessman.ogg",0,0],"chef":["9/90/En-au-chef.ogg",5,4],"Korean":["3/3f/En-us-Korean.ogg",8,2],"country":["9/9b/En-us-country.ogg",0,0],"what":["a/a3/En-us-what.ogg",0,0],"where":["e/ef/En-us-where.ogg",0,0],"who":["1/10/En-us-who.ogg",0,0],"job":["c/c5/En-us-job.ogg",0,0],"address":["9/99/En-us-address.ogg",0,0],"married":["9/9d/En-us-married.ogg",0,0],"single":["4/4c/En-us-single.ogg",0,0],"near":["2/2a/En-us-near.ogg",0,0],"work":["5/5f/En-us-work.ogg",0,2],"company":["6/6f/En-us-company.ogg",0,0],"how":["2/23/En-us-how.ogg",0,0],"when":["7/7a/En-us-when.ogg",0,0],"why":["6/69/En-us-why.ogg",0,0],"which":["8/83/En-us-which.ogg",0,0],"birthday":["c/c7/En-us-birthday.ogg",0,0],"free":["a/a0/En-us-free.ogg",7,2],"here":["e/e4/En-us-here.ogg",0,0],"table":["0/0b/En-us-table.ogg",0,0],"chair":["8/8b/En-us-chair.ogg",0,0],"bag":["e/e1/En-us-bag.ogg",0,0],"phone":["7/7d/En-us-phone.ogg",0,0],"key":["a/aa/En-us-key.ogg",0,0],"umbrella":["8/8a/En-us-umbrella.ogg",0,0],"computer":["a/a1/En-us-computer.ogg",0,0],"window":["1/16/En-us-window.ogg",0,0],"door":["8/82/En-us-door.ogg",0,0],"bottle":["a/ad/En-us-bottle.ogg",0,0],"box":["9/95/En-us-box.ogg",0,0],"watch":["0/05/En-us-watch.ogg",0,0],"cup":["5/57/En-us-cup.ogg",0,0],"glass":["5/5f/En-us-glass.ogg",0,0],"picture":["d/db/En-us-picture.ogg",0,0],"clock":["9/97/En-us-clock.ogg",0,0],"wallet":["3/38/En-au-wallet.ogg",5,4],"glasses":["0/01/En-uk-glasses.ogg",1,1],"lamp":["2/20/En-us-lamp.ogg",0,0],"pencil":["f/f9/En-us-pencil.ogg",0,0],"family":["6/61/En-us-family.ogg",0,0],"father":["b/b0/En-us-father.ogg",0,0],"mother":["0/07/En-us-mother.ogg",0,0],"parents":["c/c3/En-us-parents.ogg",0,0],"brother":["b/b6/En-us-brother.ogg",0,0],"sister":["4/47/En-us-sister.ogg",0,0],"son":["6/68/En-us-son.ogg",0,0],"daughter":["2/22/En-us-daughter.ogg",0,0],"husband":["4/4b/En-us-husband.ogg",0,0],"wife":["7/7a/En-us-wife.ogg",0,0],"children":["9/92/En-us-children.ogg",0,0],"uncle":["4/44/En-us-uncle.ogg",0,0],"aunt":["5/5c/En-us-aunt.ogg",0,0],"cousin":["1/13/En-us-cousin.ogg",0,0],"baby":["d/de/En-us-baby.ogg",0,0],"grandfather":["9/9a/En-us-grandfather.ogg",0,0],"grandmother":["a/a3/En-us-grandmother.ogg",0,0],"twins":["e/ea/En-au-twins.ogg",5,4],"red":["c/c9/En-us-red.ogg",0,0],"blue":["8/85/En-us-blue.ogg",0,0],"green":["c/c0/En-us-green.ogg",0,0],"yellow":["8/8b/En-us-yellow.ogg",0,0],"black":["6/6d/En-uk-black.ogg",7,2],"white":["4/4e/En-us-white.ogg",0,0],"big":["9/96/En-us-big.ogg",0,0],"small":["b/b5/En-us-small.ogg",0,0],"tall":["d/d1/En-us-tall.ogg",0,0],"short":["7/7d/En-us-short.ogg",0,0],"new":["3/34/En-us-new.ogg",0,0],"beautiful":["e/ea/En-us-beautiful.ogg",0,0],"pink":["2/25/En-uk-pink.ogg",7,2],"brown":["2/29/En-us-brown.ogg",0,0],"orange":["3/30/En-uk-orange.ogg",1,1],"gray":["c/ca/En-us-gray.ogg",0,0],"long":["f/f8/En-us-long.ogg",7,2],"old":["b/be/En-us-old.ogg",0,0],"young":["6/69/En-us-young.ogg",0,0],"cute":["7/73/En-us-cute.ogg",0,0],"go to work":["f/f5/En-au-go_to_work.ogg",5,4],"start":["2/2e/En-us-start.ogg",0,0],"finish":["0/05/En-us-finish.ogg",0,0],"cook":["6/63/En-us-cook.ogg",0,0],"read":["5/50/En-us-read.ogg",0,2],"exercise":["2/29/En-us-exercise.ogg",0,0],"early":["d/da/En-us-early.ogg",0,0],"late":["b/b2/En-us-late.ogg",0,0],"office":["7/74/En-us-office.ogg",0,2],"factory":["8/8b/En-uk-factory.ogg",1,1],"hospital":["2/24/En-us-hospital.ogg",0,0],"school":["d/d4/En-uk-school.ogg",1,1],"boss":["d/d4/En-us-boss.ogg",0,0],"colleague":["9/98/En-us-colleague.ogg",9,0],"meeting":["1/1f/En-us-meeting.ogg",0,0],"salary":["8/89/En-us-salary.ogg",0,0],"busy":["b/b4/En-us-busy.ogg",0,0],"drive":["4/4b/En-us-drive.ogg",0,0],"help":["b/b7/En-us-help.ogg",0,0],"teach":["4/41/En-us-teach.ogg",0,0],"manager":["6/6c/En-us-manager.ogg",0,0],"staff":["7/7a/En-us-staff.ogg",0,0],"email":["f/fa/En-us-email.ogg",0,0],"report":["a/af/En-us-report.ogg",0,0],"earn":["3/30/En-us-earn.ogg",0,0],"Monday":["6/63/En-us-Monday.ogg",0,0],"Tuesday":["d/dc/En-us-Tuesday.ogg",0,0],"Wednesday":["1/16/En-us-Wednesday.ogg",0,0],"Thursday":["c/cc/En-us-Thursday.ogg",0,0],"Friday":["7/75/En-us-Friday.ogg",0,0],"Saturday":["2/2a/En-us-Saturday.ogg",0,0],"Sunday":["3/3e/En-us-Sunday.ogg",0,0],"o'clock":["f/f8/En-us-o%27clock.ogg",0,0],"always":["7/73/En-us-always.ogg",0,0],"usually":["9/92/En-us-usually.ogg",0,0],"sometimes":["c/c0/En-us-sometimes.ogg",0,0],"never":["6/6e/En-us-never.ogg",0,0],"morning":["9/9b/En-us-morning.ogg",0,0],"afternoon":["2/27/En-us-afternoon.ogg",0,0],"evening":["a/a4/En-uk-evening.ogg",1,1],"week":["c/cf/En-us-week.ogg",0,0],"month":["a/a4/En-us-month.ogg",0,0],"January":["8/8c/En-us-January.ogg",0,0],"December":["9/92/En-us-December.ogg",0,0],"quarter past":["d/da/En-au-quarter_past.ogg",5,4],"rice":["f/f9/En-us-rice.ogg",0,0],"noodles":["4/4b/En-us-noodles.ogg",0,2],"chicken":["6/6a/En-us-chicken.ogg",0,0],"beef":["e/e1/En-uk-beef.ogg",1,1],"fish":["3/3e/En-us-fish.ogg",7,2],"egg":["8/88/En-us-egg.ogg",0,0],"bread":["d/dc/En-us-bread.ogg",0,0],"water":["b/bd/En-us-water.ogg",0,0],"coffee":["e/e3/En-us-coffee.ogg",0,0],"tea":["1/12/En-us-tea.ogg",0,0],"menu":["f/fd/En-us-menu.ogg",0,0],"bill":["f/f9/En-us-bill.ogg",0,0],"delicious":["1/13/En-us-delicious.ogg",0,0],"pork":["c/ce/En-us-pork.ogg",0,0],"vegetables":["6/6c/En-us-vegetables.ogg",9,0],"fruit":["6/6d/En-us-fruit.ogg",0,0],"juice":["0/0f/En-us-juice.ogg",10,2],"milk":["6/64/En-us-milk.ogg",0,0],"sugar":["6/6d/En-us-sugar.ogg",0,0],"salt":["b/b5/En-us-salt.ogg",0,0],"shop":["b/ba/En-us-shop.ogg",0,0],"buy":["c/cf/En-us-buy.ogg",0,0],"sell":["c/c4/En-us-sell.ogg",0,0],"price":["0/04/En-us-price.ogg",0,0],"cheap":["1/1d/En-uk-cheap.ogg",1,1],"expensive":["c/ce/En-us-expensive.ogg",0,0],"size":["e/e3/En-us-size.ogg",0,0],"shirt":["c/c7/En-us-shirt.ogg",0,0],"shoes":["2/2b/En-us-shoes.ogg",0,0],"dress":["e/ea/En-us-dress.ogg",0,0],"money":["d/d0/En-us-money.ogg",0,0],"pay":["c/c4/En-us-pay.ogg",0,0],"try on":["7/7c/En-au-try_on.ogg",5,4],"pants":["e/e7/En-us-pants.ogg",0,0],"jacket":["b/bf/En-us-jacket.ogg",0,0],"hat":["8/8b/En-us-hat.ogg",0,0],"discount":["1/11/En-us-discount.ogg",0,0],"cash":["7/70/En-us-cash.ogg",9,0],"large":["e/ef/En-us-large.ogg",0,0],"medium":["d/de/En-us-medium.ogg",0,0],"house":["d/d1/En-uk-house.ogg",1,1],"apartment":["5/51/En-us-apartment.ogg",0,0],"room":["6/67/En-us-room.ogg",0,0],"bedroom":["2/29/En-us-bedroom.ogg",0,0],"kitchen":["e/e9/En-us-kitchen.ogg",6,0],"bathroom":["1/12/En-us-bathroom.ogg",0,0],"bed":["1/14/En-us-bed.ogg",0,0],"sofa":["2/22/En-us-sofa.ogg",0,0],"fridge":["5/5c/En-uk-fridge.ogg",1,1],"garden":["3/37/En-us-garden.ogg",0,0],"floor":["3/39/En-us-floor.ogg",0,0],"stairs":["0/08/En-us-stairs.ogg",0,0],"balcony":["e/e0/En-us-balcony.ogg",0,0],"wardrobe":["b/b8/En-us-wardrobe.ogg",9,0],"shower":["4/49/En-au-shower.ogg",5,4],"mirror":["f/f4/En-us-mirror.ogg",0,0],"carpet":["8/87/En-us-carpet.ogg",0,0],"swim":["1/16/En-us-swim.ogg",0,0],"sing":["3/36/En-us-sing.ogg",0,0],"dance":["a/a6/En-us-dance.ogg",0,0],"speak":["0/0d/En-us-speak.ogg",0,2],"travel":["2/2f/En-us-travel.ogg",0,0],"play games":["8/87/En-au-play_games.ogg",5,4],"well":["2/23/En-us-well.ogg",0,0],"draw":["d/d0/En-us-draw.ogg",0,0],"climb":["e/ea/En-us-climb.ogg",0,0],"jog":["f/f6/En-us-jog.ogg",11,3],"love":["1/13/En-us-love.ogg",0,0],"hate":["a/aa/En-us-hate.ogg",0,0],"now":["9/9e/En-us-now.ogg",0,0],"talk":["6/6f/En-us-talk.ogg",0,0],"wait":["c/c6/En-us-wait.ogg",0,0],"eat":["4/4a/En-us-eat.ogg",0,0],"drink":["3/35/En-us-drink.ogg",0,0],"write":["1/1d/En-us-write.ogg",0,0],"run":["a/a9/En-us-run.ogg",0,0],"sleep":["0/0b/En-us-sleep.ogg",0,0],"study":["a/a1/En-us-study.ogg",0,0],"call":["a/a1/En-us-call.ogg",0,0],"rain":["9/95/En-us-rain.ogg",0,0],"cry":["0/02/En-us-cry.ogg",0,0],"laugh":["a/a8/En-us-laugh.ogg",0,2],"sit":["4/40/En-us-sit.ogg",0,0],"stand":["9/9d/En-us-stand.ogg",0,0],"wear":["e/e8/En-us-wear.ogg",0,0],"smile":["9/9f/En-us-smile.ogg",0,0],"street":["6/6e/En-us-street.ogg",0,0],"bank":["4/4d/En-us-bank.ogg",0,0],"supermarket":["a/ab/En-uk-supermarket.ogg",12,4],"go straight":["0/03/En-au-go_straight.ogg",5,4],"opposite":["6/6e/En-us-opposite.ogg",0,0],"between":["2/22/En-us-between.ogg",0,0],"behind":["d/d9/En-us-behind.ogg",0,0],"in front of":["7/71/En-uk-in_front_of.ogg",1,1],"corner":["5/51/En-us-corner.ogg",0,0],"bridge":["8/8f/En-us-bridge.ogg",0,0],"market":["f/fe/En-us-market.ogg",0,0],"hotel":["f/f6/En-us-hotel.ogg",0,0],"pharmacy":["2/21/En-us-pharmacy.ogg",0,0],"map":["e/e0/En-us-map.ogg",0,0],"far":["e/ef/En-us-far.ogg",0,0],"yesterday":["4/43/En-us-yesterday.ogg",0,0],"ago":["9/9a/En-us-ago.ogg",0,0],"at home":["d/d2/En-au-at_home.ogg",5,4],"at work":["9/9d/En-us-at_work.ogg",4,3],"tired":["9/92/En-us-tired.ogg",0,0],"happy":["6/6d/En-us-happy.ogg",0,0],"sad":["5/51/En-us-sad.ogg",0,0],"hungry":["d/dd/En-us-hungry.ogg",0,0],"weekend":["1/16/En-us-weekend.ogg",0,0],"party":["e/e3/En-us-party.ogg",0,0],"born":["6/6f/En-us-born.ogg",0,0],"sick":["2/28/En-us-sick.ogg",0,0],"angry":["7/7e/En-us-angry.ogg",0,0],"excited":["b/bf/En-us-excited.ogg",0,0],"visit":["a/ac/En-us-visit.ogg",0,0],"clean":["2/2c/En-us-clean.ogg",0,0],"stay":["0/0a/En-us-stay.ogg",0,0],"walk":["b/bb/En-us-walk.ogg",0,0],"wash":["a/a7/En-us-wash.ogg",0,0],"open":["6/67/En-us-open.ogg",2,0],"close":["a/ab/En-us-close-verb.ogg",0,0],"arrive":["e/e5/En-us-arrive.ogg",0,0],"ask":["f/f6/En-us-ask.ogg",0,0],"want":["4/4d/En-us-want.ogg",0,0],"need":["5/57/En-us-need.ogg",0,0],"rent":["6/60/En-us-rent.ogg",0,0],"borrow":["d/da/En-us-borrow.ogg",0,0],"invite":["e/ec/En-us-invite.ogg",13,0],"enjoy":["8/84/En-us-enjoy.ogg",0,0],"check":["f/ff/En-us-check.ogg",0,0],"order":["f/fd/En-us-order.ogg",0,0],"relax":["d/d9/En-us-relax.ogg",0,0],"stop":["4/43/En-us-stop.ogg",0,0],"go":["0/0a/En-us-go.ogg",0,0],"went":["8/8a/En-us-went.ogg",0,0],"have":["b/be/En-us-have.ogg",0,0],"had":["6/68/En-us-had.ogg",0,0],"see":["a/a2/En-us-see.ogg",0,0],"saw":["3/3e/En-us-saw.ogg",0,0],"ate":["a/af/En-us-ate.ogg",0,0],"bought":["d/dd/En-us-bought.ogg",0,0],"take":["9/9b/En-us-take.ogg",0,0],"took":["5/5b/En-us-took.ogg",7,2],"get":["2/2f/En-us-get.ogg",0,0],"got":["0/07/En-us-got.ogg",0,0],"make":["0/03/En-us-make.ogg",0,0],"made":["5/57/En-us-made.ogg",0,0],"come":["d/d9/En-us-come.ogg",0,0],"came":["7/7d/En-us-came.ogg",0,0],"meet":["a/a8/En-us-meet.ogg",0,0],"met":["f/f9/En-us-met.ogg",0,0],"trip":["5/53/En-us-trip.ogg",0,0],"beach":["d/dc/En-us-beach.ogg",0,0],"wrote":["3/3b/En-us-wrote.ogg",0,0],"drank":["8/80/En-us-drank.ogg",0,0],"slept":["7/7c/En-us-slept.ogg",0,0],"swam":["2/29/En-us-swam.ogg",14,4],"give":["6/69/En-us-give.ogg",7,2],"gave":["b/bb/En-us-gave.ogg",0,0],"leave":["8/8d/En-us-leave.ogg",0,0],"left":["f/fb/En-us-left.ogg",0,0],"fly":["5/5b/En-us-fly.ogg",0,2],"flew":["f/f2/En-us-flew.ogg",0,0],"tomorrow":["c/ca/En-us-tomorrow.ogg",0,0],"tonight":["a/aa/En-us-tonight.ogg",0,0],"plan":["5/5a/En-us-plan.ogg",0,0],"holiday":["7/79/En-us-holiday.ogg",9,0],"learn":["5/54/En-us-learn.ogg",0,0],"move":["9/9d/En-us-move.ogg",0,0],"maybe":["4/4d/En-us-maybe.ogg",0,0],"soon":["f/f9/En-us-soon.ogg",0,0],"promise":["1/1e/En-us-promise.ogg",0,0],"hope":["3/30/En-us-hope.ogg",0,0],"course":["0/09/En-us-course.ogg",0,0],"weather":["8/8a/En-us-weather.ogg",0,0],"hot":["2/28/En-us-hot.ogg",0,0],"cold":["b/bf/En-us-cold.ogg",0,0],"warm":["3/36/En-us-warm.ogg",0,0],"sunny":["c/c6/En-us-sunny.ogg",0,0],"windy":["6/64/En-au-windy.ogg",5,4],"summer":["8/8a/En-us-summer.ogg",0,0],"winter":["d/d4/En-us-winter.ogg",0,0],"good":["2/28/En-us-good.ogg",7,2],"better":["4/45/En-us-better.ogg",0,0],"bad":["f/f2/En-us-bad.ogg",0,0],"worse":["8/83/En-us-worse.ogg",0,0],"spring":["0/07/En-us-spring.ogg",0,2],"autumn":["1/1a/En-us-autumn.ogg",7,2],"cloudy":["3/3a/En-us-cloudy.ogg",14,4],"storm":["0/09/En-us-storm.ogg",0,0],"temperature":["d/d3/En-us-temperature.ogg",0,0],"degree":["c/c2/En-us-degree.ogg",0,0],"high":["7/7e/En-us-high.ogg",0,0],"fourteen":["8/8d/En-us-fourteen.ogg",2,0],"forty":["3/39/En-us-forty.ogg",2,0],"eighteen":["f/f1/En-us-eighteen.ogg",2,0],"eighty":["6/62/En-us-eighty.ogg",2,0],"night":["4/46/En-us-night.ogg",0,0],"not":["f/f9/En-us-not.ogg",0,0],"right":["6/6b/En-us-right.ogg",0,0],"age":["b/b0/En-us-age.ogg",0,0],"books":["4/41/En-us-books.ogg",0,0],"bags":["1/1b/En-us-bags.ogg",9,0],"boxes":["2/2d/En-us-boxes.ogg",15,0],"this":["f/f8/En-us-this.ogg",7,2],"that":["e/e8/En-us-that.ogg",0,0],"they":["4/41/En-us-they.ogg",0,0],"play":["8/8e/En-us-play.ogg",0,0],"it":["0/06/En-us-it.ogg",0,0],"works":["2/24/En-us-works.ogg",0,0],"goes":["0/02/En-us-goes.ogg",0,0],"thank":["1/14/En-us-thank.ogg",0,0],"she":["b/b3/En-us-she.ogg",0,0],"men":["7/7c/En-us-men.ogg",0,0],"eating":["a/a7/En-us-eating.ogg",0,0],"running":["e/e4/En-us-running.ogg",0,0],"sleeping":["8/8a/En-us-sleeping.ogg",0,0],"waiting":["7/76/En-us-waiting.ogg",0,0],"road":["6/6e/En-us-road.ogg",0,0],"light":["c/cf/En-us-light.ogg",0,0],"walked":["d/d9/En-us-walked.ogg",0,0],"asked":["8/87/En-us-asked.ogg",0,0],"washed":["9/9e/En-us-washed.ogg",0,0],"played":["7/76/En-us-played.ogg",0,0],"cleaned":["8/8e/En-us-cleaned.ogg",9,0],"wanted":["7/7f/En-us-wanted.ogg",0,0],"needed":["c/cd/En-us-needed.ogg",0,0],"visited":["e/e3/En-us-visited.ogg",0,0],"taught":["c/c3/En-us-taught.ogg",0,0],"caught":["6/69/En-us-caught.ogg",0,0],"I'll":["8/81/En-us-I%27ll.ogg",0,0],"you'll":["c/c7/En-us-you%27ll.ogg",0,0],"she'll":["7/75/En-us-she%27ll.ogg",0,0],"we'll":["7/7e/En-us-we%27ll.ogg",0,0],"won't":["9/9b/En-us-won%27t.ogg",0,0],"girl":["f/f3/En-us-girl.ogg",0,0],"first":["9/9e/En-us-first.ogg",0,0],"name:Ben":["5/5d/En-au-Ben.ogg",5,4],"name:Lucy":["6/60/En-us-Lucy.ogg",0,0],"name:Jack":["d/d3/En-us-jack.ogg",0,0],"name:Tom":["b/b8/En-us-tom.ogg",0,0],"name:Lily":["d/d9/En-us-lily.ogg",9,0],"name:Sam":["f/f9/En-us-Sam.ogg",0,0],"name:Grace":["5/58/En-us-grace.ogg",0,0],"name:Henry":["d/df/En-us-henry.ogg",0,0],"name:Peter":["e/e2/En-us-Peter.ogg",9,0],"name:Zoe":["4/4a/En-uk-Zoe.ogg",16,2],"name:Max":["a/a9/En-us-max.ogg",0,0],"name:Rose":["1/15/En-uk-rose.ogg",17,2],"name:David":["b/bc/En-us-David.ogg",0,0],"name:Leo":["0/00/En-us-Leo.ogg",7,0],"name:Oliver":["b/b4/En-us-oliver.ogg",9,0],"name:Frank":["1/1d/En-us-frank.ogg",0,0],"name:Victor":["7/7f/En-us-victor.ogg",0,0],"name:Wendy":["6/63/En-au-wendy.ogg",5,4],"letter:A":["5/52/En-us-a.ogg",18,2],"A":["5/52/En-us-a.ogg",18,2],"letter:B":["d/d1/LL-Q1860_%28eng%29-Flame%2C_not_lame-B.wav",19,3],"letter:C":["1/1d/En-uk-c.ogg",20,0],"letter:D":["b/b9/En-uk-d.ogg",20,0],"letter:E":["1/18/En-us-e.ogg",20,0],"E":["1/18/En-us-e.ogg",20,0],"letter:F":["6/64/En-uk-f.ogg",20,0],"letter:G":["8/81/En-uk-g.ogg",20,0],"G":["8/81/En-uk-g.ogg",20,0],"letter:H":["0/07/En-uk-h.ogg",20,0],"letter:I":["9/9f/En-us-I.ogg",7,2],"I":["9/9f/En-us-I.ogg",7,2],"letter:J":["8/8f/LL-Q1860_%28eng%29-Flame%2C_not_lame-J.wav",19,3],"J":["8/8f/LL-Q1860_%28eng%29-Flame%2C_not_lame-J.wav",19,3],"letter:K":["8/8d/En-us-k.ogg",9,0],"letter:L":["9/95/En-us-L.ogg",21,0],"letter:M":["3/3b/En-uk-m.ogg",20,0],"letter:N":["7/71/En-us-n.ogg",0,0],"letter:O":["7/7d/En-us-o.ogg",21,0],"letter:P":["7/79/En-us-p.ogg",0,0],"letter:Q":["6/6f/En-us-q.ogg",21,0],"letter:R":["7/75/En-us-r.ogg",20,0],"R":["7/75/En-us-r.ogg",20,0],"letter:S":["8/85/En-us-S-letter.ogg",14,4],"letter:T":["8/8d/En-us-t.ogg",21,0],"letter:U":["9/9d/En-us-u.ogg",21,0],"letter:V":["3/3a/En-us-v.ogg",21,0],"letter:W":["b/ba/En-au-W.ogg",5,4],"W":["b/ba/En-au-W.ogg",5,4],"letter:X":["b/bd/En-us-X.ogg",14,4],"letter:Y":["d/dd/En-us-y.ogg",21,0],"Y":["d/dd/En-us-y.ogg",21,0],"letter:Z":["0/0f/En-us-z.ogg",0,0],"sixteen":["4/43/En-us-sixteen.ogg",2,0],"sixty":["5/54/En-us-sixty.ogg",2,0],"grey":["a/af/En-us-grey.ogg",0,0],"me":["c/ca/En-us-me.ogg",0,0],"jet":["9/9b/En-au-jet.ogg",5,4],"yet":["b/b8/En-us-yet.ogg",0,0],"jam":["d/dc/En-us-jam.ogg",0,0],"yam":["a/a6/En-us-yam.ogg",14,4],"day":["5/58/En-us-day.ogg",0,0],"then":["a/a5/En-us-then.ogg",0,0],"den":["0/09/En-us-den.ogg",9,0],"there":["1/1a/En-us-there.ogg",0,0],"dare":["9/9c/En-us-dare.ogg",0,0],"back":["e/ec/En-us-back.ogg",0,0],"gas":["a/ad/En-us-gas.ogg",7,0],"sheep":["8/82/En-us-sheep.ogg",0,0],"ship":["a/a9/En-us-ship.ogg",0,0],"seat":["2/21/En-us-seat.ogg",0,0],"tree":["d/d2/En-us-tree.ogg",0,0],"tank":["6/6e/En-au-tank.ogg",5,4],"thin":["5/5d/En-us-thin.ogg",7,2],"tin":["9/95/En-us-tin.ogg",0,0],"shoe":["4/44/En-us-shoe.ogg",0,0],"sue":["8/86/En-us-sue.ogg",9,0],"man":["4/45/En-us-man.ogg",0,0],"pan":["c/cf/En-us-pan.ogg",0,0],"sin":["2/2f/En-us-sin.ogg",7,2],"thing":["b/b1/En-us-thing.ogg",7,2],"rang":["f/f6/En-us-rang.ogg",0,0],"ran":["c/c1/En-us-ran.ogg",0,0],"rock":["2/25/En-us-rock.ogg",0,0],"lock":["7/73/En-us-lock.ogg",0,0],"bat":["b/bb/En-us-bat.ogg",0,0],"sat":["d/d6/En-us-sat.ogg",0,0],"bet":["9/98/En-us-bet.ogg",0,0],"so":["3/3b/En-us-so.ogg",0,0],"boat":["c/cb/En-us-boat.ogg",0,0],"coat":["0/07/En-us-coat.ogg",0,0],"word":["b/bf/En-us-word.ogg",0,0],"ward":["3/30/En-us-ward.ogg",0,0],"How many":["3/39/En-uk-how_many.ogg",1,1],"people":["9/93/En-us-people.ogg",0,0],"him":["2/23/En-us-him.ogg",0,0],"us":["0/0c/En-us-us.ogg",0,0],"them":["2/25/En-us-them.ogg",0,0],"February":["9/92/En-us-February.ogg",0,0],"March":["6/6a/En-us-March.ogg",0,0],"April":["3/35/En-us-April.ogg",0,0],"May":["5/54/En-us-May.ogg",0,0],"June":["9/97/En-us-June.ogg",0,0],"July":["a/a1/En-us-July.ogg",0,0],"August":["0/0d/En-us-August.ogg",0,0],"September":["5/5b/En-us-September.ogg",0,0],"October":["2/26/En-us-October.ogg",0,0],"November":["4/4f/En-us-November.ogg",0,0],"second":["e/eb/En-us-second.ogg",0,0],"third":["4/4e/En-us-third.ogg",0,0],"fourth":["c/cc/En-us-fourth.ogg",0,2],"fifth":["8/80/En-us-fifth.ogg",0,2],"twelfth":["b/bc/En-us-twelfth.ogg",0,0],"twentieth":["2/2b/En-us-twentieth.ogg",0,0],"date":["4/4a/En-us-date.ogg",0,0],"lesson":["3/3e/En-us-lesson.ogg",0,0],"page":["e/eb/En-us-page.ogg",0,0],"example":["7/77/En-us-example.ogg",0,2],"mistake":["5/51/En-us-mistake.ogg",0,0],"easy":["0/07/En-us-easy.ogg",0,0],"difficult":["e/e8/En-us-difficult.ogg",0,0],"seventeen":["b/b1/En-us-seventeen.ogg",2,0],"seventy":["3/3e/En-us-seventy.ogg",2,0],"million":["a/a5/En-us-million.ogg",2,0],"person":["2/2c/En-us-person.ogg",0,0],"bye":["7/77/En-us-bye.ogg",0,0],"woman":["4/4d/En-us-woman.ogg",0,0],"boy":["7/7f/En-us-boy.ogg",0,0],"friendly":["2/2c/En-us-friendly.ogg",0,0],"really":["5/5e/En-us-really.ogg",0,0],"also":["9/97/En-us-also.ogg",0,0],"actor":["4/4b/En-us-actor.ogg",0,0],"singer":["b/b5/En-us-singer.ogg",0,0],"waiter":["2/27/En-us-waiter.ogg",0,0],"artist":["1/18/En-us-artist.ogg",0,0],"writer":["7/75/En-us-writer.ogg",0,0],"language":["3/3a/En-us-language.ogg",0,0],"know":["a/ad/En-us-know.ogg",0,2],"tell":["a/a9/En-us-tell.ogg",0,0],"information":["3/38/En-us-information.ogg",0,0],"favorite":["0/0e/En-us-favorite.ogg",0,0],"same":["6/64/En-us-same.ogg",0,0],"different":["4/46/En-us-different.ogg",0,0],"desk":["f/f1/En-us-desk.ogg",0,0],"paper":["3/33/En-us-paper.ogg",0,0],"dictionary":["c/cf/En-us-dictionary.ogg",0,2],"put":["e/e5/En-us-put.ogg",0,0],"find":["4/48/En-us-find.ogg",0,0],"bring":["a/ad/En-us-bring.ogg",0,0],"dad":["5/56/En-us-dad.ogg",0,0],"mom":["8/81/En-us-mom.ogg",0,0],"face":["7/73/En-us-face.ogg",0,0],"eye":["6/6f/En-us-eye.ogg",8,2],"hand":["d/d2/En-us-hand.ogg",0,0],"leg":["6/62/En-us-leg.ogg",0,0],"head":["5/5c/En-us-head.ogg",0,0],"dark":["2/24/En-us-dark.ogg",0,0],"purple":["b/bb/En-us-purple.ogg",0,0],"often":["e/e6/En-us-often.ogg",0,0],"before":["8/8e/En-us-before.ogg",0,2],"after":["1/1c/En-us-after.ogg",0,0],"ready":["4/41/En-us-ready.ogg",0,0],"quickly":["7/7b/En-us-quickly.ogg",0,0],"send":["8/8f/En-us-send.ogg",0,0],"message":["8/80/En-us-message.ogg",0,0],"problem":["e/ee/En-us-problem.ogg",0,0],"important":["9/9e/En-us-important.ogg",0,0],"hard":["7/78/En-us-hard.ogg",0,0],"meat":["2/2b/En-us-meat.ogg",0,0],"cheese":["b/bc/En-us-cheese.ogg",0,0],"cake":["8/89/En-us-cake.ogg",0,0],"potato":["7/77/En-us-potato.ogg",0,0],"tomato":["7/78/En-us-tomato.ogg",0,0],"clothes":["a/a1/En-us-clothes.ogg",0,0],"skirt":["b/bb/En-us-skirt.ogg",0,0],"dollar":["3/3e/En-us-dollar.ogg",0,0],"cost":["1/13/En-us-cost.ogg",0,0],"wall":["a/ac/En-us-wall.ogg",0,0],"toilet":["d/d5/En-us-toilet.ogg",0,0],"upstairs":["b/b3/En-us-upstairs.ogg",0,2],"downstairs":["0/00/En-us-downstairs.ogg",13,0],"quiet":["f/fe/En-us-quiet.ogg",0,0],"dirty":["f/fe/En-us-dirty.ogg",0,0],"sport":["9/9c/En-us-sport.ogg",0,0],"movie":["4/4e/En-us-movie.ogg",0,0],"song":["f/f1/En-us-song.ogg",0,0],"interesting":["2/2e/En-us-interesting.ogg",0,0],"boring":["b/ba/En-us-boring.ogg",0,0],"hear":["b/be/En-us-hear.ogg",0,0],"something":["1/13/En-us-something.ogg",0,0],"everything":["5/56/En-us-everything.ogg",0,0],"nothing":["b/b5/En-us-nothing.ogg",0,0],"together":["3/32/En-us-together.ogg",0,0],"train":["f/f0/En-us-train.ogg",0,0],"taxi":["6/6d/En-us-taxi.ogg",0,0],"plane":["e/e8/En-us-plane.ogg",0,0],"airport":["1/17/En-us-airport.ogg",0,0],"ticket":["6/6c/En-us-ticket.ogg",0,0],"park":["8/82/En-us-park.ogg",0,0],"museum":["7/77/En-us-museum.ogg",0,0],"cinema":["1/1d/En-us-cinema.ogg",0,0],"remember":["0/05/En-us-remember.ogg",0,0],"forget":["8/81/En-us-forget.ogg",0,0],"wonderful":["e/e2/En-us-wonderful.ogg",0,0],"terrible":["7/71/En-us-terrible.ogg",0,0],"passport":["6/61/En-us-passport.ogg",0,0],"flight":["5/54/En-us-flight.ogg",0,0],"river":["e/e2/En-us-river.ogg",0,0],"spend":["b/bc/En-us-spend.ogg",0,0],"amazing":["a/af/En-us-amazing.ogg",0,0],"have to":["3/30/En-us-have_to.ogg",0,0],"must":["9/9c/En-us-must.ogg",0,0],"because":["b/b4/En-us-because.ogg",0,0],"begin":["1/1e/En-us-begin.ogg",0,0],"snow":["d/d8/En-us-snow.ogg",0,0],"sun":["4/4b/En-us-Sun.ogg",0,0],"dangerous":["a/ae/En-us-dangerous.ogg",0,0],"popular":["4/47/En-us-popular.ogg",0,0],"famous":["8/89/En-us-famous.ogg",0,0],"world":["9/94/En-ca-world.ogg",22,0],"Korea":["0/00/LL-Q1860_%28eng%29-Vealhurl-Korea.wav",23,4],"T-shirt":["f/fe/LL-Q1860_%28eng%29-Vealhurl-t-shirt.wav",23,4],"accountant":["1/1a/LL-Q1860_%28eng%29-Arlo_Barnes-accountant.wav",24,3],"bored":["9/91/LL-Q1860_%28eng%29-Grendelkhan-bored.wav",25,3],"bus stop":["5/55/LL-Q1860_%28eng%29-Flame%2C_not_lame-bus_stop.wav",26,3],"cheaper":["3/32/LL-Q1860_%28eng%29-Grendelkhan-cheaper.wav",25,3],"cool":["c/c8/LL-Q1860_%28eng%29-Grendelkhan-cool.wav",25,3],"credit card":["8/83/LL-Q1860_%28eng%29-Vealhurl-credit_card.wav",23,4],"customer":["c/c9/LL-Q1860_%28eng%29-Arlo_Barnes-customer.wav",24,3],"exam":["f/f7/LL-Q1860_%28eng%29-Arlo_Barnes-exam.wav",24,3],"hometown":["6/61/LL-Q1860_%28eng%29-Vealhurl-hometown.wav",23,4],"jeans":["8/85/LL-Q1860_%28eng%29-Wodencafe-jeans.wav",27,3],"neighbor":["5/56/LL-Q1860_%28eng%29-Grendelkhan-neighbor.wav",25,3],"next to":["e/e6/LL-Q1860_%28eng%29-Vealhurl-next_to.wav",23,4],"notebook":["6/6a/LL-Q1860_%28eng%29-Vealhurl-notebook.wav",23,4],"one hundred":["2/20/LL-Q1860_%28eng%29-Back_ache-one_hundred.wav",28,4],"overtime":["2/2c/LL-Q1860_%28eng%29-Vealhurl-overtime.wav",23,4],"piano":["d/dc/LL-Q1860_%28eng%29-Grendelkhan-piano.wav",25,3],"rainy":["2/2b/LL-Q1860_%28eng%29-Vealhurl-rainy.wav",23,4],"restaurant":["4/47/LL-Q1860_%28eng%29-Wodencafe-restaurant.wav",27,3],"should":["b/be/LL-Q1860_%28eng%29-Grendelkhan-should.wav",25,3],"souvenir":["0/0f/LL-Q1860_%28eng%29-Vealhurl-souvenir.wav",23,4],"spicy":["7/75/LL-Q1860_%28eng%29-Vealhurl-spicy.wav",23,4],"tennis":["9/9e/LL-Q1860_%28eng%29-Vealhurl-tennis.wav",23,4],"traffic light":["7/78/LL-Q1860_%28eng%29-Vealhurl-traffic_light.wav",23,4]}};
+const HUMAN = {"a":["Dvortygirl","Association Shtooka, Judith Franck","TheDaveRoss","recorded by TheDaveRoss","Steve Shives","Commander Keane","EncycloPetey","Wikimedia Commons","Muke","Neskaya","Dominic","Mx. Granger","TaxRebate","Dvortybot","Sylvanmoon","TreeMama","Xonique","Celestianpower","Xnux","Speaker: Flame, not lame Recorder: Flame","Logictheo","Twocs","Denelson83","Vealhurl (Lingua Libre)","Arlo Barnes (Lingua Libre)","Grendelkhan (Lingua Libre)","Flame, not lame (Lingua Libre)","Wodencafe (Lingua Libre)","Back ache (Lingua Libre)","Gbeebani","DroEsperanto","Rappo","Spacecat2","Neoglitch"],"l":["CC BY-SA 3.0","CC BY 3.0 us","Public domain","CC0","CC BY-SA 4.0"],"m":{"name":["c/ce/En-us-name.ogg",0,0],"spell":["8/84/En-us-spell.ogg",0,0],"letter":["a/a4/En-us-letter.ogg",0,0],"teacher":["7/74/En-us-teacher.ogg",0,0],"student":["9/98/En-us-student.ogg",0,0],"book":["3/3d/En-us-book.ogg",0,0],"pen":["8/86/En-us-pen.ogg",0,0],"yes":["b/b1/En-us-yes.ogg",0,0],"no":["1/19/En-us-no.ogg",0,0],"please":["5/54/En-us-please.ogg",0,0],"thank you":["9/96/En-uk-thank_you.ogg",1,1],"sorry":["4/47/En-us-sorry.ogg",0,0],"classroom":["d/d8/En-uk-classroom.ogg",1,1],"question":["1/1d/En-us-question.ogg",0,0],"answer":["b/bb/En-us-answer.ogg",0,0],"listen":["b/b2/En-us-listen.ogg",0,0],"repeat":["f/fc/En-us-repeat.ogg",0,0],"again":["a/ad/En-us-again.ogg",0,0],"understand":["5/52/En-us-understand.ogg",0,0],"zero":["6/61/En-us-zero.ogg",2,0],"three":["d/d4/En-us-three.ogg",0,0],"five":["c/cf/En-us-five.ogg",0,2],"eight":["1/16/En-us-eight.ogg",3,0],"ten":["4/4c/En-us-ten.ogg",2,0],"twelve":["d/d1/En-us-twelve.ogg",2,0],"thirteen":["0/06/En-us-thirteen.ogg",2,0],"thirty":["6/6f/En-us-thirty.ogg",2,0],"fifteen":["a/a4/En-us-fifteen.ogg",2,0],"fifty":["9/91/En-us-fifty.ogg",2,0],"phone number":["a/af/En-us-phone_number.ogg",4,3],"one":["1/1f/En-us-one.ogg",0,0],"two":["4/47/En-us-two.ogg",0,0],"four":["8/88/En-us-four.ogg",0,2],"six":["e/eb/En-us-six.ogg",2,0],"seven":["7/77/En-us-seven.ogg",0,0],"nine":["9/9b/En-us-nine.ogg",2,0],"twenty":["c/c9/En-us-twenty.ogg",0,0],"ninety":["f/f2/En-us-ninety.ogg",2,0],"hello":["5/52/En-us-hello.ogg",0,2],"hi":["f/f4/En-us-hi.ogg",0,0],"good morning":["e/e8/En-us-good_morning.ogg",0,0],"good afternoon":["7/7d/En-us-good_afternoon.ogg",0,0],"good evening":["f/f0/En-us-good_evening.ogg",0,0],"goodbye":["3/32/En-us-goodbye.ogg",0,0],"see you":["6/6b/En-uk-see_you.ogg",1,1],"fine":["7/7e/En-us-fine.ogg",0,0],"friend":["8/89/En-us-friend.ogg",0,0],"how are you":["0/0a/En-us-how_are_you.ogg",0,0],"nice to meet you":["6/62/En-uk-nice_to_meet_you.ogg",1,1],"great":["f/ff/En-us-great.ogg",0,2],"not bad":["c/c5/En-au-not_bad.ogg",5,4],"everyone":["1/15/En-us-everyone.ogg",0,0],"welcome":["9/96/En-us-welcome.ogg",0,0],"good night":["1/11/En-us-good_night.ogg",0,2],"doctor":["0/0d/En-us-doctor.ogg",0,0],"engineer":["2/20/En-us-engineer.ogg",0,0],"nurse":["8/84/En-us-nurse.ogg",0,0],"driver":["8/81/En-us-driver.ogg",0,0],"Vietnam":["e/e8/En-us-Vietnam.ogg",6,0],"Vietnamese":["8/81/En-us-Vietnamese.ogg",7,2],"Japan":["b/bb/En-us-Japan.ogg",6,0],"Japanese":["0/05/En-us-Japanese.ogg",7,2],"from":["7/70/En-us-from.ogg",0,0],"city":["9/92/En-us-city.ogg",7,2],"worker":["0/00/En-us-worker.ogg",0,0],"farmer":["2/21/En-us-farmer.ogg",0,0],"businessman":["8/82/En-us-businessman.ogg",0,0],"chef":["9/90/En-au-chef.ogg",5,4],"Korean":["3/3f/En-us-Korean.ogg",8,2],"country":["9/9b/En-us-country.ogg",0,0],"what":["a/a3/En-us-what.ogg",0,0],"where":["e/ef/En-us-where.ogg",0,0],"who":["1/10/En-us-who.ogg",0,0],"job":["c/c5/En-us-job.ogg",0,0],"address":["9/99/En-us-address.ogg",0,0],"married":["9/9d/En-us-married.ogg",0,0],"single":["4/4c/En-us-single.ogg",0,0],"near":["2/2a/En-us-near.ogg",0,0],"work":["5/5f/En-us-work.ogg",0,2],"company":["6/6f/En-us-company.ogg",0,0],"how":["2/23/En-us-how.ogg",0,0],"when":["7/7a/En-us-when.ogg",0,0],"why":["6/69/En-us-why.ogg",0,0],"which":["8/83/En-us-which.ogg",0,0],"birthday":["c/c7/En-us-birthday.ogg",0,0],"free":["a/a0/En-us-free.ogg",7,2],"here":["e/e4/En-us-here.ogg",0,0],"table":["0/0b/En-us-table.ogg",0,0],"chair":["8/8b/En-us-chair.ogg",0,0],"bag":["e/e1/En-us-bag.ogg",0,0],"phone":["7/7d/En-us-phone.ogg",0,0],"key":["a/aa/En-us-key.ogg",0,0],"umbrella":["8/8a/En-us-umbrella.ogg",0,0],"computer":["a/a1/En-us-computer.ogg",0,0],"window":["1/16/En-us-window.ogg",0,0],"door":["8/82/En-us-door.ogg",0,0],"bottle":["a/ad/En-us-bottle.ogg",0,0],"box":["9/95/En-us-box.ogg",0,0],"watch":["0/05/En-us-watch.ogg",0,0],"cup":["5/57/En-us-cup.ogg",0,0],"glass":["5/5f/En-us-glass.ogg",0,0],"picture":["d/db/En-us-picture.ogg",0,0],"clock":["9/97/En-us-clock.ogg",0,0],"wallet":["3/38/En-au-wallet.ogg",5,4],"glasses":["0/01/En-uk-glasses.ogg",1,1],"lamp":["2/20/En-us-lamp.ogg",0,0],"pencil":["f/f9/En-us-pencil.ogg",0,0],"family":["6/61/En-us-family.ogg",0,0],"father":["b/b0/En-us-father.ogg",0,0],"mother":["0/07/En-us-mother.ogg",0,0],"parents":["c/c3/En-us-parents.ogg",0,0],"brother":["b/b6/En-us-brother.ogg",0,0],"sister":["4/47/En-us-sister.ogg",0,0],"son":["6/68/En-us-son.ogg",0,0],"daughter":["2/22/En-us-daughter.ogg",0,0],"husband":["4/4b/En-us-husband.ogg",0,0],"wife":["7/7a/En-us-wife.ogg",0,0],"children":["9/92/En-us-children.ogg",0,0],"uncle":["4/44/En-us-uncle.ogg",0,0],"aunt":["5/5c/En-us-aunt.ogg",0,0],"cousin":["1/13/En-us-cousin.ogg",0,0],"baby":["d/de/En-us-baby.ogg",0,0],"grandfather":["9/9a/En-us-grandfather.ogg",0,0],"grandmother":["a/a3/En-us-grandmother.ogg",0,0],"twins":["e/ea/En-au-twins.ogg",5,4],"red":["c/c9/En-us-red.ogg",0,0],"blue":["8/85/En-us-blue.ogg",0,0],"green":["c/c0/En-us-green.ogg",0,0],"yellow":["8/8b/En-us-yellow.ogg",0,0],"black":["6/6d/En-uk-black.ogg",7,2],"white":["4/4e/En-us-white.ogg",0,0],"big":["9/96/En-us-big.ogg",0,0],"small":["b/b5/En-us-small.ogg",0,0],"tall":["d/d1/En-us-tall.ogg",0,0],"short":["7/7d/En-us-short.ogg",0,0],"new":["3/34/En-us-new.ogg",0,0],"beautiful":["e/ea/En-us-beautiful.ogg",0,0],"pink":["2/25/En-uk-pink.ogg",7,2],"brown":["2/29/En-us-brown.ogg",0,0],"orange":["3/30/En-uk-orange.ogg",1,1],"gray":["c/ca/En-us-gray.ogg",0,0],"long":["f/f8/En-us-long.ogg",7,2],"old":["b/be/En-us-old.ogg",0,0],"young":["6/69/En-us-young.ogg",0,0],"cute":["7/73/En-us-cute.ogg",0,0],"go to work":["f/f5/En-au-go_to_work.ogg",5,4],"start":["2/2e/En-us-start.ogg",0,0],"finish":["0/05/En-us-finish.ogg",0,0],"cook":["6/63/En-us-cook.ogg",0,0],"read":["5/50/En-us-read.ogg",0,2],"exercise":["2/29/En-us-exercise.ogg",0,0],"early":["d/da/En-us-early.ogg",0,0],"late":["b/b2/En-us-late.ogg",0,0],"office":["7/74/En-us-office.ogg",0,2],"factory":["8/8b/En-uk-factory.ogg",1,1],"hospital":["2/24/En-us-hospital.ogg",0,0],"school":["d/d4/En-uk-school.ogg",1,1],"boss":["d/d4/En-us-boss.ogg",0,0],"colleague":["9/98/En-us-colleague.ogg",9,0],"meeting":["1/1f/En-us-meeting.ogg",0,0],"salary":["8/89/En-us-salary.ogg",0,0],"busy":["b/b4/En-us-busy.ogg",0,0],"drive":["4/4b/En-us-drive.ogg",0,0],"help":["b/b7/En-us-help.ogg",0,0],"teach":["4/41/En-us-teach.ogg",0,0],"manager":["6/6c/En-us-manager.ogg",0,0],"staff":["7/7a/En-us-staff.ogg",0,0],"email":["f/fa/En-us-email.ogg",0,0],"report":["a/af/En-us-report.ogg",0,0],"earn":["3/30/En-us-earn.ogg",0,0],"Monday":["6/63/En-us-Monday.ogg",0,0],"Tuesday":["d/dc/En-us-Tuesday.ogg",0,0],"Wednesday":["1/16/En-us-Wednesday.ogg",0,0],"Thursday":["c/cc/En-us-Thursday.ogg",0,0],"Friday":["7/75/En-us-Friday.ogg",0,0],"Saturday":["2/2a/En-us-Saturday.ogg",0,0],"Sunday":["3/3e/En-us-Sunday.ogg",0,0],"o'clock":["f/f8/En-us-o%27clock.ogg",0,0],"always":["7/73/En-us-always.ogg",0,0],"usually":["9/92/En-us-usually.ogg",0,0],"sometimes":["c/c0/En-us-sometimes.ogg",0,0],"never":["6/6e/En-us-never.ogg",0,0],"morning":["9/9b/En-us-morning.ogg",0,0],"afternoon":["2/27/En-us-afternoon.ogg",0,0],"evening":["a/a4/En-uk-evening.ogg",1,1],"week":["c/cf/En-us-week.ogg",0,0],"month":["a/a4/En-us-month.ogg",0,0],"January":["8/8c/En-us-January.ogg",0,0],"December":["9/92/En-us-December.ogg",0,0],"quarter past":["d/da/En-au-quarter_past.ogg",5,4],"rice":["f/f9/En-us-rice.ogg",0,0],"noodles":["4/4b/En-us-noodles.ogg",0,2],"chicken":["6/6a/En-us-chicken.ogg",0,0],"beef":["e/e1/En-uk-beef.ogg",1,1],"fish":["3/3e/En-us-fish.ogg",7,2],"egg":["8/88/En-us-egg.ogg",0,0],"bread":["d/dc/En-us-bread.ogg",0,0],"water":["b/bd/En-us-water.ogg",0,0],"coffee":["e/e3/En-us-coffee.ogg",0,0],"tea":["1/12/En-us-tea.ogg",0,0],"menu":["f/fd/En-us-menu.ogg",0,0],"bill":["f/f9/En-us-bill.ogg",0,0],"delicious":["1/13/En-us-delicious.ogg",0,0],"pork":["c/ce/En-us-pork.ogg",0,0],"vegetables":["6/6c/En-us-vegetables.ogg",9,0],"fruit":["6/6d/En-us-fruit.ogg",0,0],"juice":["0/0f/En-us-juice.ogg",10,2],"milk":["6/64/En-us-milk.ogg",0,0],"sugar":["6/6d/En-us-sugar.ogg",0,0],"salt":["b/b5/En-us-salt.ogg",0,0],"shop":["b/ba/En-us-shop.ogg",0,0],"buy":["c/cf/En-us-buy.ogg",0,0],"sell":["c/c4/En-us-sell.ogg",0,0],"price":["0/04/En-us-price.ogg",0,0],"cheap":["1/1d/En-uk-cheap.ogg",1,1],"expensive":["c/ce/En-us-expensive.ogg",0,0],"size":["e/e3/En-us-size.ogg",0,0],"shirt":["c/c7/En-us-shirt.ogg",0,0],"shoes":["2/2b/En-us-shoes.ogg",0,0],"dress":["e/ea/En-us-dress.ogg",0,0],"money":["d/d0/En-us-money.ogg",0,0],"pay":["c/c4/En-us-pay.ogg",0,0],"try on":["7/7c/En-au-try_on.ogg",5,4],"pants":["e/e7/En-us-pants.ogg",0,0],"jacket":["b/bf/En-us-jacket.ogg",0,0],"hat":["8/8b/En-us-hat.ogg",0,0],"discount":["1/11/En-us-discount.ogg",0,0],"cash":["7/70/En-us-cash.ogg",9,0],"large":["e/ef/En-us-large.ogg",0,0],"medium":["d/de/En-us-medium.ogg",0,0],"house":["d/d1/En-uk-house.ogg",1,1],"apartment":["5/51/En-us-apartment.ogg",0,0],"room":["6/67/En-us-room.ogg",0,0],"bedroom":["2/29/En-us-bedroom.ogg",0,0],"kitchen":["e/e9/En-us-kitchen.ogg",6,0],"bathroom":["1/12/En-us-bathroom.ogg",0,0],"bed":["1/14/En-us-bed.ogg",0,0],"sofa":["2/22/En-us-sofa.ogg",0,0],"fridge":["5/5c/En-uk-fridge.ogg",1,1],"garden":["3/37/En-us-garden.ogg",0,0],"floor":["3/39/En-us-floor.ogg",0,0],"stairs":["0/08/En-us-stairs.ogg",0,0],"balcony":["e/e0/En-us-balcony.ogg",0,0],"wardrobe":["b/b8/En-us-wardrobe.ogg",9,0],"shower":["4/49/En-au-shower.ogg",5,4],"mirror":["f/f4/En-us-mirror.ogg",0,0],"carpet":["8/87/En-us-carpet.ogg",0,0],"swim":["1/16/En-us-swim.ogg",0,0],"sing":["3/36/En-us-sing.ogg",0,0],"dance":["a/a6/En-us-dance.ogg",0,0],"speak":["0/0d/En-us-speak.ogg",0,2],"travel":["2/2f/En-us-travel.ogg",0,0],"play games":["8/87/En-au-play_games.ogg",5,4],"well":["2/23/En-us-well.ogg",0,0],"draw":["d/d0/En-us-draw.ogg",0,0],"climb":["e/ea/En-us-climb.ogg",0,0],"jog":["f/f6/En-us-jog.ogg",11,3],"love":["1/13/En-us-love.ogg",0,0],"hate":["a/aa/En-us-hate.ogg",0,0],"now":["9/9e/En-us-now.ogg",0,0],"talk":["6/6f/En-us-talk.ogg",0,0],"wait":["c/c6/En-us-wait.ogg",0,0],"eat":["4/4a/En-us-eat.ogg",0,0],"drink":["3/35/En-us-drink.ogg",0,0],"write":["1/1d/En-us-write.ogg",0,0],"run":["a/a9/En-us-run.ogg",0,0],"sleep":["0/0b/En-us-sleep.ogg",0,0],"study":["a/a1/En-us-study.ogg",0,0],"call":["a/a1/En-us-call.ogg",0,0],"rain":["9/95/En-us-rain.ogg",0,0],"cry":["0/02/En-us-cry.ogg",0,0],"laugh":["a/a8/En-us-laugh.ogg",0,2],"sit":["4/40/En-us-sit.ogg",0,0],"stand":["9/9d/En-us-stand.ogg",0,0],"wear":["e/e8/En-us-wear.ogg",0,0],"smile":["9/9f/En-us-smile.ogg",0,0],"street":["6/6e/En-us-street.ogg",0,0],"bank":["4/4d/En-us-bank.ogg",0,0],"supermarket":["a/ab/En-uk-supermarket.ogg",12,4],"go straight":["0/03/En-au-go_straight.ogg",5,4],"opposite":["6/6e/En-us-opposite.ogg",0,0],"between":["2/22/En-us-between.ogg",0,0],"behind":["d/d9/En-us-behind.ogg",0,0],"in front of":["7/71/En-uk-in_front_of.ogg",1,1],"corner":["5/51/En-us-corner.ogg",0,0],"bridge":["8/8f/En-us-bridge.ogg",0,0],"market":["f/fe/En-us-market.ogg",0,0],"hotel":["f/f6/En-us-hotel.ogg",0,0],"pharmacy":["2/21/En-us-pharmacy.ogg",0,0],"map":["e/e0/En-us-map.ogg",0,0],"far":["e/ef/En-us-far.ogg",0,0],"yesterday":["4/43/En-us-yesterday.ogg",0,0],"ago":["9/9a/En-us-ago.ogg",0,0],"at home":["d/d2/En-au-at_home.ogg",5,4],"at work":["9/9d/En-us-at_work.ogg",4,3],"tired":["9/92/En-us-tired.ogg",0,0],"happy":["6/6d/En-us-happy.ogg",0,0],"sad":["5/51/En-us-sad.ogg",0,0],"hungry":["d/dd/En-us-hungry.ogg",0,0],"weekend":["1/16/En-us-weekend.ogg",0,0],"party":["e/e3/En-us-party.ogg",0,0],"born":["6/6f/En-us-born.ogg",0,0],"sick":["2/28/En-us-sick.ogg",0,0],"angry":["7/7e/En-us-angry.ogg",0,0],"excited":["b/bf/En-us-excited.ogg",0,0],"visit":["a/ac/En-us-visit.ogg",0,0],"clean":["2/2c/En-us-clean.ogg",0,0],"stay":["0/0a/En-us-stay.ogg",0,0],"walk":["b/bb/En-us-walk.ogg",0,0],"wash":["a/a7/En-us-wash.ogg",0,0],"open":["6/67/En-us-open.ogg",2,0],"close":["a/ab/En-us-close-verb.ogg",0,0],"arrive":["e/e5/En-us-arrive.ogg",0,0],"ask":["f/f6/En-us-ask.ogg",0,0],"want":["4/4d/En-us-want.ogg",0,0],"need":["5/57/En-us-need.ogg",0,0],"rent":["6/60/En-us-rent.ogg",0,0],"borrow":["d/da/En-us-borrow.ogg",0,0],"invite":["e/ec/En-us-invite.ogg",13,0],"enjoy":["8/84/En-us-enjoy.ogg",0,0],"check":["f/ff/En-us-check.ogg",0,0],"order":["f/fd/En-us-order.ogg",0,0],"relax":["d/d9/En-us-relax.ogg",0,0],"stop":["4/43/En-us-stop.ogg",0,0],"go":["0/0a/En-us-go.ogg",0,0],"went":["8/8a/En-us-went.ogg",0,0],"have":["b/be/En-us-have.ogg",0,0],"had":["6/68/En-us-had.ogg",0,0],"see":["a/a2/En-us-see.ogg",0,0],"saw":["3/3e/En-us-saw.ogg",0,0],"ate":["a/af/En-us-ate.ogg",0,0],"bought":["d/dd/En-us-bought.ogg",0,0],"take":["9/9b/En-us-take.ogg",0,0],"took":["5/5b/En-us-took.ogg",7,2],"get":["2/2f/En-us-get.ogg",0,0],"got":["0/07/En-us-got.ogg",0,0],"make":["0/03/En-us-make.ogg",0,0],"made":["5/57/En-us-made.ogg",0,0],"come":["d/d9/En-us-come.ogg",0,0],"came":["7/7d/En-us-came.ogg",0,0],"meet":["a/a8/En-us-meet.ogg",0,0],"met":["f/f9/En-us-met.ogg",0,0],"trip":["5/53/En-us-trip.ogg",0,0],"beach":["d/dc/En-us-beach.ogg",0,0],"wrote":["3/3b/En-us-wrote.ogg",0,0],"drank":["8/80/En-us-drank.ogg",0,0],"slept":["7/7c/En-us-slept.ogg",0,0],"swam":["2/29/En-us-swam.ogg",14,4],"give":["6/69/En-us-give.ogg",7,2],"gave":["b/bb/En-us-gave.ogg",0,0],"leave":["8/8d/En-us-leave.ogg",0,0],"left":["f/fb/En-us-left.ogg",0,0],"fly":["5/5b/En-us-fly.ogg",0,2],"flew":["f/f2/En-us-flew.ogg",0,0],"tomorrow":["c/ca/En-us-tomorrow.ogg",0,0],"tonight":["a/aa/En-us-tonight.ogg",0,0],"plan":["5/5a/En-us-plan.ogg",0,0],"holiday":["7/79/En-us-holiday.ogg",9,0],"learn":["5/54/En-us-learn.ogg",0,0],"move":["9/9d/En-us-move.ogg",0,0],"maybe":["4/4d/En-us-maybe.ogg",0,0],"soon":["f/f9/En-us-soon.ogg",0,0],"promise":["1/1e/En-us-promise.ogg",0,0],"hope":["3/30/En-us-hope.ogg",0,0],"course":["0/09/En-us-course.ogg",0,0],"weather":["8/8a/En-us-weather.ogg",0,0],"hot":["2/28/En-us-hot.ogg",0,0],"cold":["b/bf/En-us-cold.ogg",0,0],"warm":["3/36/En-us-warm.ogg",0,0],"sunny":["c/c6/En-us-sunny.ogg",0,0],"windy":["6/64/En-au-windy.ogg",5,4],"summer":["8/8a/En-us-summer.ogg",0,0],"winter":["d/d4/En-us-winter.ogg",0,0],"good":["2/28/En-us-good.ogg",7,2],"better":["4/45/En-us-better.ogg",0,0],"bad":["f/f2/En-us-bad.ogg",0,0],"worse":["8/83/En-us-worse.ogg",0,0],"spring":["0/07/En-us-spring.ogg",0,2],"autumn":["1/1a/En-us-autumn.ogg",7,2],"cloudy":["3/3a/En-us-cloudy.ogg",14,4],"storm":["0/09/En-us-storm.ogg",0,0],"temperature":["d/d3/En-us-temperature.ogg",0,0],"degree":["c/c2/En-us-degree.ogg",0,0],"high":["7/7e/En-us-high.ogg",0,0],"fourteen":["8/8d/En-us-fourteen.ogg",2,0],"forty":["3/39/En-us-forty.ogg",2,0],"eighteen":["f/f1/En-us-eighteen.ogg",2,0],"eighty":["6/62/En-us-eighty.ogg",2,0],"night":["4/46/En-us-night.ogg",0,0],"not":["f/f9/En-us-not.ogg",0,0],"right":["6/6b/En-us-right.ogg",0,0],"age":["b/b0/En-us-age.ogg",0,0],"books":["4/41/En-us-books.ogg",0,0],"bags":["1/1b/En-us-bags.ogg",9,0],"boxes":["2/2d/En-us-boxes.ogg",15,0],"this":["f/f8/En-us-this.ogg",7,2],"that":["e/e8/En-us-that.ogg",0,0],"they":["4/41/En-us-they.ogg",0,0],"play":["8/8e/En-us-play.ogg",0,0],"it":["0/06/En-us-it.ogg",0,0],"works":["2/24/En-us-works.ogg",0,0],"goes":["0/02/En-us-goes.ogg",0,0],"thank":["1/14/En-us-thank.ogg",0,0],"she":["b/b3/En-us-she.ogg",0,0],"men":["7/7c/En-us-men.ogg",0,0],"eating":["a/a7/En-us-eating.ogg",0,0],"running":["e/e4/En-us-running.ogg",0,0],"sleeping":["8/8a/En-us-sleeping.ogg",0,0],"waiting":["7/76/En-us-waiting.ogg",0,0],"road":["6/6e/En-us-road.ogg",0,0],"light":["c/cf/En-us-light.ogg",0,0],"walked":["d/d9/En-us-walked.ogg",0,0],"asked":["8/87/En-us-asked.ogg",0,0],"washed":["9/9e/En-us-washed.ogg",0,0],"played":["7/76/En-us-played.ogg",0,0],"cleaned":["8/8e/En-us-cleaned.ogg",9,0],"wanted":["7/7f/En-us-wanted.ogg",0,0],"needed":["c/cd/En-us-needed.ogg",0,0],"visited":["e/e3/En-us-visited.ogg",0,0],"taught":["c/c3/En-us-taught.ogg",0,0],"caught":["6/69/En-us-caught.ogg",0,0],"I'll":["8/81/En-us-I%27ll.ogg",0,0],"you'll":["c/c7/En-us-you%27ll.ogg",0,0],"she'll":["7/75/En-us-she%27ll.ogg",0,0],"we'll":["7/7e/En-us-we%27ll.ogg",0,0],"won't":["9/9b/En-us-won%27t.ogg",0,0],"girl":["f/f3/En-us-girl.ogg",0,0],"first":["9/9e/En-us-first.ogg",0,0],"name:Ben":["5/5d/En-au-Ben.ogg",5,4],"name:Lucy":["6/60/En-us-Lucy.ogg",0,0],"name:Jack":["d/d3/En-us-jack.ogg",0,0],"name:Tom":["b/b8/En-us-tom.ogg",0,0],"name:Lily":["d/d9/En-us-lily.ogg",9,0],"name:Sam":["f/f9/En-us-Sam.ogg",0,0],"name:Grace":["5/58/En-us-grace.ogg",0,0],"name:Henry":["d/df/En-us-henry.ogg",0,0],"name:Peter":["e/e2/En-us-Peter.ogg",9,0],"name:Zoe":["4/4a/En-uk-Zoe.ogg",16,2],"name:Max":["a/a9/En-us-max.ogg",0,0],"name:Rose":["1/15/En-uk-rose.ogg",17,2],"name:David":["b/bc/En-us-David.ogg",0,0],"name:Leo":["0/00/En-us-Leo.ogg",7,0],"name:Oliver":["b/b4/En-us-oliver.ogg",9,0],"name:Frank":["1/1d/En-us-frank.ogg",0,0],"name:Victor":["7/7f/En-us-victor.ogg",0,0],"name:Wendy":["6/63/En-au-wendy.ogg",5,4],"letter:A":["5/52/En-us-a.ogg",18,2],"A":["5/52/En-us-a.ogg",18,2],"letter:B":["d/d1/LL-Q1860_%28eng%29-Flame%2C_not_lame-B.wav",19,3],"letter:C":["1/1d/En-uk-c.ogg",20,0],"letter:D":["b/b9/En-uk-d.ogg",20,0],"letter:E":["1/18/En-us-e.ogg",20,0],"E":["1/18/En-us-e.ogg",20,0],"letter:F":["6/64/En-uk-f.ogg",20,0],"letter:G":["8/81/En-uk-g.ogg",20,0],"G":["8/81/En-uk-g.ogg",20,0],"letter:H":["0/07/En-uk-h.ogg",20,0],"letter:I":["9/9f/En-us-I.ogg",7,2],"I":["9/9f/En-us-I.ogg",7,2],"letter:J":["8/8f/LL-Q1860_%28eng%29-Flame%2C_not_lame-J.wav",19,3],"J":["8/8f/LL-Q1860_%28eng%29-Flame%2C_not_lame-J.wav",19,3],"letter:K":["8/8d/En-us-k.ogg",9,0],"letter:L":["9/95/En-us-L.ogg",21,0],"letter:M":["3/3b/En-uk-m.ogg",20,0],"letter:N":["7/71/En-us-n.ogg",0,0],"letter:O":["7/7d/En-us-o.ogg",21,0],"letter:P":["7/79/En-us-p.ogg",0,0],"letter:Q":["6/6f/En-us-q.ogg",21,0],"letter:R":["7/75/En-us-r.ogg",20,0],"R":["7/75/En-us-r.ogg",20,0],"letter:S":["8/85/En-us-S-letter.ogg",14,4],"letter:T":["8/8d/En-us-t.ogg",21,0],"letter:U":["9/9d/En-us-u.ogg",21,0],"letter:V":["3/3a/En-us-v.ogg",21,0],"letter:W":["b/ba/En-au-W.ogg",5,4],"W":["b/ba/En-au-W.ogg",5,4],"letter:X":["b/bd/En-us-X.ogg",14,4],"letter:Y":["d/dd/En-us-y.ogg",21,0],"Y":["d/dd/En-us-y.ogg",21,0],"letter:Z":["0/0f/En-us-z.ogg",0,0],"sixteen":["4/43/En-us-sixteen.ogg",2,0],"sixty":["5/54/En-us-sixty.ogg",2,0],"grey":["a/af/En-us-grey.ogg",0,0],"me":["c/ca/En-us-me.ogg",0,0],"jet":["9/9b/En-au-jet.ogg",5,4],"yet":["b/b8/En-us-yet.ogg",0,0],"jam":["d/dc/En-us-jam.ogg",0,0],"yam":["a/a6/En-us-yam.ogg",14,4],"day":["5/58/En-us-day.ogg",0,0],"then":["a/a5/En-us-then.ogg",0,0],"den":["0/09/En-us-den.ogg",9,0],"there":["1/1a/En-us-there.ogg",0,0],"dare":["9/9c/En-us-dare.ogg",0,0],"back":["e/ec/En-us-back.ogg",0,0],"gas":["a/ad/En-us-gas.ogg",7,0],"sheep":["8/82/En-us-sheep.ogg",0,0],"ship":["a/a9/En-us-ship.ogg",0,0],"seat":["2/21/En-us-seat.ogg",0,0],"tree":["d/d2/En-us-tree.ogg",0,0],"tank":["6/6e/En-au-tank.ogg",5,4],"thin":["5/5d/En-us-thin.ogg",7,2],"tin":["9/95/En-us-tin.ogg",0,0],"shoe":["4/44/En-us-shoe.ogg",0,0],"sue":["8/86/En-us-sue.ogg",9,0],"man":["4/45/En-us-man.ogg",0,0],"pan":["c/cf/En-us-pan.ogg",0,0],"sin":["2/2f/En-us-sin.ogg",7,2],"thing":["b/b1/En-us-thing.ogg",7,2],"rang":["f/f6/En-us-rang.ogg",0,0],"ran":["c/c1/En-us-ran.ogg",0,0],"rock":["2/25/En-us-rock.ogg",0,0],"lock":["7/73/En-us-lock.ogg",0,0],"bat":["b/bb/En-us-bat.ogg",0,0],"sat":["d/d6/En-us-sat.ogg",0,0],"bet":["9/98/En-us-bet.ogg",0,0],"so":["3/3b/En-us-so.ogg",0,0],"boat":["c/cb/En-us-boat.ogg",0,0],"coat":["0/07/En-us-coat.ogg",0,0],"word":["b/bf/En-us-word.ogg",0,0],"ward":["3/30/En-us-ward.ogg",0,0],"How many":["3/39/En-uk-how_many.ogg",1,1],"people":["9/93/En-us-people.ogg",0,0],"him":["2/23/En-us-him.ogg",0,0],"us":["0/0c/En-us-us.ogg",0,0],"them":["2/25/En-us-them.ogg",0,0],"February":["9/92/En-us-February.ogg",0,0],"March":["6/6a/En-us-March.ogg",0,0],"April":["3/35/En-us-April.ogg",0,0],"May":["5/54/En-us-May.ogg",0,0],"June":["9/97/En-us-June.ogg",0,0],"July":["a/a1/En-us-July.ogg",0,0],"August":["0/0d/En-us-August.ogg",0,0],"September":["5/5b/En-us-September.ogg",0,0],"October":["2/26/En-us-October.ogg",0,0],"November":["4/4f/En-us-November.ogg",0,0],"second":["e/eb/En-us-second.ogg",0,0],"third":["4/4e/En-us-third.ogg",0,0],"fourth":["c/cc/En-us-fourth.ogg",0,2],"fifth":["8/80/En-us-fifth.ogg",0,2],"twelfth":["b/bc/En-us-twelfth.ogg",0,0],"twentieth":["2/2b/En-us-twentieth.ogg",0,0],"date":["4/4a/En-us-date.ogg",0,0],"lesson":["3/3e/En-us-lesson.ogg",0,0],"page":["e/eb/En-us-page.ogg",0,0],"example":["7/77/En-us-example.ogg",0,2],"mistake":["5/51/En-us-mistake.ogg",0,0],"easy":["0/07/En-us-easy.ogg",0,0],"difficult":["e/e8/En-us-difficult.ogg",0,0],"seventeen":["b/b1/En-us-seventeen.ogg",2,0],"seventy":["3/3e/En-us-seventy.ogg",2,0],"million":["a/a5/En-us-million.ogg",2,0],"person":["2/2c/En-us-person.ogg",0,0],"bye":["7/77/En-us-bye.ogg",0,0],"woman":["4/4d/En-us-woman.ogg",0,0],"boy":["7/7f/En-us-boy.ogg",0,0],"friendly":["2/2c/En-us-friendly.ogg",0,0],"really":["5/5e/En-us-really.ogg",0,0],"also":["9/97/En-us-also.ogg",0,0],"actor":["4/4b/En-us-actor.ogg",0,0],"singer":["b/b5/En-us-singer.ogg",0,0],"waiter":["2/27/En-us-waiter.ogg",0,0],"artist":["1/18/En-us-artist.ogg",0,0],"writer":["7/75/En-us-writer.ogg",0,0],"language":["3/3a/En-us-language.ogg",0,0],"know":["a/ad/En-us-know.ogg",0,2],"tell":["a/a9/En-us-tell.ogg",0,0],"information":["3/38/En-us-information.ogg",0,0],"favorite":["0/0e/En-us-favorite.ogg",0,0],"same":["6/64/En-us-same.ogg",0,0],"different":["4/46/En-us-different.ogg",0,0],"desk":["f/f1/En-us-desk.ogg",0,0],"paper":["3/33/En-us-paper.ogg",0,0],"dictionary":["c/cf/En-us-dictionary.ogg",0,2],"put":["e/e5/En-us-put.ogg",0,0],"find":["4/48/En-us-find.ogg",0,0],"bring":["a/ad/En-us-bring.ogg",0,0],"dad":["5/56/En-us-dad.ogg",0,0],"mom":["8/81/En-us-mom.ogg",0,0],"face":["7/73/En-us-face.ogg",0,0],"eye":["6/6f/En-us-eye.ogg",8,2],"hand":["d/d2/En-us-hand.ogg",0,0],"leg":["6/62/En-us-leg.ogg",0,0],"head":["5/5c/En-us-head.ogg",0,0],"dark":["2/24/En-us-dark.ogg",0,0],"purple":["b/bb/En-us-purple.ogg",0,0],"often":["e/e6/En-us-often.ogg",0,0],"before":["8/8e/En-us-before.ogg",0,2],"after":["1/1c/En-us-after.ogg",0,0],"ready":["4/41/En-us-ready.ogg",0,0],"quickly":["7/7b/En-us-quickly.ogg",0,0],"send":["8/8f/En-us-send.ogg",0,0],"message":["8/80/En-us-message.ogg",0,0],"problem":["e/ee/En-us-problem.ogg",0,0],"important":["9/9e/En-us-important.ogg",0,0],"hard":["7/78/En-us-hard.ogg",0,0],"meat":["2/2b/En-us-meat.ogg",0,0],"cheese":["b/bc/En-us-cheese.ogg",0,0],"cake":["8/89/En-us-cake.ogg",0,0],"potato":["7/77/En-us-potato.ogg",0,0],"tomato":["7/78/En-us-tomato.ogg",0,0],"clothes":["a/a1/En-us-clothes.ogg",0,0],"skirt":["b/bb/En-us-skirt.ogg",0,0],"dollar":["3/3e/En-us-dollar.ogg",0,0],"cost":["1/13/En-us-cost.ogg",0,0],"wall":["a/ac/En-us-wall.ogg",0,0],"toilet":["d/d5/En-us-toilet.ogg",0,0],"upstairs":["b/b3/En-us-upstairs.ogg",0,2],"downstairs":["0/00/En-us-downstairs.ogg",13,0],"quiet":["f/fe/En-us-quiet.ogg",0,0],"dirty":["f/fe/En-us-dirty.ogg",0,0],"sport":["9/9c/En-us-sport.ogg",0,0],"movie":["4/4e/En-us-movie.ogg",0,0],"song":["f/f1/En-us-song.ogg",0,0],"interesting":["2/2e/En-us-interesting.ogg",0,0],"boring":["b/ba/En-us-boring.ogg",0,0],"hear":["b/be/En-us-hear.ogg",0,0],"something":["1/13/En-us-something.ogg",0,0],"everything":["5/56/En-us-everything.ogg",0,0],"nothing":["b/b5/En-us-nothing.ogg",0,0],"together":["3/32/En-us-together.ogg",0,0],"train":["f/f0/En-us-train.ogg",0,0],"taxi":["6/6d/En-us-taxi.ogg",0,0],"plane":["e/e8/En-us-plane.ogg",0,0],"airport":["1/17/En-us-airport.ogg",0,0],"ticket":["6/6c/En-us-ticket.ogg",0,0],"park":["8/82/En-us-park.ogg",0,0],"museum":["7/77/En-us-museum.ogg",0,0],"cinema":["1/1d/En-us-cinema.ogg",0,0],"remember":["0/05/En-us-remember.ogg",0,0],"forget":["8/81/En-us-forget.ogg",0,0],"wonderful":["e/e2/En-us-wonderful.ogg",0,0],"terrible":["7/71/En-us-terrible.ogg",0,0],"passport":["6/61/En-us-passport.ogg",0,0],"flight":["5/54/En-us-flight.ogg",0,0],"river":["e/e2/En-us-river.ogg",0,0],"spend":["b/bc/En-us-spend.ogg",0,0],"amazing":["a/af/En-us-amazing.ogg",0,0],"have to":["3/30/En-us-have_to.ogg",0,0],"must":["9/9c/En-us-must.ogg",0,0],"because":["b/b4/En-us-because.ogg",0,0],"begin":["1/1e/En-us-begin.ogg",0,0],"snow":["d/d8/En-us-snow.ogg",0,0],"sun":["4/4b/En-us-Sun.ogg",0,0],"dangerous":["a/ae/En-us-dangerous.ogg",0,0],"popular":["4/47/En-us-popular.ogg",0,0],"famous":["8/89/En-us-famous.ogg",0,0],"world":["9/94/En-ca-world.ogg",22,0],"Korea":["0/00/LL-Q1860_%28eng%29-Vealhurl-Korea.wav",23,4],"T-shirt":["f/fe/LL-Q1860_%28eng%29-Vealhurl-t-shirt.wav",23,4],"accountant":["1/1a/LL-Q1860_%28eng%29-Arlo_Barnes-accountant.wav",24,3],"bored":["9/91/LL-Q1860_%28eng%29-Grendelkhan-bored.wav",25,3],"bus stop":["5/55/LL-Q1860_%28eng%29-Flame%2C_not_lame-bus_stop.wav",26,3],"cheaper":["3/32/LL-Q1860_%28eng%29-Grendelkhan-cheaper.wav",25,3],"cool":["c/c8/LL-Q1860_%28eng%29-Grendelkhan-cool.wav",25,3],"credit card":["8/83/LL-Q1860_%28eng%29-Vealhurl-credit_card.wav",23,4],"customer":["c/c9/LL-Q1860_%28eng%29-Arlo_Barnes-customer.wav",24,3],"exam":["f/f7/LL-Q1860_%28eng%29-Arlo_Barnes-exam.wav",24,3],"hometown":["6/61/LL-Q1860_%28eng%29-Vealhurl-hometown.wav",23,4],"jeans":["8/85/LL-Q1860_%28eng%29-Wodencafe-jeans.wav",27,3],"neighbor":["5/56/LL-Q1860_%28eng%29-Grendelkhan-neighbor.wav",25,3],"next to":["e/e6/LL-Q1860_%28eng%29-Vealhurl-next_to.wav",23,4],"notebook":["6/6a/LL-Q1860_%28eng%29-Vealhurl-notebook.wav",23,4],"one hundred":["2/20/LL-Q1860_%28eng%29-Back_ache-one_hundred.wav",28,4],"overtime":["2/2c/LL-Q1860_%28eng%29-Vealhurl-overtime.wav",23,4],"piano":["d/dc/LL-Q1860_%28eng%29-Grendelkhan-piano.wav",25,3],"rainy":["2/2b/LL-Q1860_%28eng%29-Vealhurl-rainy.wav",23,4],"restaurant":["4/47/LL-Q1860_%28eng%29-Wodencafe-restaurant.wav",27,3],"should":["b/be/LL-Q1860_%28eng%29-Grendelkhan-should.wav",25,3],"souvenir":["0/0f/LL-Q1860_%28eng%29-Vealhurl-souvenir.wav",23,4],"spicy":["7/75/LL-Q1860_%28eng%29-Vealhurl-spicy.wav",23,4],"tennis":["9/9e/LL-Q1860_%28eng%29-Vealhurl-tennis.wav",23,4],"traffic light":["7/78/LL-Q1860_%28eng%29-Vealhurl-traffic_light.wav",23,4],"adult":["1/11/En-us-adult.ogg",0,0],"afraid":["6/61/En-us-afraid.ogg",0,0],"air":["e/e2/En-us-air.ogg",0,0],"animal":["1/12/En-us-animal.ogg",0,0],"apple":["9/9a/En-us-apple.ogg",0,0],"arm":["b/b9/En-us-arm.ogg",0,0],"ball":["a/a8/En-us-ball.ogg",0,0],"banana":["6/61/En-us-banana.ogg",0,0],"band":["6/63/En-us-band.ogg",0,0],"bath":["f/f9/En-us-bath.ogg",0,0],"bicycle":["3/31/En-us-bicycle.ogg",0,0],"bird":["0/07/En-us-bird.ogg",0,0],"boots":["2/2e/En-us-boots.ogg",0,0],"boyfriend":["9/95/En-us-boyfriend.ogg",0,0],"building":["a/a3/En-us-building.ogg",0,0],"business":["7/77/En-us-business.ogg",0,0],"camera":["5/59/En-us-camera.ogg",0,0],"capital":["f/ff/En-us-capital.ogg",0,0],"career":["b/b4/En-us-career.ogg",0,0],"cat":["4/46/En-us-cat.ogg",0,0],"change":["3/3f/En-us-change.ogg",0,0],"chocolate":["3/31/En-us-chocolate.ogg",0,0],"club":["7/70/En-us-club.ogg",0,0],"correct":["a/ae/En-us-correct.ogg",0,0],"dancer":["0/0d/En-us-dancer.ogg",0,2],"decide":["a/a3/En-us-decide.ogg",0,0],"dog":["0/06/En-us-dog.ogg",0,0],"ear":["6/68/En-us-ear.ogg",0,0],"east":["4/47/En-us-east.ogg",0,0],"eleven":["d/db/En-us-eleven.ogg",2,2],"exciting":["7/79/En-us-exciting.ogg",9,0],"fantastic":["b/b6/En-us-fantastic.ogg",14,4],"farm":["7/78/En-us-farm.ogg",0,0],"fast":["e/e5/En-us-fast.ogg",0,0],"feel":["6/6d/En-us-feel.ogg",0,0],"festival":["0/0a/En-us-festival.ogg",0,0],"flat":["3/30/En-us-flat.ogg",0,0],"flower":["d/d3/En-us-flower.ogg",0,0],"food":["6/64/En-uk-food.ogg",1,1],"foot":["3/33/En-us-foot.ogg",0,0],"funny":["d/d2/En-us-funny.ogg",0,0],"future":["b/b7/En-us-future.ogg",0,0],"game":["6/62/En-us-game.ogg",0,0],"girlfriend":["7/71/En-us-girlfriend.ogg",0,0],"hair":["8/8b/En-us-hair.ogg",0,0],"half":["3/32/En-us-half.ogg",0,0],"healthy":["0/06/En-us-healthy.ogg",0,0],"hey":["6/6f/En-us-hey.ogg",0,2],"horse":["f/fb/En-us-horse.ogg",0,0],"hour":["e/ec/En-us-hour.ogg",0,0],"ice cream":["2/28/En-us-ice_cream.ogg",0,0],"idea":["9/90/En-us-idea.ogg",0,0],"improve":["2/2a/En-us-improve.ogg",0,0],"interested":["c/c2/En-us-interested.ogg",0,0],"internet":["f/fc/En-us-internet.ogg",29,0],"journey":["c/cd/En-us-journey.ogg",0,0],"kilometer":["d/da/En-us-kilometre.ogg",0,0],"later":["a/a0/En-us-later.ogg",0,0],"life":["f/fc/En-us-life.ogg",9,0],"magazine":["4/43/En-us-magazine.ogg",30,2],"meal":["3/36/En-us-meal.ogg",0,0],"member":["4/4e/En-us-member.ogg",0,0],"midnight":["3/36/En-us-midnight.ogg",0,0],"mountain":["c/ca/En-us-mountain.ogg",0,0],"mouth":["5/52/En-us-mouth.ogg",0,0],"newspaper":["a/a5/En-us-newspaper.ogg",0,0],"nineteen":["6/67/En-us-nineteen.ogg",2,0],"north":["3/39/En-us-north.ogg",0,0],"nose":["7/7f/En-us-nose.ogg",0,0],"once":["f/f8/En-us-once.ogg",0,0],"online":["0/0d/En-us-online.ogg",0,0],"painting":["f/f3/En-us-painting.ogg",0,0],"pair":["d/d4/En-us-pair.ogg",0,0],"photo":["b/b1/En-us-photo.ogg",0,0],"place":["a/a0/En-us-place.ogg",0,0],"plant":["a/a0/En-us-plant.ogg",0,0],"poor":["1/1f/En-us-poor.ogg",0,0],"prepare":["0/06/En-us-prepare.ogg",0,0],"project":["f/fe/En-us-project.ogg",0,0],"radio":["e/e3/En-us-radio.ogg",0,0],"rich":["4/45/En-us-rich.ogg",0,0],"roof":["e/e8/En-us-roof.ogg",0,0],"routine":["8/83/En-us-routine.ogg",14,4],"salad":["c/cd/En-us-salad.ogg",0,0],"sandwich":["f/f0/En-us-sandwich.ogg",31,0],"sea":["6/6e/En-us-sea.ogg",0,0],"sentence":["7/72/En-us-sentence.ogg",7,0],"slow":["1/12/En-us-slow.ogg",0,0],"soup":["8/8d/En-us-soup.ogg",0,0],"south":["6/6e/En-us-south.ogg",0,0],"spelling":["1/14/En-us-spelling.ogg",0,0],"station":["5/5c/En-us-station.ogg",0,0],"story":["1/11/En-us-story.ogg",17,2],"strong":["9/95/En-us-strong.ogg",0,0],"sweater":["9/93/En-us-sweater.ogg",32,2],"team":["f/fc/En-us-team.ogg",0,0],"teenager":["8/82/En-us-teenager.ogg",0,0],"television":["4/47/En-us-television.ogg",0,0],"text":["9/9c/En-us-text.ogg",0,0],"theater":["8/89/En-us-theater.ogg",9,0],"thirsty":["b/b6/En-us-thirsty.ogg",33,0],"thousand":["c/c7/En-us-thousand.ogg",2,0],"tooth":["f/fa/En-us-tooth.ogg",0,0],"town":["7/7c/En-us-town.ogg",0,0],"trousers":["e/ef/En-us-trousers.ogg",0,0],"twice":["9/96/En-us-twice.ogg",0,0],"university":["d/db/En-us-university.ogg",0,0],"vegetable":["f/f7/En-us-vegetable.ogg",0,0],"video":["7/70/En-us-video.ogg",32,2],"village":["9/93/En-us-village.ogg",0,0],"west":["6/61/En-us-west.ogg",0,0],"wrong":["b/b9/En-us-wrong.ogg",7,2]}};
 const LESSONS = [
 {n:1,t:"Bảng chữ cái & đánh vần",gt:"26 chữ cái, nguyên âm",
 g:"Tiếng Anh có 26 chữ cái, trong đó 5 nguyên âm: A, E, I, O, U. Tên chữ đọc khác tiếng Việt: A /eɪ/, E /iː/, I /aɪ/, O /oʊ/, U /juː/. Hay nhầm: G /dʒiː/ với J /dʒeɪ/; E /iː/ với I /aɪ/. Bấm vào chữ để nghe giọng người bản xứ rồi nhại lại.",
-w:["name|tên","spell|đánh vần","letter|chữ cái","teacher|giáo viên","student|học viên","book|quyển sách","pen|cây bút","yes|vâng, có","no|không","please|làm ơn","thank you|cảm ơn","sorry|xin lỗi","classroom|lớp học","notebook|quyển vở","question|câu hỏi","answer|câu trả lời","listen|nghe","repeat|nhắc lại","again|lần nữa","understand|hiểu","lesson|bài học","page|trang (sách)","example|ví dụ","mistake|lỗi sai","easy|dễ","difficult|khó"],
+w:["name|tên","spell|đánh vần","letter|chữ cái","teacher|giáo viên","student|học viên","book|quyển sách","pen|cây bút","yes|vâng, có","no|không","please|làm ơn","thank you|cảm ơn","sorry|xin lỗi","classroom|lớp học","notebook|quyển vở","question|câu hỏi","answer|câu trả lời","listen|nghe","repeat|nhắc lại","again|lần nữa","understand|hiểu","lesson|bài học","page|trang (sách)","example|ví dụ","mistake|lỗi sai","easy|dễ","difficult|khó","word|từ","sentence|câu","correct|đúng","wrong|sai","spelling|cách đánh vần"],
 p:["What's your name?|Bạn tên là gì?","My name is Lan.|Tôi tên là Lan.","How do you spell your name?|Bạn đánh vần tên mình thế nào?","Can you spell it, please?|Bạn đánh vần giúp tôi được không?","Can you repeat that, please?|Bạn nhắc lại được không?","Sorry, I don't understand.|Xin lỗi, tôi không hiểu.","Listen and repeat.|Nghe và nhắc lại.","Thank you very much.|Cảm ơn bạn rất nhiều."],
 q:[["Chữ \"I\" trong tiếng Anh đọc gần giống:","ai|i|ê",0],["Chữ \"E\" trong tiếng Anh đọc gần giống:","e|i|ơ",1],["Tiếng Anh có mấy nguyên âm (a, e, i, o, u)?","3|5|7",1],["\"How do you spell your name?\" nghĩa là:","Bạn tên là gì?|Bạn đánh vần tên mình thế nào?|Bạn bao nhiêu tuổi?",1],["Chữ \"G\" trong tiếng Anh đọc gần giống:", "gờ|gi|giây", 1],["Không nghe rõ, bạn nói:", "Can you repeat that, please?|Thank you very much.|What's your name?", 0]]},
 
 {n:2,t:"Số đếm 0–100",gt:"Số đếm, -teen và -ty; How many?",
 g:"Số 13–19 có đuôi -teen, nhấn âm cuối: thir-TEEN. Số tròn chục 20–90 có đuôi -ty, nhấn âm đầu: THIR-ty. Số ghép có gạch nối: 25 = twenty-five. Khi đọc số điện thoại, số 0 có thể đọc là 'oh'. Hỏi số lượng: How many + danh từ số nhiều? (How many books? – Ten books.)",
-w:["zero|số 0","three|số 3","five|số 5","eight|số 8","ten|số 10","twelve|số 12","thirteen|số 13","thirty|số 30","fifteen|số 15","fifty|số 50","one hundred|số 100","phone number|số điện thoại","one|số 1","two|số 2","four|số 4","six|số 6","seven|số 7","nine|số 9","twenty|số 20","ninety|số 90","How many|bao nhiêu (đếm được)","people|người (số nhiều)","seventeen|số 17","seventy|số 70","million|một triệu","person|người (một người)"],
+w:["zero|số 0","three|số 3","five|số 5","eight|số 8","ten|số 10","twelve|số 12","thirteen|số 13","thirty|số 30","fifteen|số 15","fifty|số 50","one hundred|số 100","phone number|số điện thoại","one|số 1","two|số 2","four|số 4","six|số 6","seven|số 7","nine|số 9","twenty|số 20","ninety|số 90","How many|bao nhiêu (đếm được)","people|người (số nhiều)","seventeen|số 17","seventy|số 70","million|một triệu","person|người (một người)","eleven|mười một","fourteen|mười bốn","sixteen|mười sáu","eighteen|mười tám","nineteen|mười chín","forty|bốn mươi","sixty|sáu mươi","eighty|tám mươi","thousand|nghìn"],
 p:["How old are you?|Bạn bao nhiêu tuổi?","I am twenty-five years old.|Tôi 25 tuổi.","What's your phone number?|Số điện thoại của bạn là gì?","It's oh nine one two, three four five.|Đó là 0912 345.","I'm thirty-two.|Tôi 32 tuổi.","My number is oh nine eight seven.|Số của tôi là 0987.","Count from one to ten.|Đếm từ 1 đến 10.","Twelve plus eight is twenty.|12 cộng 8 bằng 20.","How many people? – Five people.|Bao nhiêu người? – Năm người.","How many books? – Twelve books.|Bao nhiêu quyển sách? – Mười hai quyển."],
 q:[["Số 13 là:","thirteen|thirty|three",0],["Số 50 là:","fifteen|fifty|five",1],["Số 25 viết là:","twenty-five|two-five|fifty-two",0],["\"How old are you?\" hỏi về:","Tên|Tuổi|Nghề nghiệp",1],["Số 90 là:", "nineteen|ninety|nine", 1],["\"thirty\" nhấn âm ở đâu?", "Âm đầu: THIR-ty|Âm cuối: thir-TY|Không nhấn âm nào", 0],["Hỏi \"bao nhiêu quyển sách\":", "How many books?|How much books?|How old books?", 0],["How many ___?", "pen|pens|a pen", 1]]},
 
 {n:3,t:"Chào hỏi",gt:"Mẫu câu chào hỏi",
 g:"Chào theo giờ: trước 12 giờ trưa nói 'Good morning', từ trưa đến khoảng 6 giờ chiều nói 'Good afternoon', buổi tối nói 'Good evening'. 'Good night' chỉ dùng khi chia tay hoặc đi ngủ, không dùng để chào khi gặp. I'm là viết tắt của I am.",
-w:["hello|xin chào","hi|chào (thân mật)","good morning|chào buổi sáng","good afternoon|chào buổi chiều","good evening|chào buổi tối","goodbye|tạm biệt","see you|hẹn gặp lại","fine|khỏe, ổn","friend|bạn bè","how are you|bạn khỏe không","and you|còn bạn thì sao","nice to meet you|rất vui được gặp bạn","Mr.|ông, anh (gọi lịch sự)","Ms.|bà, cô, chị (gọi lịch sự)","great|tuyệt","not bad|không tệ","everyone|mọi người","welcome|chào mừng","good night|chúc ngủ ngon","see you tomorrow|hẹn gặp ngày mai","bye|tạm biệt (thân mật)","woman|phụ nữ","boy|cậu bé, con trai","friendly|thân thiện","really|thật sự, thật là","also|cũng"],
+w:["hello|xin chào","hi|chào (thân mật)","good morning|chào buổi sáng","good afternoon|chào buổi chiều","good evening|chào buổi tối","goodbye|tạm biệt","see you|hẹn gặp lại","fine|khỏe, ổn","friend|bạn bè","how are you|bạn khỏe không","and you|còn bạn thì sao","nice to meet you|rất vui được gặp bạn","Mr.|ông, anh (gọi lịch sự)","Ms.|bà, cô, chị (gọi lịch sự)","great|tuyệt","not bad|không tệ","everyone|mọi người","welcome|chào mừng","good night|chúc ngủ ngon","see you tomorrow|hẹn gặp ngày mai","bye|tạm biệt (thân mật)","woman|phụ nữ","boy|cậu bé, con trai","friendly|thân thiện","really|thật sự, thật là","also|cũng","hey|này (chào thân mật)","OK|được, ổn"],
 p:["Hello, I'm Minh.|Xin chào, tôi là Minh.","How are you?|Bạn khỏe không?","I'm fine, thank you. And you?|Tôi khỏe, cảm ơn. Còn bạn?","Nice to meet you.|Rất vui được gặp bạn.","Good morning, everyone.|Chào buổi sáng mọi người.","I'm great, thanks.|Tôi rất khỏe, cảm ơn.","See you tomorrow.|Hẹn gặp lại ngày mai.","Welcome to our class.|Chào mừng đến với lớp học của chúng ta."],
 q:[["8 giờ sáng gặp sếp, bạn nói:","Good night|Good morning|Good evening",1],["\"Good night\" dùng khi:","Gặp nhau buổi tối|Chia tay hoặc đi ngủ|Buổi sáng",1],["Đáp lại \"How are you?\":","I'm fine, thank you.|I'm Minh.|Nice to meet you.",0],["\"I'm\" là viết tắt của:","I is|I am|I are",1],["Chia tay bạn, hẹn mai gặp lại, bạn nói:", "See you tomorrow.|Good morning.|Nice to meet you.", 0],["\"Ms. Lan\" dùng để gọi:", "Một người phụ nữ|Một người đàn ông|Một em bé", 0]]},
 
 {n:4,t:"Nghề nghiệp & quốc tịch",gt:"To be khẳng định: am / is / are",
 g:"Động từ to be nghĩa là 'là' hoặc 'ở'. I đi với am; He / She / It đi với is; You / We / They đi với are. Viết tắt: I'm, he's, she's, you're, we're, they're. Nói nghề của 1 người phải có a (hoặc an trước nguyên âm): a doctor, an engineer.",
-w:["doctor|bác sĩ","engineer|kỹ sư","nurse|y tá","driver|tài xế","office worker|nhân viên văn phòng","accountant|kế toán","Vietnam|nước Việt Nam","Vietnamese|người Việt Nam","Japan|nước Nhật Bản","Japanese|người Nhật","from|đến từ","city|thành phố","worker|công nhân","farmer|nông dân","businessman|doanh nhân","chef|đầu bếp","police officer|cảnh sát","Korea|nước Hàn Quốc","Korean|người Hàn Quốc","country|đất nước","actor|diễn viên","singer|ca sĩ","waiter|người phục vụ (bàn)","artist|họa sĩ, nghệ sĩ","writer|nhà văn","language|ngôn ngữ"],
+w:["doctor|bác sĩ","engineer|kỹ sư","nurse|y tá","driver|tài xế","office worker|nhân viên văn phòng","accountant|kế toán","Vietnam|nước Việt Nam","Vietnamese|người Việt Nam","Japan|nước Nhật Bản","Japanese|người Nhật","from|đến từ","city|thành phố","worker|công nhân","farmer|nông dân","businessman|doanh nhân","chef|đầu bếp","police officer|cảnh sát","Korea|nước Hàn Quốc","Korean|người Hàn Quốc","country|đất nước","actor|diễn viên","singer|ca sĩ","waiter|người phục vụ (bàn)","artist|họa sĩ, nghệ sĩ","writer|nhà văn","language|ngôn ngữ","dancer|vũ công","scientist|nhà khoa học","tourist|khách du lịch","capital|thủ đô"],
 p:["I am a nurse.|Tôi là y tá.","He is an engineer.|Anh ấy là kỹ sư.","She is from Japan.|Cô ấy đến từ Nhật Bản.","We are Vietnamese.|Chúng tôi là người Việt Nam.","I'm an office worker.|Tôi là nhân viên văn phòng.","They are farmers.|Họ là nông dân.","You are a good chef.|Bạn là một đầu bếp giỏi.","My friend is from Korea.|Bạn tôi đến từ Hàn Quốc."],
 q:[["She ___ a doctor.","am|is|are",1],["They ___ from Japan.","is|am|are",2],["I ___ an accountant.","am|is|are",0],["He is ___ engineer.","a|an|(không cần từ nào)",1],["We ___ engineers.", "is|am|are", 2],["Viết tắt của \"she is\":", "she's|shes|she'is", 0]]},
 
 {n:5,t:"Hỏi thông tin cá nhân",gt:"To be phủ định, câu hỏi; What / Where / Who",
 g:"Câu hỏi Yes/No: đưa to be lên đầu. You are a student → Are you a student? Trả lời: Yes, I am. / No, I'm not. Phủ định: thêm not sau to be: He is not (isn't) a driver. Câu hỏi có từ để hỏi: What / Where / Who + to be + chủ ngữ?",
-w:["what|cái gì","where|ở đâu","who|ai","job|công việc","live|sống","hometown|quê","address|địa chỉ","married|đã kết hôn","single|độc thân","near|gần","work|làm việc","company|công ty","how|như thế nào","when|khi nào","why|tại sao","which|cái nào","birthday|sinh nhật","email address|địa chỉ email","free|rảnh","here|ở đây","know|biết","tell|nói cho biết, kể","information|thông tin","favorite|yêu thích nhất","same|giống nhau","different|khác nhau"],
+w:["what|cái gì","where|ở đâu","who|ai","job|công việc","live|sống","hometown|quê","address|địa chỉ","married|đã kết hôn","single|độc thân","near|gần","work|làm việc","company|công ty","how|như thế nào","when|khi nào","why|tại sao","which|cái nào","birthday|sinh nhật","email address|địa chỉ email","free|rảnh","here|ở đây","know|biết","tell|nói cho biết, kể","information|thông tin","favorite|yêu thích nhất","same|giống nhau","different|khác nhau","age|tuổi","website|trang web","online|trên mạng","adult|người lớn"],
 p:["What is your job?|Công việc của bạn là gì?","Where are you from?|Bạn đến từ đâu?","Are you married? – No, I'm not.|Bạn kết hôn chưa? – Chưa.","Who is she?|Cô ấy là ai?","Where is your company?|Công ty của bạn ở đâu?","Is she your sister? – Yes, she is.|Cô ấy là chị gái bạn à? – Đúng vậy.","I'm not free today.|Hôm nay tôi không rảnh.","When is your birthday?|Sinh nhật bạn khi nào?"],
 q:[["___ are you from? – I'm from Hanoi.","What|Where|Who",1],["Are you a student? – Yes, ___","I am.|I'm.|I is.",0],["Phủ định của \"He is a driver\":","He not is a driver.|He isn't a driver.|He aren't a driver.",1],["___ is that man? – He is my teacher.","Who|What|Where",0],["___ is your birthday? – It's in May.", "When|Who|Where", 0],["Is she a nurse? – No, ___", "she isn't.|she not.|she aren't.", 0]]},
 
 {n:6,t:"Đồ vật quanh ta",gt:"a / an, số nhiều, this / that / these / those",
 g:"a đứng trước phụ âm (a bag), an đứng trước nguyên âm (an umbrella). Số nhiều thêm -s (bags); từ tận cùng s, x, ch, sh thêm -es (boxes, watches). this = cái này (gần), these = những cái này; that = cái kia (xa), those = những cái kia.",
-w:["table|cái bàn","chair|cái ghế","bag|cái túi","phone|điện thoại","key|chìa khóa","umbrella|cái ô","computer|máy tính","window|cửa sổ","door|cửa ra vào","bottle|cái chai","box|cái hộp","watch|đồng hồ đeo tay","cup|cái cốc","glass|cái ly thủy tinh","picture|bức tranh","clock|đồng hồ treo tường","wallet|cái ví","glasses|kính mắt","lamp|cái đèn","pencil|bút chì","desk|bàn làm việc","paper|giấy","dictionary|từ điển","put|đặt, để","find|tìm thấy","bring|mang theo"],
+w:["table|cái bàn","chair|cái ghế","bag|cái túi","phone|điện thoại","key|chìa khóa","umbrella|cái ô","computer|máy tính","window|cửa sổ","door|cửa ra vào","bottle|cái chai","box|cái hộp","watch|đồng hồ đeo tay","cup|cái cốc","glass|cái ly thủy tinh","picture|bức tranh","clock|đồng hồ treo tường","wallet|cái ví","glasses|kính mắt","lamp|cái đèn","pencil|bút chì","desk|bàn làm việc","paper|giấy","dictionary|từ điển","put|đặt, để","find|tìm thấy","bring|mang theo","camera|máy ảnh","radio|đài, radio","television|tivi","newspaper|báo","magazine|tạp chí","ball|quả bóng"],
 p:["What is this? – It's a key.|Đây là cái gì? – Đó là chìa khóa.","That is an umbrella.|Kia là một cái ô.","These are my books.|Đây là những quyển sách của tôi.","Those are big boxes.|Kia là những cái hộp to.","Is this your wallet? – Yes, it is.|Đây là ví của bạn à? – Đúng rồi.","This is a nice picture.|Đây là một bức tranh đẹp.","Those are my glasses.|Kia là kính của tôi.","I have two pencils.|Tôi có hai cây bút chì."],
 q:[["___ umbrella","a|an|two",1],["Số nhiều của \"box\":","boxs|boxes|boxies",1],["___ are my keys. (ở gần)","This|These|That",1],["___ is a chair. (ở xa)","That|Those|These",0],["Số nhiều của \"watch\":", "watchs|watches|watchies", 1],["___ is my phone. (đang cầm trên tay)", "This|These|Those", 0]]},
 
 {n:7,t:"Gia đình",gt:"Tính từ sở hữu; sở hữu cách 's; me / him / her / them",
 g:"Tính từ sở hữu đứng trước danh từ: I → my, you → your, he → his, she → her, we → our, they → their, it → its. Ví dụ: my father, her son. 'have' nghĩa là có: I have a sister. Sở hữu cách 's: tên người + 's + đồ vật, nghĩa là “của ai”: Lan's phone = điện thoại của Lan, my brother's wife = vợ của anh tôi. Đại từ làm tân ngữ (đứng sau động từ): I → me, he → him, she → her, we → us, they → them. Ví dụ: I love them. Call me.",
-w:["family|gia đình","father|bố","mother|mẹ","parents|bố mẹ","brother|anh / em trai","sister|chị / em gái","son|con trai","daughter|con gái","husband|chồng","wife|vợ","children|con cái","grandparents|ông bà","uncle|chú, bác, cậu","aunt|cô, dì, bác gái","cousin|anh chị em họ","baby|em bé","grandfather|ông","grandmother|bà","only child|con một","twins|anh chị em sinh đôi","me|tôi (sau động từ)","him|anh ấy (sau động từ)","us|chúng tôi (sau động từ)","them|họ (sau động từ)","dad|bố (thân mật)","mom|mẹ (thân mật)"],
+w:["family|gia đình","father|bố","mother|mẹ","parents|bố mẹ","brother|anh / em trai","sister|chị / em gái","son|con trai","daughter|con gái","husband|chồng","wife|vợ","children|con cái","grandparents|ông bà","uncle|chú, bác, cậu","aunt|cô, dì, bác gái","cousin|anh chị em họ","baby|em bé","grandfather|ông","grandmother|bà","only child|con một","twins|anh chị em sinh đôi","me|tôi (sau động từ)","him|anh ấy (sau động từ)","us|chúng tôi (sau động từ)","them|họ (sau động từ)","dad|bố (thân mật)","mom|mẹ (thân mật)","girlfriend|bạn gái","boyfriend|bạn trai","man|người đàn ông","girl|cô gái","teenager|thanh thiếu niên"],
 p:["This is my family.|Đây là gia đình tôi.","Her name is Hoa.|Tên cô ấy là Hoa.","I have two brothers.|Tôi có hai anh em trai.","His wife is a teacher.|Vợ anh ấy là giáo viên.","Their children are students.|Con của họ là học sinh.","My uncle is a driver.|Chú tôi là tài xế.","I'm an only child.|Tôi là con một.","Your baby is very cute.|Em bé của bạn rất dễ thương.","This is Lan's husband.|Đây là chồng của Lan.","My brother's name is Nam.|Anh trai tôi tên là Nam.","I love them very much.|Tôi rất yêu họ.","Call me, please.|Gọi cho tôi nhé."],
 q:[["This is Nam. ___ wife is a nurse.","His|Her|My",0],["Lan is a doctor. ___ son is ten.","His|Her|Their",1],["We love ___ parents.","our|we|us",0],["\"daughter\" nghĩa là:","Con trai|Con gái|Cháu",1],["Mr. and Mrs. Lee love ___ children.", "his|her|their", 2],["\"aunt\" nghĩa là:", "Chú, bác|Cô, dì|Ông", 1],["\"Ông của Mai\" là:", "Mai's grandfather|Grandfather Mai's|Mai grandfather", 0],["This is ___ phone.", "Nam|Nam's|Nams", 1],["Tom is my friend. I like ___.", "he|him|his", 1],["My parents are great. I love ___.", "they|their|them", 2]]},
 
 {n:8,t:"Màu sắc & miêu tả",gt:"Tính từ đứng trước danh từ",
 g:"Tính từ đứng TRƯỚC danh từ, ngược với tiếng Việt: xe đỏ = a red car (không nói a car red). Hoặc đứng sau to be: The car is red. Tính từ không thêm -s khi số nhiều: two red cars.",
-w:["red|màu đỏ","blue|màu xanh dương","green|màu xanh lá","yellow|màu vàng","black|màu đen","white|màu trắng","big|to","small|nhỏ","tall|cao","short|thấp, ngắn","new|mới","beautiful|đẹp","pink|màu hồng","brown|màu nâu","orange|màu cam","gray|màu xám","long|dài","old|cũ, già","young|trẻ","cute|dễ thương","face|khuôn mặt","eye|mắt","hand|bàn tay","leg|chân","head|đầu","dark|tối, sẫm màu","purple|màu tím"],
+w:["red|màu đỏ","blue|màu xanh dương","green|màu xanh lá","yellow|màu vàng","black|màu đen","white|màu trắng","big|to","small|nhỏ","tall|cao","short|thấp, ngắn","new|mới","beautiful|đẹp","pink|màu hồng","brown|màu nâu","orange|màu cam","gray|màu xám","long|dài","old|cũ, già","young|trẻ","cute|dễ thương","face|khuôn mặt","eye|mắt","hand|bàn tay","leg|chân","head|đầu","dark|tối, sẫm màu","purple|màu tím","hair|tóc","nose|mũi","mouth|miệng","ear|tai","tooth|răng","arm|cánh tay","foot|bàn chân","funny|vui tính, buồn cười","strong|khỏe"],
 p:["I have a red car.|Tôi có một chiếc xe hơi màu đỏ.","My bag is black.|Túi của tôi màu đen.","She is tall and beautiful.|Cô ấy cao và đẹp.","It's a small house.|Đó là một ngôi nhà nhỏ.","Her hair is long and black.|Tóc cô ấy dài và đen.","What color is your bag? – It's brown.|Túi của bạn màu gì? – Màu nâu.","My grandfather is old but strong.|Ông tôi già nhưng khỏe.","The baby is very cute.|Em bé rất dễ thương."],
 q:[["\"Chiếc túi mới\" là:","a bag new|a new bag|a news bag",1],["My car ___ white.","is|are|am",0],["\"Hai cái ghế xanh\" là:","two blues chairs|two blue chairs|two chairs blue",1],["Trái nghĩa của \"big\":","tall|small|new",1],["\"What color is it?\" hỏi về:", "Kích thước|Màu sắc|Giá tiền", 1],["\"Một con mèo nhỏ màu trắng\" là:", "a white small cat|a small white cat|a cat small white", 1]]},
 
 {n:9,t:"Thói quen hằng ngày",gt:"Hiện tại đơn với I / you / we / they",
 g:"Hiện tại đơn nói về thói quen, việc lặp lại. Với I / you / we / they: giữ nguyên động từ (I work). Phủ định: don't + động từ (I don't cook). Câu hỏi: Do + chủ ngữ + động từ? (Do you cook?) Trả lời: Yes, I do. / No, I don't.",
-w:["get up|thức dậy","have breakfast|ăn sáng","go to work|đi làm","start|bắt đầu","finish|kết thúc","have lunch|ăn trưa","go home|về nhà","cook|nấu ăn","watch TV|xem TV","read|đọc","go to bed|đi ngủ","every day|mỗi ngày","take a shower|tắm","brush teeth|đánh răng","have dinner|ăn tối","go shopping|đi mua sắm","do homework|làm bài tập về nhà","exercise|tập thể dục","early|sớm","late|muộn","wake up|thức dậy","often|thường, hay","before|trước (khi)","after|sau (khi)","ready|sẵn sàng","quickly|nhanh chóng"],
+w:["get up|thức dậy","have breakfast|ăn sáng","go to work|đi làm","start|bắt đầu","finish|kết thúc","have lunch|ăn trưa","go home|về nhà","cook|nấu ăn","watch TV|xem TV","read|đọc","go to bed|đi ngủ","every day|mỗi ngày","take a shower|tắm","brush teeth|đánh răng","have dinner|ăn tối","go shopping|đi mua sắm","do homework|làm bài tập về nhà","exercise|tập thể dục","early|sớm","late|muộn","wake up|thức dậy","often|thường, hay","before|trước (khi)","after|sau (khi)","ready|sẵn sàng","quickly|nhanh chóng","routine|lịch sinh hoạt","bath|tắm bồn"],
 p:["I get up at six.|Tôi thức dậy lúc 6 giờ.","We have lunch at twelve.|Chúng tôi ăn trưa lúc 12 giờ.","They don't cook at home.|Họ không nấu ăn ở nhà.","Do you watch TV every day?|Bạn có xem TV mỗi ngày không?","I take a shower in the morning.|Tôi tắm vào buổi sáng.","We have dinner at seven.|Chúng tôi ăn tối lúc 7 giờ.","I don't go to bed late.|Tôi không đi ngủ muộn.","What time do you get up?|Bạn thức dậy lúc mấy giờ?","I have breakfast before work.|Tôi ăn sáng trước khi đi làm.","After work, I often go to the gym.|Sau giờ làm, tôi hay đi tập gym."],
 q:[["I ___ at 7 every day.","get up|gets up|getting up",0],["They ___ watch TV.","doesn't|don't|not",1],["___ you go to work by bus?","Do|Does|Are",0],["Do you cook? – Yes, ___","I do.|I cook.|I am.",0],["What time ___ you have dinner?", "do|does|are", 0],["We ___ exercise every day.", "doesn't|don't|isn't", 1],["Tôi ăn sáng ___ khi đi làm: I have breakfast ___ work.", "after|before|often", 1]]},
 
 {n:10,t:"Công việc",gt:"Hiện tại đơn với he / she: thêm -s, does",
 g:"Với He / She / It: động từ thêm -s (works, drives). Tận cùng o, s, x, ch, sh thêm -es (goes, watches). have đổi thành has. Phủ định: doesn't + động từ nguyên mẫu (He doesn't work). Câu hỏi: Does + chủ ngữ + động từ nguyên mẫu?",
-w:["office|văn phòng","factory|nhà máy","hospital|bệnh viện","school|trường học","boss|sếp","colleague|đồng nghiệp","customer|khách hàng","meeting|cuộc họp","salary|lương","busy|bận","drive|lái xe","help|giúp đỡ","teach|dạy","manager|quản lý","staff|nhân viên","email|thư điện tử","report|báo cáo","earn|kiếm (tiền)","day off|ngày nghỉ","overtime|làm thêm giờ","send|gửi","message|tin nhắn","problem|vấn đề","important|quan trọng","hard|chăm chỉ; vất vả"],
+w:["office|văn phòng","factory|nhà máy","hospital|bệnh viện","school|trường học","boss|sếp","colleague|đồng nghiệp","customer|khách hàng","meeting|cuộc họp","salary|lương","busy|bận","drive|lái xe","help|giúp đỡ","teach|dạy","manager|quản lý","staff|nhân viên","email|thư điện tử","report|báo cáo","earn|kiếm (tiền)","day off|ngày nghỉ","overtime|làm thêm giờ","send|gửi","message|tin nhắn","problem|vấn đề","important|quan trọng","hard|chăm chỉ; vất vả","business|kinh doanh","project|dự án","team|nhóm","member|thành viên","career|sự nghiệp"],
 p:["She works in a hospital.|Cô ấy làm việc ở bệnh viện.","My boss drives to work.|Sếp tôi lái xe đi làm.","He doesn't work on Sunday.|Anh ấy không làm việc vào Chủ nhật.","Does she have a meeting today?|Hôm nay cô ấy có cuộc họp không?","My sister teaches English.|Chị tôi dạy tiếng Anh.","He has a meeting every Monday.|Anh ấy có họp mỗi thứ Hai.","She doesn't like her job.|Cô ấy không thích công việc của mình.","What does your father do?|Bố bạn làm nghề gì?"],
 q:[["She ___ in an office.","work|works|working",1],["My father ___ TV every evening.","watchs|watches|watch",1],["He ___ like coffee.","don't|doesn't|isn't",1],["___ your sister have a car?","Do|Does|Is",1],["She ___ two children.", "have|has|haves", 1],["What ___ your brother do? – He's a driver.", "do|does|is", 1]]},
 
-{n:11,t:"Thời gian",gt:"Giờ, thứ, 12 tháng; in / on / at; always / never",
-g:"Giờ đúng: It's + số + o'clock. Giờ rưỡi: half past + giờ (half past eight = 8:30). Thứ dùng on (on Monday), giờ dùng at (at 7), tháng dùng in (in May). Trạng từ tần suất đứng trước động từ thường (I always eat) và sau to be (She is never late). Ghi nhớ nhanh: AT + giờ (at 7, at night), ON + thứ, ngày (on Monday, on May 5th), IN + tháng, năm, buổi (in May, in 2025, in the morning). 12 tháng luôn viết hoa chữ cái đầu.",
-w:["Monday|thứ Hai","Tuesday|thứ Ba","Wednesday|thứ Tư","Thursday|thứ Năm","Friday|thứ Sáu","Saturday|thứ Bảy","Sunday|Chủ nhật","o'clock|giờ đúng","always|luôn luôn","usually|thường xuyên","sometimes|thỉnh thoảng","never|không bao giờ","morning|buổi sáng","afternoon|buổi chiều","evening|buổi tối","week|tuần","month|tháng","January|tháng Một","December|tháng Mười Hai","quarter past|quá 15 phút","February|tháng Hai","March|tháng Ba","April|tháng Tư","May|tháng Năm","June|tháng Sáu","July|tháng Bảy","August|tháng Tám","September|tháng Chín","October|tháng Mười","November|tháng Mười Một"],
-p:["What time is it? – It's seven o'clock.|Mấy giờ rồi? – 7 giờ đúng.","It's half past eight.|Bây giờ là 8 giờ rưỡi.","I usually go to the gym on Monday.|Tôi thường đi tập gym vào thứ Hai.","She is never late.|Cô ấy không bao giờ đi trễ.","It's a quarter past six.|Bây giờ là 6 giờ 15.","My birthday is in January.|Sinh nhật tôi vào tháng Một.","I sometimes work on Saturday.|Thỉnh thoảng tôi làm việc vào thứ Bảy.","See you on Friday at ten.|Hẹn gặp bạn thứ Sáu lúc 10 giờ.","Tet is in January or February.|Tết vào tháng Một hoặc tháng Hai.","The meeting is at nine on Monday.|Cuộc họp lúc 9 giờ vào thứ Hai.","I study English in the evening.|Tôi học tiếng Anh vào buổi tối."],
-q:[["9:30 là:","half past nine|nine half|half past ten",0],["I go to the gym ___ Monday.","in|on|at",1],["The class starts ___ 7 o'clock.","on|in|at",2],["Câu đúng là:","I eat always rice.|I always eat rice.|Always I eat rice.",1],["My birthday is ___ December.", "on|in|at", 1],["7:15 là:", "a quarter past seven|seven fifteen past|a quarter to seven", 0],["I was born ___ 1998.", "in|on|at", 0],["See you ___ Friday!", "in|on|at", 1],["I watch TV ___ night.", "in|on|at", 2],["Tháng Tám là:", "August|October|April", 0]]},
+{n:11,t:"Thời gian",gt:"Giờ, thứ, 12 tháng; in / on / at; always / never; How often?",
+g:"Giờ đúng: It's + số + o'clock. Giờ rưỡi: half past + giờ (half past eight = 8:30). Thứ dùng on (on Monday), giờ dùng at (at 7), tháng dùng in (in May). Trạng từ tần suất đứng trước động từ thường (I always eat) và sau to be (She is never late). Ghi nhớ nhanh: AT + giờ (at 7, at night), ON + thứ, ngày (on Monday, on May 5th), IN + tháng, năm, buổi (in May, in 2025, in the morning). 12 tháng luôn viết hoa chữ cái đầu. Hỏi bao lâu một lần: How often + do/does + chủ ngữ + động từ? Trả lời: every day (mỗi ngày), once a week (mỗi tuần một lần), twice a month (mỗi tháng hai lần), three times a week (mỗi tuần ba lần).",
+w:["Monday|thứ Hai","Tuesday|thứ Ba","Wednesday|thứ Tư","Thursday|thứ Năm","Friday|thứ Sáu","Saturday|thứ Bảy","Sunday|Chủ nhật","o'clock|giờ đúng","always|luôn luôn","usually|thường xuyên","sometimes|thỉnh thoảng","never|không bao giờ","morning|buổi sáng","afternoon|buổi chiều","evening|buổi tối","week|tuần","month|tháng","January|tháng Một","December|tháng Mười Hai","quarter past|quá 15 phút","February|tháng Hai","March|tháng Ba","April|tháng Tư","May|tháng Năm","June|tháng Sáu","July|tháng Bảy","August|tháng Tám","September|tháng Chín","October|tháng Mười","November|tháng Mười Một","minute|phút","hour|tiếng, giờ đồng hồ","half|một nửa, rưỡi","midnight|nửa đêm","once|một lần","twice|hai lần","later|sau, lát nữa","how often|bao lâu một lần"],
+p:["What time is it? – It's seven o'clock.|Mấy giờ rồi? – 7 giờ đúng.","It's half past eight.|Bây giờ là 8 giờ rưỡi.","I usually go to the gym on Monday.|Tôi thường đi tập gym vào thứ Hai.","She is never late.|Cô ấy không bao giờ đi trễ.","It's a quarter past six.|Bây giờ là 6 giờ 15.","My birthday is in January.|Sinh nhật tôi vào tháng Một.","I sometimes work on Saturday.|Thỉnh thoảng tôi làm việc vào thứ Bảy.","See you on Friday at ten.|Hẹn gặp bạn thứ Sáu lúc 10 giờ.","Tet is in January or February.|Tết vào tháng Một hoặc tháng Hai.","The meeting is at nine on Monday.|Cuộc họp lúc 9 giờ vào thứ Hai.","I study English in the evening.|Tôi học tiếng Anh vào buổi tối.","How often do you exercise? – Twice a week.|Bạn tập thể dục bao lâu một lần? – Mỗi tuần hai lần.","I visit my parents once a month.|Mỗi tháng tôi về thăm bố mẹ một lần."],
+q:[["9:30 là:","half past nine|nine half|half past ten",0],["I go to the gym ___ Monday.","in|on|at",1],["The class starts ___ 7 o'clock.","on|in|at",2],["Câu đúng là:","I eat always rice.|I always eat rice.|Always I eat rice.",1],["My birthday is ___ December.","on|in|at",1],["7:15 là:","a quarter past seven|seven fifteen past|a quarter to seven",0],["I was born ___ 1998.","in|on|at",0],["See you ___ Friday!","in|on|at",1],["I watch TV ___ night.","in|on|at",2],["Tháng Tám là:","August|October|April",0],["___ do you go to the gym? – Three times a week.","How often|How many|What time",0],["\"Mỗi tuần một lần\" là:","once a week|one a week|one time week",0]]},
 
 {n:12,t:"Ôn tập & kiểm tra giữa khóa",gt:"Ôn buổi 1–11",review:[1,11],
 g:"Bài kiểm tra gồm 30 câu lấy ngẫu nhiên từ buổi 1–11: từ vựng, ngữ pháp và sắp xếp câu. Mỗi lần làm lại câu hỏi sẽ khác. Mục tiêu: đạt từ 70% trở lên.",w:[],p:[],q:[]},
 
-{n:13,t:"Đồ ăn & gọi món",gt:"I'd like…, Can I have…?; đếm được / không đếm được",
-g:"Gọi món lịch sự: I'd like + món (I'd like = I would like = tôi muốn), hoặc Can I have + món, please? Danh từ đếm được có số nhiều (an egg, two eggs). Danh từ không đếm được không thêm -s, không dùng a/an: water, rice. Riêng khi gọi đồ uống có thể nói 'a coffee' = một ly cà phê.",
-w:["rice|cơm, gạo","noodles|mì, bún, phở","chicken|thịt gà","beef|thịt bò","fish|cá","egg|trứng","bread|bánh mì","water|nước","coffee|cà phê","tea|trà","menu|thực đơn","bill|hóa đơn","delicious|ngon","pork|thịt lợn","vegetables|rau","fruit|trái cây","juice|nước ép","milk|sữa","sugar|đường","salt|muối","spicy|cay","meat|thịt","cheese|phô mai","cake|bánh ngọt","potato|khoai tây","tomato|cà chua","restaurant|nhà hàng"],
-p:["Can I have the menu, please?|Cho tôi xem thực đơn được không?","I'd like a coffee, please.|Cho tôi một ly cà phê.","Can I have the bill, please?|Cho tôi tính tiền nhé.","This soup is delicious.|Món súp này ngon quá.","I'd like fried rice with chicken.|Cho tôi cơm chiên gà.","No sugar, please.|Đừng cho đường nhé.","Is it spicy?|Món này có cay không?","Can I have some water, please?|Cho tôi xin ít nước."],
-q:[["\"I'd like\" nghĩa là:","Tôi thích|Tôi muốn|Tôi có",1],["Danh từ KHÔNG đếm được:","egg|water|chair",1],["Muốn tính tiền, bạn nói:","Can I have the menu?|Can I have the bill, please?|I'd like a fish.",1],["Two ___, please.","egg|eggs|an egg",1],["Bạn không muốn cho đường, bạn nói:", "No sugar, please.|Some sugar, please.|I like sugar.", 0],["Can I have ___ water, please?", "a|some|an", 1]]},
+{n:13,t:"Đồ ăn & gọi món",gt:"I'd like…, Can I have…?; I'd like to / want to + động từ; đếm được / không đếm được",
+g:"Gọi món lịch sự: I'd like + món (I'd like = I would like = tôi muốn), hoặc Can I have + món, please? Danh từ đếm được có số nhiều (an egg, two eggs). Danh từ không đếm được không thêm -s, không dùng a/an: water, rice. Riêng khi gọi đồ uống có thể nói 'a coffee' = một ly cà phê. Muốn LÀM gì: I'd like to + động từ (I'd like to order = tôi muốn gọi món) hoặc I want to + động từ (I want to try pho). Mời lịch sự: Would you like to + động từ…? (Bạn có muốn… không?). Chú ý: I'd like a coffee (+ đồ vật) nhưng I'd like to drink coffee (+ việc làm).",
+w:["rice|cơm, gạo","noodles|mì, bún, phở","chicken|thịt gà","beef|thịt bò","fish|cá","egg|trứng","bread|bánh mì","water|nước","coffee|cà phê","tea|trà","menu|thực đơn","bill|hóa đơn","delicious|ngon","pork|thịt lợn","vegetables|rau","fruit|trái cây","juice|nước ép","milk|sữa","sugar|đường","salt|muối","spicy|cay","meat|thịt","cheese|phô mai","cake|bánh ngọt","potato|khoai tây","tomato|cà chua","restaurant|nhà hàng","food|đồ ăn","meal|bữa ăn","apple|quả táo","banana|quả chuối","chocolate|sô-cô-la","ice cream|kem","salad|món sa-lát","sandwich|bánh mì kẹp","vegetable|rau","soup|món súp"],
+p:["Can I have the menu, please?|Cho tôi xem thực đơn được không?","I'd like a coffee, please.|Cho tôi một ly cà phê.","Can I have the bill, please?|Cho tôi tính tiền nhé.","This soup is delicious.|Món súp này ngon quá.","I'd like fried rice with chicken.|Cho tôi cơm chiên gà.","No sugar, please.|Đừng cho đường nhé.","Is it spicy?|Món này có cay không?","Can I have some water, please?|Cho tôi xin ít nước.","I'd like to order, please.|Tôi muốn gọi món.","Would you like to try some?|Bạn có muốn ăn thử một chút không?"],
+q:[["\"I'd like\" nghĩa là:","Tôi thích|Tôi muốn|Tôi có",1],["Danh từ KHÔNG đếm được:","egg|water|chair",1],["Muốn tính tiền, bạn nói:","Can I have the menu?|Can I have the bill, please?|I'd like a fish.",1],["Two ___, please.","egg|eggs|an egg",1],["Bạn không muốn cho đường, bạn nói:","No sugar, please.|Some sugar, please.|I like sugar.",0],["Can I have ___ water, please?","a|some|an",1],["I'd like ___ the fish.","try|to try|trying",1],["I want ___ a coffee.","drink|to drink|drinks",1]]},
 
 {n:14,t:"Mua sắm",gt:"How much is / are…?; some / any",
 g:"Hỏi giá 1 món: How much is + danh từ số ít? Nhiều món: How much are + danh từ số nhiều? some dùng trong câu khẳng định (I want some apples). any dùng trong câu phủ định và câu hỏi (I don't have any money. Do you have any eggs?).",
-w:["shop|cửa hàng","buy|mua","sell|bán","price|giá","cheap|rẻ","expensive|đắt","size|cỡ, kích thước","shirt|áo sơ mi","shoes|giày","dress|váy đầm","money|tiền","pay|trả tiền","try on|mặc thử","pants|quần dài","jacket|áo khoác","hat|cái mũ","discount|giảm giá","credit card|thẻ tín dụng","cash|tiền mặt","large|cỡ lớn","medium|cỡ vừa","clothes|quần áo","jeans|quần jean","T-shirt|áo phông","skirt|chân váy","dollar|đô la","cost|có giá (là)"],
+w:["shop|cửa hàng","buy|mua","sell|bán","price|giá","cheap|rẻ","expensive|đắt","size|cỡ, kích thước","shirt|áo sơ mi","shoes|giày","dress|váy đầm","money|tiền","pay|trả tiền","try on|mặc thử","pants|quần dài","jacket|áo khoác","hat|cái mũ","discount|giảm giá","credit card|thẻ tín dụng","cash|tiền mặt","large|cỡ lớn","medium|cỡ vừa","clothes|quần áo","jeans|quần jean","T-shirt|áo phông","skirt|chân váy","dollar|đô la","cost|có giá (là)","sweater|áo len","trousers|quần dài","boots|đôi bốt","pair|đôi, cặp","change|tiền thừa"],
 p:["How much is this shirt?|Cái áo này bao nhiêu tiền?","How much are these shoes?|Đôi giày này bao nhiêu tiền?","Can I try it on?|Tôi mặc thử được không?","Do you have any small sizes?|Bạn có cỡ nhỏ không?","It's too expensive.|Nó đắt quá.","Can I pay by card?|Tôi trả bằng thẻ được không?","I'll take it.|Tôi lấy cái này.","Do you have this in medium?|Cái này có cỡ vừa không?"],
 q:[["How much ___ these shoes?","is|are|do",1],["I don't have ___ money.","some|any|a",1],["I want ___ apples.","some|any|an",0],["Trái nghĩa của \"cheap\":","small|expensive|new",1],["\"discount\" nghĩa là:", "Giảm giá|Hóa đơn|Tiền mặt", 0],["Do you have ___ jackets?", "some|any|a", 1]]},
 
 {n:15,t:"Nhà cửa",gt:"There is / There are",
 g:"There is + danh từ số ít (There is a bed). There are + danh từ số nhiều (There are two beds). Phủ định: There isn't / There aren't. Câu hỏi: Is there…? / Are there…? Trả lời: Yes, there is. / No, there aren't.",
-w:["house|ngôi nhà","apartment|căn hộ","room|phòng","bedroom|phòng ngủ","kitchen|nhà bếp","bathroom|phòng tắm","living room|phòng khách","bed|giường","sofa|ghế sofa","fridge|tủ lạnh","garden|khu vườn","floor|tầng, sàn nhà","stairs|cầu thang","balcony|ban công","wardrobe|tủ quần áo","shower|vòi sen","mirror|cái gương","carpet|tấm thảm","washing machine|máy giặt","neighbor|hàng xóm","wall|bức tường","toilet|nhà vệ sinh","upstairs|ở tầng trên","downstairs|ở tầng dưới","quiet|yên tĩnh","dirty|bẩn"],
+w:["house|ngôi nhà","apartment|căn hộ","room|phòng","bedroom|phòng ngủ","kitchen|nhà bếp","bathroom|phòng tắm","living room|phòng khách","bed|giường","sofa|ghế sofa","fridge|tủ lạnh","garden|khu vườn","floor|tầng, sàn nhà","stairs|cầu thang","balcony|ban công","wardrobe|tủ quần áo","shower|vòi sen","mirror|cái gương","carpet|tấm thảm","washing machine|máy giặt","neighbor|hàng xóm","wall|bức tường","toilet|nhà vệ sinh","upstairs|ở tầng trên","downstairs|ở tầng dưới","quiet|yên tĩnh","dirty|bẩn","flat|căn hộ","plant|cây (trồng)","flower|bông hoa","building|tòa nhà","roof|mái nhà"],
 p:["There is a sofa in the living room.|Có một ghế sofa trong phòng khách.","There are two bedrooms.|Có hai phòng ngủ.","Is there a garden? – No, there isn't.|Có vườn không? – Không có.","There isn't a fridge in my room.|Phòng tôi không có tủ lạnh.","There is a mirror in the bathroom.|Có một cái gương trong phòng tắm.","Are there any chairs in the kitchen?|Trong bếp có cái ghế nào không?","My apartment is on the fifth floor.|Căn hộ của tôi ở tầng 5.","There aren't any shops near my house.|Gần nhà tôi không có cửa hàng nào."],
 q:[["There ___ three rooms.","is|are|be",1],["There ___ a fridge in the kitchen.","is|are|have",0],["___ there a bathroom? – Yes, there is.","Are|Is|Do",1],["\"kitchen\" nghĩa là:","phòng ngủ|nhà bếp|phòng khách",1],["There ___ any windows in the bathroom.", "isn't|aren't|not", 1],["Are there two bedrooms? – Yes, ___", "there is.|there are.|they are.", 1]]},
 
 {n:16,t:"Khả năng & sở thích",gt:"can / can't; like + V-ing",
 g:"can + động từ nguyên mẫu, mọi chủ ngữ đều giống nhau: He can swim (không có 'cans' hay 'can swims'). Phủ định: can't. Câu hỏi: Can you…? Nói sở thích: like + V-ing: I like reading. Thêm -ing: swim → swimming, dance → dancing.",
-w:["swim|bơi","sing|hát","dance|nhảy, múa","play football|chơi bóng đá","ride a bike|đi xe đạp","speak|nói (ngôn ngữ)","travel|đi du lịch","listen to music|nghe nhạc","take photos|chụp ảnh","play games|chơi game","hobby|sở thích","well|giỏi, tốt","draw|vẽ","play the guitar|chơi đàn guitar","read books|đọc sách","go fishing|đi câu cá","climb|leo","jog|chạy bộ","love|rất thích, yêu","hate|ghét","sport|thể thao","movie|bộ phim","song|bài hát","tennis|quần vợt","piano|đàn piano","interesting|thú vị","boring|nhàm chán"],
+w:["swim|bơi","sing|hát","dance|nhảy, múa","play football|chơi bóng đá","ride a bike|đi xe đạp","speak|nói (ngôn ngữ)","travel|đi du lịch","listen to music|nghe nhạc","take photos|chụp ảnh","play games|chơi game","hobby|sở thích","well|giỏi, tốt","draw|vẽ","play the guitar|chơi đàn guitar","read books|đọc sách","go fishing|đi câu cá","climb|leo","jog|chạy bộ","love|rất thích, yêu","hate|ghét","sport|thể thao","movie|bộ phim","song|bài hát","tennis|quần vợt","piano|đàn piano","interesting|thú vị","boring|nhàm chán","game|trò chơi","film|bộ phim","concert|buổi hòa nhạc","club|câu lạc bộ","band|ban nhạc","painting|vẽ tranh, bức tranh","story|câu chuyện"],
 p:["I can swim.|Tôi biết bơi.","She can't sing well.|Cô ấy hát không hay.","Can you speak English? – A little.|Bạn nói được tiếng Anh không? – Một chút.","I like listening to music.|Tôi thích nghe nhạc.","My son can draw very well.|Con trai tôi vẽ rất giỏi.","I don't like running.|Tôi không thích chạy bộ.","What do you do in your free time?|Lúc rảnh bạn làm gì?","She loves playing the guitar.|Cô ấy rất thích chơi guitar."],
 q:[["He ___ English.","can speaks|can speak|cans speak",1],["I like ___ photos.","take|taking|takes",1],["___ she drive? – No, she can't.","Do|Can|Is",1],["\"dance\" thêm -ing là:","danceing|dancing|dancting",1],["She ___ cooking.", "love|loves|loving", 1],["Câu đúng là:", "I can't to swim.|I can't swim.|I don't can swim.", 1]]},
 
 {n:17,t:"Đang làm gì?",gt:"Hiện tại tiếp diễn: am / is / are + V-ing",
 g:"Hiện tại tiếp diễn nói việc ĐANG xảy ra. Công thức: am / is / are + V-ing: I am eating. run → running (gấp đôi phụ âm cuối), write → writing (bỏ e). Câu hỏi: Are you eating? Dấu hiệu: now, right now, at the moment, Look!",
-w:["now|bây giờ","right now|ngay lúc này","at the moment|hiện tại","talk|nói chuyện","wait|đợi","eat|ăn","drink|uống","write|viết","run|chạy","sleep|ngủ","study|học","call|gọi điện","rain|mưa","cry|khóc","laugh|cười","sit|ngồi","stand|đứng","wear|mặc, đeo","smile|mỉm cười","work from home|làm việc ở nhà","hear|nghe thấy","something|cái gì đó","everything|mọi thứ","nothing|không có gì","together|cùng nhau"],
+w:["now|bây giờ","right now|ngay lúc này","at the moment|hiện tại","talk|nói chuyện","wait|đợi","eat|ăn","drink|uống","write|viết","run|chạy","sleep|ngủ","study|học","call|gọi điện","rain|mưa","cry|khóc","laugh|cười","sit|ngồi","stand|đứng","wear|mặc, đeo","smile|mỉm cười","work from home|làm việc ở nhà","hear|nghe thấy","something|cái gì đó","everything|mọi thứ","nothing|không có gì","together|cùng nhau","video|video","internet|mạng internet","text|tin nhắn","photo|bức ảnh"],
 p:["What are you doing?|Bạn đang làm gì vậy?","I'm waiting for the bus.|Tôi đang đợi xe buýt.","She is talking on the phone.|Cô ấy đang nói chuyện điện thoại.","They aren't sleeping now.|Bây giờ họ không ngủ.","It's raining now.|Bây giờ trời đang mưa.","Why are you laughing?|Sao bạn đang cười vậy?","He is wearing a blue shirt.|Anh ấy đang mặc áo sơ mi xanh.","Are you working from home today?|Hôm nay bạn làm việc ở nhà à?"],
 q:[["She ___ now.","is cooking|cooks|cooking",0],["What ___ you doing?","do|are|is",1],["\"run\" thêm -ing là:","runing|running|runeing",1],["Look! The baby ___","sleeps.|is sleeping.|sleep.",1],["Look! It ___", "rains.|is raining.|raining.", 1],["\"sit\" thêm -ing là:", "siting|sitting|sitteing", 1]]},
 
-{n:18,t:"Chỉ đường",gt:"Giới từ nơi chốn",
-g:"Giới từ nơi chốn: in (trong), on (trên), under (dưới), next to (bên cạnh), opposite (đối diện), between A and B (giữa A và B), behind (phía sau), in front of (phía trước). Hỏi đường lịch sự: Excuse me, where is…? hoặc How can I get to…?",
-w:["street|đường phố","bank|ngân hàng","supermarket|siêu thị","bus stop|trạm xe buýt","turn left|rẽ trái","turn right|rẽ phải","go straight|đi thẳng","next to|bên cạnh","opposite|đối diện","between|ở giữa","behind|phía sau","in front of|phía trước","corner|góc đường","traffic light|đèn giao thông","bridge|cây cầu","market|chợ","hotel|khách sạn","pharmacy|hiệu thuốc","map|bản đồ","far|xa","train|tàu hỏa","taxi|xe taxi","plane|máy bay","airport|sân bay","ticket|vé","park|công viên"],
-p:["Excuse me, where is the bank?|Xin lỗi, ngân hàng ở đâu ạ?","Go straight and turn left.|Đi thẳng rồi rẽ trái.","It's next to the supermarket.|Nó ở bên cạnh siêu thị.","The bus stop is opposite the school.|Trạm xe buýt ở đối diện trường học.","Turn right at the traffic light.|Rẽ phải ở đèn giao thông.","Is it far from here?|Có xa đây không?","The pharmacy is on the corner.|Hiệu thuốc ở góc đường.","How can I get to the market?|Đi đến chợ bằng cách nào?"],
-q:[["Ngân hàng ở giữa trường và chợ: The bank is ___ the school and the market.","next to|between|opposite",1],["\"Rẽ phải\" là:","turn left|turn right|go straight",1],["Hỏi đường lịch sự, bạn mở đầu bằng:","Hey!|Excuse me,|Sorry me,",1],["The cat is ___ the table. (ở dưới bàn)","on|under|in",1],["\"Hiệu thuốc\" là:", "pharmacy|bakery|library", 0],["The hotel is ___ the bank. (đối diện)", "opposite|between|behind", 0]]},
+{n:18,t:"Chỉ đường",gt:"Giới từ nơi chốn; have to / should / must",
+g:"Giới từ nơi chốn: in (trong), on (trên), under (dưới), next to (bên cạnh), opposite (đối diện), between A and B (giữa A và B), behind (phía sau), in front of (phía trước). Hỏi đường lịch sự: Excuse me, where is…? hoặc How can I get to…? Phải làm gì: have to + động từ (You have to turn left), với he/she dùng has to (She has to take a bus). Lời khuyên: should + động từ (You should take a taxi). must: bắt buộc, mạnh hơn (You must stop at the red light). Phủ định: don't have to = không cần, shouldn't = không nên, mustn't = không được.",
+w:["street|đường phố","bank|ngân hàng","supermarket|siêu thị","bus stop|trạm xe buýt","turn left|rẽ trái","turn right|rẽ phải","go straight|đi thẳng","next to|bên cạnh","opposite|đối diện","between|ở giữa","behind|phía sau","in front of|phía trước","corner|góc đường","traffic light|đèn giao thông","bridge|cây cầu","market|chợ","hotel|khách sạn","pharmacy|hiệu thuốc","map|bản đồ","far|xa","train|tàu hỏa","taxi|xe taxi","plane|máy bay","airport|sân bay","ticket|vé","park|công viên","road|con đường","station|nhà ga","town|thị trấn","village|làng","place|nơi, chỗ","kilometer|ki-lô-mét","north|phía bắc","south|phía nam","east|phía đông","west|phía tây"],
+p:["Excuse me, where is the bank?|Xin lỗi, ngân hàng ở đâu ạ?","Go straight and turn left.|Đi thẳng rồi rẽ trái.","It's next to the supermarket.|Nó ở bên cạnh siêu thị.","The bus stop is opposite the school.|Trạm xe buýt ở đối diện trường học.","Turn right at the traffic light.|Rẽ phải ở đèn giao thông.","Is it far from here?|Có xa đây không?","The pharmacy is on the corner.|Hiệu thuốc ở góc đường.","How can I get to the market?|Đi đến chợ bằng cách nào?","You have to turn left at the bank.|Bạn phải rẽ trái ở ngân hàng.","You should take a taxi. It's far.|Bạn nên đi taxi. Xa lắm.","You must stop at the red light.|Bạn phải dừng lại khi đèn đỏ.","I have to work on Saturday.|Tôi phải làm việc vào thứ Bảy.","You should drink more water.|Bạn nên uống nhiều nước hơn."],
+q:[["Ngân hàng ở giữa trường và chợ: The bank is ___ the school and the market.","next to|between|opposite",1],["\"Rẽ phải\" là:","turn left|turn right|go straight",1],["Hỏi đường lịch sự, bạn mở đầu bằng:","Hey!|Excuse me,|Sorry me,",1],["The cat is ___ the table. (ở dưới bàn)","on|under|in",1],["\"Hiệu thuốc\" là:","pharmacy|bakery|library",0],["The hotel is ___ the bank. (đối diện)","opposite|between|behind",0],["She ___ to work late today.","have|has|having",1],["You are tired. You ___ go to bed early.","should|has|are",0],["It's very far. You ___ take a taxi.","should|shouldn't|can't",0]]},
 
 {n:19,t:"Hôm qua",gt:"Quá khứ của to be: was / were; ngày tháng",
 g:"Quá khứ của to be: I / He / She / It + was; You / We / They + were. Phủ định: wasn't / weren't. Câu hỏi: Were you…? Was she…? Dấu hiệu: yesterday, last night, last week, two days ago. Ngày tháng dùng số thứ tự: 1st first, 2nd second, 3rd third, 4th fourth, 5th fifth… 20th twentieth, 21st twenty-first. Nói: on May 5th (on May fifth). Hỏi: When is your birthday? / When were you born?",
-w:["yesterday|hôm qua","last night|tối qua","last week|tuần trước","ago|cách đây","at home|ở nhà","at work|ở chỗ làm","tired|mệt","happy|vui","sad|buồn","hungry|đói","weekend|cuối tuần","party|bữa tiệc","born|được sinh ra","last month|tháng trước","last year|năm ngoái","sick|ốm","bored|chán","angry|tức giận","excited|hào hứng","at school|ở trường","first|thứ nhất (1st)","second|thứ hai (2nd)","third|thứ ba (3rd)","fourth|thứ tư (4th)","fifth|thứ năm (5th)","twelfth|thứ mười hai (12th)","twentieth|thứ hai mươi (20th)","date|ngày (tháng)"],
+w:["yesterday|hôm qua","last night|tối qua","last week|tuần trước","ago|cách đây","at home|ở nhà","at work|ở chỗ làm","tired|mệt","happy|vui","sad|buồn","hungry|đói","weekend|cuối tuần","party|bữa tiệc","born|được sinh ra","last month|tháng trước","last year|năm ngoái","sick|ốm","bored|chán","angry|tức giận","excited|hào hứng","at school|ở trường","first|thứ nhất (1st)","second|thứ hai (2nd)","third|thứ ba (3rd)","fourth|thứ tư (4th)","fifth|thứ năm (5th)","twelfth|thứ mười hai (12th)","twentieth|thứ hai mươi (20th)","date|ngày (tháng)","feel|cảm thấy","thirsty|khát","afraid|sợ","exciting|thú vị, hào hứng","fantastic|tuyệt vời","interested|quan tâm, thích"],
 p:["I was at home yesterday.|Hôm qua tôi ở nhà.","Where were you last night?|Tối qua bạn ở đâu?","We were very tired.|Chúng tôi đã rất mệt.","The party wasn't fun.|Bữa tiệc chẳng vui.","I was born in 1995.|Tôi sinh năm 1995.","She wasn't at work yesterday. She was sick.|Hôm qua cô ấy không đi làm. Cô ấy bị ốm.","Were they happy? – Yes, they were.|Họ có vui không? – Có.","I was bored last weekend.|Cuối tuần trước tôi thấy chán.","When is your birthday? – It's on May fifth.|Sinh nhật bạn khi nào? – Ngày 5 tháng 5.","I was born on March third, 1995.|Tôi sinh ngày 3 tháng 3 năm 1995.","What's the date today? – It's June twelfth.|Hôm nay ngày mấy? – Ngày 12 tháng 6."],
 q:[["I ___ tired yesterday.","were|was|am",1],["They ___ at the party last night.","was|were|are",1],["___ you at work yesterday?","Was|Were|Did",1],["\"Hai ngày trước\" là:","two days ago|ago two days|two days last",0],["Where ___ you born?", "was|were|are", 1],["She wasn't at work. She ___ sick.", "is|was|were", 1],["Ngày 3 đọc là:", "three|third|thirty", 1],["\"2nd\" đọc là:", "two|second|twice", 1],["I was born ___ July 4th.", "in|on|at", 1]]},
 
-{n:20,t:"Cuối tuần vừa rồi",gt:"Quá khứ đơn có quy tắc: -ed",
-g:"Quá khứ đơn có quy tắc: động từ + -ed (walk → walked), mọi chủ ngữ giống nhau. Từ tận cùng e chỉ thêm d (arrive → arrived). Phủ định: didn't + nguyên mẫu. Câu hỏi: Did + chủ ngữ + nguyên mẫu? Đọc đuôi -ed: /t/ sau p, k, s, sh, ch (walked); /id/ sau t, d (visited, needed); /d/ với các âm còn lại (played).",
-w:["visit|thăm","clean|dọn dẹp","stay|ở lại","walk|đi bộ","wash|rửa, giặt","open|mở","close|đóng","arrive|đến nơi","ask|hỏi","answer|trả lời","want|muốn","need|cần","rent|thuê","borrow|mượn","invite|mời","enjoy|tận hưởng, thích","check|kiểm tra","order|gọi món, đặt hàng","relax|thư giãn","stop|dừng lại","museum|bảo tàng","cinema|rạp chiếu phim","remember|nhớ","forget|quên","wonderful|tuyệt vời","terrible|tệ, kinh khủng"],
-p:["I visited my grandparents last weekend.|Cuối tuần trước tôi đã về thăm ông bà.","She cleaned the house yesterday.|Hôm qua cô ấy đã dọn nhà.","We didn't watch TV last night.|Tối qua chúng tôi không xem TV.","Did you walk to work? – Yes, I did.|Bạn đi bộ đi làm à? – Đúng vậy.","We enjoyed the party.|Chúng tôi rất thích bữa tiệc.","I ordered a pizza last night.|Tối qua tôi đã đặt pizza.","He didn't call me.|Anh ấy không gọi cho tôi.","They stayed at home and relaxed.|Họ ở nhà và thư giãn."],
-q:[["She ___ her mother yesterday.","visit|visited|visits",1],["We didn't ___ the house.","cleaned|clean|cleans",1],["Đuôi -ed của \"wanted\" đọc là:","/t/|/d/|/id/",2],["___ you watch the film last night?","Do|Did|Were",1],["Quá khứ của \"stop\":", "stoped|stopped|stopt", 1],["Đuôi -ed của \"played\" đọc là:", "/t/|/d/|/id/", 1]]},
+{n:20,t:"Cuối tuần vừa rồi",gt:"Quá khứ đơn có quy tắc: -ed; there was / there were",
+g:"Quá khứ đơn có quy tắc: động từ + -ed (walk → walked), mọi chủ ngữ giống nhau. Từ tận cùng e chỉ thêm d (arrive → arrived). Phủ định: didn't + nguyên mẫu. Câu hỏi: Did + chủ ngữ + nguyên mẫu? Đọc đuôi -ed: /t/ sau p, k, s, sh, ch (walked); /id/ sau t, d (visited, needed); /d/ với các âm còn lại (played). Quá khứ của there is / there are: There was + số ít (There was a party), There were + số nhiều (There were many people). Phủ định: There wasn't / There weren't. Câu hỏi: Was there…? / Were there…?",
+w:["visit|thăm","clean|dọn dẹp","stay|ở lại","walk|đi bộ","wash|rửa, giặt","open|mở","close|đóng","arrive|đến nơi","ask|hỏi","answer|trả lời","want|muốn","need|cần","rent|thuê","borrow|mượn","invite|mời","enjoy|tận hưởng, thích","check|kiểm tra","order|gọi món, đặt hàng","relax|thư giãn","stop|dừng lại","museum|bảo tàng","cinema|rạp chiếu phim","remember|nhớ","forget|quên","wonderful|tuyệt vời","terrible|tệ, kinh khủng","festival|lễ hội","theater|nhà hát","farm|nông trại","dog|con chó","cat|con mèo","bird|con chim","horse|con ngựa"],
+p:["I visited my grandparents last weekend.|Cuối tuần trước tôi đã về thăm ông bà.","She cleaned the house yesterday.|Hôm qua cô ấy đã dọn nhà.","We didn't watch TV last night.|Tối qua chúng tôi không xem TV.","Did you walk to work? – Yes, I did.|Bạn đi bộ đi làm à? – Đúng vậy.","We enjoyed the party.|Chúng tôi rất thích bữa tiệc.","I ordered a pizza last night.|Tối qua tôi đã đặt pizza.","He didn't call me.|Anh ấy không gọi cho tôi.","They stayed at home and relaxed.|Họ ở nhà và thư giãn.","There was a big party last Saturday.|Thứ Bảy tuần trước có một bữa tiệc lớn.","There were many people at the beach.|Ở bãi biển có rất nhiều người."],
+q:[["She ___ her mother yesterday.","visit|visited|visits",1],["We didn't ___ the house.","cleaned|clean|cleans",1],["Đuôi -ed của \"wanted\" đọc là:","/t/|/d/|/id/",2],["___ you watch the film last night?","Do|Did|Were",1],["Quá khứ của \"stop\":","stoped|stopped|stopt",1],["Đuôi -ed của \"played\" đọc là:","/t/|/d/|/id/",1],["There ___ a lot of people at the party.","was|were|is",1],["___ there a problem yesterday?","Were|Was|Did",1]]},
 
-{n:21,t:"Chuyến đi",gt:"Quá khứ đơn bất quy tắc",
-g:"Nhiều động từ hay dùng có dạng quá khứ riêng, phải học thuộc: go → went, have → had, see → saw, eat → ate, buy → bought. Phủ định và câu hỏi vẫn dùng did + nguyên mẫu: I didn't go (không nói didn't went).",
-w:["go – went|đi","have – had|có, ăn","see – saw|nhìn thấy","eat – ate|ăn","buy – bought|mua","take – took|cầm, đi (xe)","get – got|nhận được, đến","make – made|làm, tạo ra","come – came|đến","meet – met|gặp","trip|chuyến đi","beach|bãi biển","write – wrote|viết","drink – drank|uống","sleep – slept|ngủ","swim – swam|bơi","give – gave|cho, tặng","leave – left|rời đi","fly – flew|bay","souvenir|quà lưu niệm","passport|hộ chiếu","flight|chuyến bay","island|hòn đảo","river|dòng sông","spend|tiêu (tiền), dành (thời gian)","amazing|tuyệt vời, đáng kinh ngạc"],
-p:["I went to Da Nang last summer.|Mùa hè năm ngoái tôi đã đi Đà Nẵng.","We took a bus to the beach.|Chúng tôi đi xe buýt ra biển.","I ate seafood and bought some gifts.|Tôi đã ăn hải sản và mua vài món quà.","Did you see the bridge? – No, I didn't.|Bạn có thấy cây cầu không? – Không.","We swam in the sea every morning.|Sáng nào chúng tôi cũng bơi ở biển.","I slept very well.|Tôi đã ngủ rất ngon.","We left the hotel at nine.|Chúng tôi rời khách sạn lúc 9 giờ.","She gave me a souvenir.|Cô ấy tặng tôi một món quà lưu niệm."],
-q:[["Last year I ___ to Hue.","go|went|goed",1],["She ___ a new phone yesterday.","buyed|bought|buys",1],["I didn't ___ him.","saw|see|seen",1],["Quá khứ của \"eat\":","eated|ate|eat",1],["Quá khứ của \"write\":", "writed|wrote|written", 1],["Did you ___ to Hanoi? – Yes, I flew there.", "fly|flew|flied", 0]]},
+{n:21,t:"Chuyến đi",gt:"Quá khứ đơn bất quy tắc; nối câu: because / but / so",
+g:"Nhiều động từ hay dùng có dạng quá khứ riêng, phải học thuộc: go → went, have → had, see → saw, eat → ate, buy → bought. Phủ định và câu hỏi vẫn dùng did + nguyên mẫu: I didn't go (không nói didn't went). Nối hai câu: and (và), but (nhưng: ý trái ngược), so (nên: kết quả), because (vì: lý do). Ví dụ: It rained, so we stayed in the hotel. The hotel was small but clean. I was tired because I swam a lot.",
+w:["go – went|đi","have – had|có, ăn","see – saw|nhìn thấy","eat – ate|ăn","buy – bought|mua","take – took|cầm, đi (xe)","get – got|nhận được, đến","make – made|làm, tạo ra","come – came|đến","meet – met|gặp","trip|chuyến đi","beach|bãi biển","write – wrote|viết","drink – drank|uống","sleep – slept|ngủ","swim – swam|bơi","give – gave|cho, tặng","leave – left|rời đi","fly – flew|bay","souvenir|quà lưu niệm","passport|hộ chiếu","flight|chuyến bay","island|hòn đảo","river|dòng sông","spend|tiêu (tiền), dành (thời gian)","amazing|tuyệt vời, đáng kinh ngạc","sea|biển","mountain|núi","boat|thuyền","bicycle|xe đạp","tree|cây","animal|động vật","journey|chuyến đi"],
+p:["I went to Da Nang last summer.|Mùa hè năm ngoái tôi đã đi Đà Nẵng.","We took a bus to the beach.|Chúng tôi đi xe buýt ra biển.","I ate seafood and bought some gifts.|Tôi đã ăn hải sản và mua vài món quà.","Did you see the bridge? – No, I didn't.|Bạn có thấy cây cầu không? – Không.","We swam in the sea every morning.|Sáng nào chúng tôi cũng bơi ở biển.","I slept very well.|Tôi đã ngủ rất ngon.","We left the hotel at nine.|Chúng tôi rời khách sạn lúc 9 giờ.","She gave me a souvenir.|Cô ấy tặng tôi một món quà lưu niệm.","It rained, so we stayed in the hotel.|Trời mưa nên chúng tôi ở trong khách sạn.","The hotel was small but very clean.|Khách sạn nhỏ nhưng rất sạch.","I'm learning English because I want a new job.|Tôi học tiếng Anh vì tôi muốn có công việc mới."],
+q:[["Last year I ___ to Hue.","go|went|goed",1],["She ___ a new phone yesterday.","buyed|bought|buys",1],["I didn't ___ him.","saw|see|seen",1],["Quá khứ của \"eat\":","eated|ate|eat",1],["Quá khứ của \"write\":","writed|wrote|written",1],["Did you ___ to Hanoi? – Yes, I flew there.","fly|flew|flied",0],["I stayed at home ___ I was sick.","but|because|so",1],["It was late, ___ we took a taxi.","because|but|so",2],["The food was cheap ___ delicious.","so|but|because",1]]},
 
-{n:22,t:"Kế hoạch",gt:"be going to / will; have to, should; because",
-g:"be going to + nguyên mẫu: kế hoạch đã định trước (I'm going to learn English next year). will + nguyên mẫu: quyết định ngay lúc nói, dự đoán, lời hứa (I'll call you. It will rain.). Phủ định của will: won't = will not. Phải làm gì: have to + động từ (I have to work), với he/she dùng has to (She has to go). Lời khuyên: should + động từ (You should rest). must: bắt buộc, mạnh hơn (You must stop here). Nói lý do: because + câu (I'm tired because I worked late).",
-w:["tomorrow|ngày mai","next week|tuần sau","next year|năm sau","tonight|tối nay","plan|kế hoạch","holiday|kỳ nghỉ","learn|học","move|chuyển (nhà)","save money|tiết kiệm tiền","get married|kết hôn","maybe|có lẽ","soon|sớm thôi","this weekend|cuối tuần này","next month|tháng sau","promise|hứa","hope|hy vọng","job interview|phỏng vấn xin việc","course|khóa học","travel abroad|đi nước ngoài","buy a house|mua nhà","have to|phải","should|nên","must|phải (bắt buộc)","because|bởi vì","exam|kỳ thi","begin|bắt đầu"],
-p:["I'm going to visit Hanoi next week.|Tuần sau tôi sẽ đi Hà Nội.","What are you going to do tonight?|Tối nay bạn định làm gì?","I think it will rain tomorrow.|Tôi nghĩ mai trời sẽ mưa.","Don't worry, I'll help you.|Đừng lo, tôi sẽ giúp bạn.","I'm going to buy a house next year.|Năm sau tôi sẽ mua nhà.","She won't be late, I promise.|Cô ấy sẽ không trễ đâu, tôi hứa.","We're going to travel abroad this summer.|Hè này chúng tôi sẽ đi nước ngoài.","I hope you will pass the test.|Tôi hy vọng bạn sẽ qua bài kiểm tra.","I have to work on Saturday.|Tôi phải làm việc vào thứ Bảy.","You should drink more water.|Bạn nên uống nhiều nước hơn.","I'm learning English because I want a new job.|Tôi học tiếng Anh vì tôi muốn có công việc mới."],
-q:[["Tuần sau tôi chuyển nhà (đã lên kế hoạch từ trước):","I will move next week.|I'm going to move next week.|I move next week.",1],["Điện thoại reo. \"I___ answer it!\"","'ll|'m going|going to",0],["\"won't\" là viết tắt của:","will not|want not|would not",0],["She is going to ___ money.","saves|save|saving",1],["Will you help me? – Yes, I ___", "will.|going.|am will.", 0],["Look at the clouds! It ___ rain.", "is going to|goes to|will to", 0],["She ___ to work late today.", "have|has|having", 1],["You are tired. You ___ go to bed early.", "should|has|are", 0],["I stayed at home ___ I was sick.", "but|because|so", 1]]},
+{n:22,t:"Kế hoạch",gt:"be going to / will; rủ nhau: Let's",
+g:"be going to + nguyên mẫu: kế hoạch đã định trước (I'm going to learn English next year). will + nguyên mẫu: quyết định ngay lúc nói, dự đoán, lời hứa (I'll call you. It will rain.). Phủ định của will: won't = will not. Rủ ai cùng làm: Let's + động từ nguyên mẫu (Let's go! = Mình đi thôi!). Đồng ý: Good idea! / OK. Từ chối: Sorry, I can't.",
+w:["tomorrow|ngày mai","next week|tuần sau","next year|năm sau","tonight|tối nay","plan|kế hoạch","holiday|kỳ nghỉ","learn|học","move|chuyển (nhà)","save money|tiết kiệm tiền","get married|kết hôn","maybe|có lẽ","soon|sớm thôi","this weekend|cuối tuần này","next month|tháng sau","promise|hứa","hope|hy vọng","job interview|phỏng vấn xin việc","course|khóa học","travel abroad|đi nước ngoài","buy a house|mua nhà","have to|phải","should|nên","must|phải (bắt buộc)","because|bởi vì","exam|kỳ thi","begin|bắt đầu","future|tương lai","idea|ý tưởng","university|trường đại học","decide|quyết định","prepare|chuẩn bị","life|cuộc sống","improve|cải thiện"],
+p:["I'm going to visit Hanoi next week.|Tuần sau tôi sẽ đi Hà Nội.","What are you going to do tonight?|Tối nay bạn định làm gì?","I think it will rain tomorrow.|Tôi nghĩ mai trời sẽ mưa.","Don't worry, I'll help you.|Đừng lo, tôi sẽ giúp bạn.","I'm going to buy a house next year.|Năm sau tôi sẽ mua nhà.","She won't be late, I promise.|Cô ấy sẽ không trễ đâu, tôi hứa.","We're going to travel abroad this summer.|Hè này chúng tôi sẽ đi nước ngoài.","I hope you will pass the test.|Tôi hy vọng bạn sẽ qua bài kiểm tra.","Let's go to the beach this weekend.|Cuối tuần này mình đi biển đi.","Let's meet at seven. – Good idea!|Mình gặp nhau lúc 7 giờ nhé. – Ý hay đấy!"],
+q:[["Tuần sau tôi chuyển nhà (đã lên kế hoạch từ trước):","I will move next week.|I'm going to move next week.|I move next week.",1],["Điện thoại reo. \"I___ answer it!\"","'ll|'m going|going to",0],["\"won't\" là viết tắt của:","will not|want not|would not",0],["She is going to ___ money.","saves|save|saving",1],["Will you help me? – Yes, I ___","will.|going.|am will.",0],["Look at the clouds! It ___ rain.","is going to|goes to|will to",0],["___ go to the cinema tonight!","Let's|Let|Lets",0],["Let's ___ dinner together.","have|having|to have",0]]},
 
 {n:23,t:"Thời tiết & so sánh",gt:"So sánh hơn, so sánh nhất",
 g:"Tính từ ngắn: thêm -er + than (cold → colder than); so sánh nhất: the + -est (the coldest). Tính từ dài (từ 2 âm tiết trở lên): more … than (more expensive than), the most … (the most beautiful). Bất quy tắc: good → better → the best; bad → worse → the worst.",
-w:["weather|thời tiết","hot|nóng","cold|lạnh","warm|ấm","cool|mát","sunny|nắng","rainy|có mưa","windy|nhiều gió","summer|mùa hè","winter|mùa đông","good – better|tốt – tốt hơn","bad – worse|tệ – tệ hơn","spring|mùa xuân","autumn|mùa thu","cloudy|nhiều mây","storm|cơn bão","temperature|nhiệt độ","degree|độ","high|cao","cheap – cheaper|rẻ – rẻ hơn","snow|tuyết","sun|mặt trời","dangerous|nguy hiểm","popular|phổ biến, được ưa chuộng","famous|nổi tiếng","world|thế giới"],
+w:["weather|thời tiết","hot|nóng","cold|lạnh","warm|ấm","cool|mát","sunny|nắng","rainy|có mưa","windy|nhiều gió","summer|mùa hè","winter|mùa đông","good – better|tốt – tốt hơn","bad – worse|tệ – tệ hơn","spring|mùa xuân","autumn|mùa thu","cloudy|nhiều mây","storm|cơn bão","temperature|nhiệt độ","degree|độ","high|cao","cheap – cheaper|rẻ – rẻ hơn","snow|tuyết","sun|mặt trời","dangerous|nguy hiểm","popular|phổ biến, được ưa chuộng","famous|nổi tiếng","world|thế giới","air|không khí","fast|nhanh","slow|chậm","rich|giàu","poor|nghèo","healthy|khỏe mạnh"],
 p:["It's hot and sunny today.|Hôm nay trời nóng và nắng.","Hanoi is colder than Saigon in winter.|Mùa đông Hà Nội lạnh hơn Sài Gòn.","Fansipan is the highest mountain in Vietnam.|Fansipan là ngọn núi cao nhất Việt Nam.","This phone is more expensive than that one.|Điện thoại này đắt hơn cái kia.","What's the weather like today?|Hôm nay thời tiết thế nào?","It's thirty degrees.|Trời 30 độ.","Summer is my favorite season.|Mùa hè là mùa tôi thích nhất.","My phone is cheaper than yours.|Điện thoại của tôi rẻ hơn của bạn."],
 q:[["Hanoi is ___ than Hue.","big|bigger|biggest",1],["This bag is ___ than that one.","expensiver|more expensive|most expensive",1],["Today is ___ day of the year!","the hottest|hotter|the most hot",0],["So sánh hơn của \"good\":","gooder|better|best",1],["So sánh nhất của \"bad\":", "the baddest|the worst|the worse", 1],["\"What's the weather like?\" hỏi về:", "Thời tiết|Thời gian|Sở thích", 0]]},
 
@@ -541,7 +554,7 @@ const NAMES = ["Anna", "Ben", "Lucy", "Jack", "Emma", "Tom", "Kate", "Mike", "Li
 /* ================== Ngân hàng câu luyện mẫu câu: 20 câu sắp xếp cho mỗi điểm ngữ pháp (nguồn: drill/d*.js) ================== */
 const DS = {};
 DS[1] = [
-{g:'Hỏi và nói tên', h:"What's your name? – My name is …", s:`
+{g:"Hỏi và nói tên", h:"What's your name? – My name is …", s:`
 What's your name?|Bạn tên là gì?
 My name is Lan.|Tôi tên là Lan.
 What is your name?|Tên bạn là gì?
@@ -563,7 +576,7 @@ My name is Anna.|Tôi tên là Anna.
 What's your name, please?|Xin cho biết bạn tên là gì?
 My name is David.|Tôi tên là David.
 `},
-{g:'Đánh vần: How do you spell …?', h:'How do you spell …? / Can you spell it, please?', s:`
+{g:"Đánh vần: How do you spell …?", h:"How do you spell …? / Can you spell it, please?", s:`
 How do you spell your name?|Bạn đánh vần tên mình thế nào?
 How do you spell it?|Từ đó đánh vần thế nào?
 Can you spell it, please?|Bạn đánh vần giúp tôi được không?
@@ -585,7 +598,7 @@ Can you spell "difficult", please?|Bạn đánh vần từ "difficult" giúp tô
 How do you spell "pen"?|Từ "pen" đánh vần thế nào?
 Please spell the word "easy".|Làm ơn đánh vần từ "easy".
 `},
-{g:'Câu nói trong lớp học', h:"Can you …, please? / Sorry, I don't understand.", s:`
+{g:"Câu nói trong lớp học", h:"Can you …, please? / Sorry, I don't understand.", s:`
 Can you repeat that, please?|Bạn nhắc lại được không?
 Sorry, I don't understand.|Xin lỗi, tôi không hiểu.
 Listen and repeat.|Nghe và nhắc lại.
@@ -609,7 +622,7 @@ Sorry, it's my mistake.|Xin lỗi, đó là lỗi của tôi.
 `}];
 
 DS[2] = [
-{g:'Hỏi tuổi: How old …?', h:"How old are you? – I'm … years old.", s:`
+{g:"Hỏi tuổi: How old …?", h:"How old are you? – I'm … years old.", s:`
 How old are you?|Bạn bao nhiêu tuổi?
 I am twenty-five years old.|Tôi hai mươi lăm tuổi.
 I'm thirty-two years old.|Tôi ba mươi hai tuổi.
@@ -631,7 +644,7 @@ Are you twenty years old?|Bạn hai mươi tuổi à?
 My student is sixteen years old.|Học viên của tôi mười sáu tuổi.
 The teacher is sixty years old.|Thầy giáo sáu mươi tuổi.
 `},
-{g:'Hỏi số lượng: How many …?', h:'How many + danh từ số nhiều? – I have three books.', s:`
+{g:"Hỏi số lượng: How many …?", h:"How many + danh từ số nhiều? – I have three books.", s:`
 How many people?|Bao nhiêu người?
 How many books?|Bao nhiêu quyển sách?
 How many students?|Bao nhiêu học viên?
@@ -653,7 +666,7 @@ English has twenty-six letters.|Tiếng Anh có hai mươi sáu chữ cái.
 My class has fifteen students.|Lớp tôi có mười lăm học viên.
 How many friends do you have?|Bạn có bao nhiêu người bạn?
 `},
-{g:'Số điện thoại và phép tính', h:"What's your phone number? / Two plus three is five.", s:`
+{g:"Số điện thoại và phép tính", h:"What's your phone number? / Two plus three is five.", s:`
 What's your phone number?|Số điện thoại của bạn là gì?
 My phone number is oh nine one two.|Số điện thoại của tôi là 0912.
 My number is oh nine eight seven.|Số của tôi là 0987.
@@ -721,7 +734,7 @@ I'm fine too, thanks.|Tôi cũng khỏe, cảm ơn.
 And how are you?|Còn bạn thế nào?
 How is your friend?|Bạn của bạn thế nào?
 `},
-{g:'Chào theo giờ và tạm biệt', h:'Good morning / Good evening / See you tomorrow.', s:`
+{g:"Chào theo giờ và tạm biệt", h:"Good morning / Good evening / See you tomorrow.", s:`
 Good morning, everyone.|Chào buổi sáng mọi người.
 Good afternoon, teacher.|Chào cô ạ (buổi chiều).
 Good evening, Mr. Nam.|Chào buổi tối, anh Nam.
@@ -745,7 +758,7 @@ Thanks, see you soon.|Cảm ơn, hẹn sớm gặp lại.
 `}];
 
 DS[4] = [
-{g:'To be + nghề nghiệp (a / an)', h:'I am a nurse. / He is an engineer. / They are farmers.', s:`
+{g:"To be + nghề nghiệp (a / an)", h:"I am a nurse. / He is an engineer. / They are farmers.", s:`
 I am a nurse.|Tôi là y tá.
 He is an engineer.|Anh ấy là kỹ sư.
 She is a doctor.|Cô ấy là bác sĩ.
@@ -767,7 +780,7 @@ My friend is an artist.|Bạn tôi là họa sĩ.
 Lan is a nurse.|Lan là y tá.
 Minh is an engineer.|Minh là kỹ sư.
 `},
-{g:'To be + from / quốc tịch', h:'I am from Vietnam. / We are Vietnamese.', s:`
+{g:"To be + from / quốc tịch", h:"I am from Vietnam. / We are Vietnamese.", s:`
 I am from Vietnam.|Tôi đến từ Việt Nam.
 She is from Japan.|Cô ấy đến từ Nhật Bản.
 We are Vietnamese.|Chúng tôi là người Việt Nam.
@@ -791,7 +804,7 @@ They are Vietnamese farmers.|Họ là nông dân Việt Nam.
 `}];
 
 DS[5] = [
-{g:'Câu hỏi Yes/No với to be', h:'Are you a student? – Yes, I am. / No, I\'m not.', s:`
+{g:"Câu hỏi Yes/No với to be", h:"Are you a student? – Yes, I am. / No, I'm not.", s:`
 Are you a student?|Bạn là học viên phải không?
 Are you married?|Bạn đã kết hôn chưa?
 Is she your sister?|Cô ấy là chị gái bạn à?
@@ -835,7 +848,7 @@ I'm not from Da Nang.|Tôi không đến từ Đà Nẵng.
 He isn't Vietnamese.|Anh ấy không phải người Việt.
 My birthday isn't in May.|Sinh nhật tôi không phải vào tháng Năm.
 `},
-{g:'Câu hỏi What / Where / Who / When + to be', h:'What is your job? / Where are you from? / Who is she?', s:`
+{g:"Câu hỏi What / Where / Who / When + to be", h:"What is your job? / Where are you from? / Who is she?", s:`
 What is your job?|Công việc của bạn là gì?
 Where are you from?|Bạn đến từ đâu?
 Who is she?|Cô ấy là ai?
@@ -881,7 +894,7 @@ That is a red bag.|Kia là một cái túi đỏ.
 Is this a watch?|Đây có phải là đồng hồ đeo tay không?
 Is that an umbrella?|Kia có phải là cái ô không?
 `},
-{g:'this / that / these / those, số nhiều', h:'These are my books. / Those are big boxes.', s:`
+{g:"this / that / these / those, số nhiều", h:"These are my books. / Those are big boxes.", s:`
 These are my books.|Đây là những quyển sách của tôi.
 Those are big boxes.|Kia là những cái hộp lớn.
 These are my glasses.|Đây là cái kính của tôi.
@@ -903,8 +916,9 @@ Is that your wallet?|Kia có phải ví của bạn không?
 These are my dictionaries.|Đây là những cuốn từ điển của tôi.
 Those pictures are beautiful.|Những bức tranh kia đẹp.
 `}];
+
 DS[7] = [
-{g:'my / your / his / her / our / their', h:'Tính từ sở hữu đứng trước danh từ: my father, her son', s:`
+{g:"my / your / his / her / our / their", h:"Tính từ sở hữu đứng trước danh từ: my father, her son", s:`
 This is my family.|Đây là gia đình tôi.
 Her name is Hoa.|Cô ấy tên là Hoa.
 His wife is a teacher.|Vợ anh ấy là giáo viên.
@@ -948,7 +962,7 @@ Her husband's name is Long.|Chồng cô ấy tên là Long.
 My son's teacher is very nice.|Cô giáo của con trai tôi rất tốt.
 Linh's baby is very cute.|Em bé của Linh rất dễ thương.
 `},
-{g:'me / him / her / us / them', h:'Đại từ đứng sau động từ: I love them. Call me.', s:`
+{g:"me / him / her / us / them", h:"Đại từ đứng sau động từ: I love them. Call me.", s:`
 I love them very much.|Tôi rất yêu họ.
 Call me, please.|Hãy gọi cho tôi nhé.
 Please help me.|Làm ơn giúp tôi.
@@ -972,7 +986,7 @@ I see them every day.|Tôi gặp họ mỗi ngày.
 `}];
 
 DS[8] = [
-{g:'Tính từ đứng trước danh từ', h:'a red car (không nói a car red)', s:`
+{g:"Tính từ đứng trước danh từ", h:"a red car (không nói a car red)", s:`
 I have a red car.|Tôi có một chiếc xe ô tô màu đỏ.
 It's a small house.|Đó là một ngôi nhà nhỏ.
 She is a tall woman.|Cô ấy là một người phụ nữ cao.
@@ -994,7 +1008,7 @@ I need a small table.|Tôi cần một cái bàn nhỏ.
 We have a pink house.|Chúng tôi có một ngôi nhà màu hồng.
 I have a long name.|Tôi có một cái tên dài.
 `},
-{g:'To be + tính từ; What color …?', h:'My bag is black. / What color is your bag?', s:`
+{g:"To be + tính từ; What color …?", h:"My bag is black. / What color is your bag?", s:`
 My bag is black.|Túi của tôi màu đen.
 The car is red.|Chiếc xe màu đỏ.
 She is very tall.|Cô ấy rất cao.
@@ -1018,7 +1032,7 @@ My favorite color is purple.|Màu yêu thích của tôi là màu tím.
 `}];
 
 DS[9] = [
-{g:'Hiện tại đơn (I / you / we / they)', h:'Thói quen: I get up at six. We have lunch at twelve.', s:`
+{g:"Hiện tại đơn (I / you / we / they)", h:"Thói quen: I get up at six. We have lunch at twelve.", s:`
 I get up at six.|Tôi thức dậy lúc sáu giờ.
 We have lunch at twelve.|Chúng tôi ăn trưa lúc mười hai giờ.
 I take a shower in the morning.|Tôi tắm vào buổi sáng.
@@ -1062,7 +1076,7 @@ We don't have lunch at home.|Chúng tôi không ăn trưa ở nhà.
 I don't go to work by bus.|Tôi không đi làm bằng xe buýt.
 They don't understand English.|Họ không hiểu tiếng Anh.
 `},
-{g:'Câu hỏi: Do you …? / What time do you …?', h:"Do you cook? – Yes, I do. / No, I don't.", s:`
+{g:"Câu hỏi: Do you …? / What time do you …?", h:"Do you cook? – Yes, I do. / No, I don't.", s:`
 Do you watch TV every day?|Bạn có xem TV mỗi ngày không?
 What time do you get up?|Bạn thức dậy lúc mấy giờ?
 Do you cook at home?|Bạn có nấu ăn ở nhà không?
@@ -1086,7 +1100,7 @@ Yes, they do.|Có, họ có.
 `}];
 
 DS[10] = [
-{g:'He / She + động từ thêm -s / -es', h:'She works. He watches. have → has', s:`
+{g:"He / She + động từ thêm -s / -es", h:"She works. He watches. have → has", s:`
 She works in a hospital.|Cô ấy làm việc ở bệnh viện.
 My boss drives to work.|Sếp tôi lái xe đi làm.
 My sister teaches English.|Chị tôi dạy tiếng Anh.
@@ -1130,7 +1144,7 @@ She doesn't go to school.|Cô bé không đi học.
 He doesn't earn much money.|Anh ấy không kiếm được nhiều tiền.
 My sister doesn't teach English.|Chị tôi không dạy tiếng Anh.
 `},
-{g:'Câu hỏi: Does he / she …?', h:'Does she work here? – Yes, she does. / What does he do?', s:`
+{g:"Câu hỏi: Does he / she …?", h:"Does she work here? – Yes, she does. / What does he do?", s:`
 Does she have a meeting today?|Hôm nay cô ấy có cuộc họp không?
 What does your father do?|Bố bạn làm nghề gì?
 Does he work in a hospital?|Anh ấy có làm việc ở bệnh viện không?
@@ -1176,7 +1190,7 @@ It's two o'clock in the afternoon.|Bây giờ là hai giờ chiều.
 The bus leaves at half past seven.|Xe buýt rời bến lúc bảy giờ rưỡi.
 Is it four o'clock?|Bốn giờ rồi à?
 `},
-{g:'in / on / at với thời gian', h:'AT + giờ, ON + thứ/ngày, IN + tháng/năm/buổi', s:`
+{g:"in / on / at với thời gian", h:"AT + giờ, ON + thứ/ngày, IN + tháng/năm/buổi", s:`
 My birthday is in January.|Sinh nhật tôi vào tháng Một.
 See you on Friday.|Hẹn gặp bạn vào thứ Sáu.
 The meeting is at nine.|Cuộc họp lúc chín giờ.
@@ -1198,7 +1212,7 @@ School starts in September.|Năm học bắt đầu vào tháng Chín.
 Lunch is at twelve.|Bữa trưa lúc mười hai giờ.
 We have a holiday in April.|Chúng tôi có kỳ nghỉ vào tháng Tư.
 `},
-{g:'always / usually / sometimes / never', h:'Đứng trước động từ thường (I always eat), sau to be (She is never late)', s:`
+{g:"always / usually / sometimes / never", h:"Đứng trước động từ thường (I always eat), sau to be (She is never late)", s:`
 She is never late.|Cô ấy không bao giờ đến muộn.
 I usually go to the gym on Monday.|Tôi thường đến phòng tập vào thứ Hai.
 I sometimes work on Saturday.|Thỉnh thoảng tôi làm việc vào thứ Bảy.
@@ -1219,7 +1233,30 @@ My mother always cooks.|Mẹ tôi lúc nào cũng nấu ăn.
 He usually takes a taxi.|Anh ấy thường đi taxi.
 The bus is always late.|Xe buýt lúc nào cũng muộn.
 I usually study in the evening.|Tôi thường học vào buổi tối.
+`},
+{g:"How often …?", h:"How often + do/does + chủ ngữ + động từ? – every day / once a week / twice a month", s:`
+How often do you exercise?|Bạn tập thể dục bao lâu một lần?
+I exercise twice a week.|Tôi tập thể dục mỗi tuần hai lần.
+How often do you go shopping?|Bạn đi mua sắm bao lâu một lần?
+I go shopping once a week.|Tôi đi mua sắm mỗi tuần một lần.
+How often does she call her mother?|Cô ấy gọi cho mẹ bao lâu một lần?
+She calls her mother every day.|Ngày nào cô ấy cũng gọi cho mẹ.
+How often do you eat out?|Bạn ăn ở ngoài bao lâu một lần?
+We eat out twice a month.|Chúng tôi ăn ở ngoài mỗi tháng hai lần.
+How often does he play football?|Anh ấy chơi bóng đá bao lâu một lần?
+He plays football three times a week.|Anh ấy chơi bóng đá mỗi tuần ba lần.
+How often do you visit your parents?|Bạn về thăm bố mẹ bao lâu một lần?
+I visit my parents once a month.|Mỗi tháng tôi về thăm bố mẹ một lần.
+How often do they have English class?|Họ học tiếng Anh bao lâu một lần?
+They have English class twice a week.|Họ học tiếng Anh mỗi tuần hai lần.
+How often does the bus come?|Xe buýt bao lâu có một chuyến?
+The bus comes every ten minutes.|Cứ mười phút có một chuyến xe buýt.
+How often do you drink coffee?|Bạn uống cà phê bao lâu một lần?
+I drink coffee every morning.|Sáng nào tôi cũng uống cà phê.
+How often do you clean your room?|Bạn dọn phòng bao lâu một lần?
+I clean my room once a week.|Tôi dọn phòng mỗi tuần một lần.
 `}];
+
 DS[13] = [
 {g:"Gọi món: I'd like … / Can I have …?", h:"I'd like a coffee, please. / Can I have the bill, please?", s:`
 Can I have the menu, please?|Cho tôi xem thực đơn được không?
@@ -1243,7 +1280,7 @@ I'd like a chicken sandwich.|Tôi muốn một cái bánh mì kẹp gà.
 Can we have the bill, please?|Cho chúng tôi hóa đơn được không?
 I'd like my coffee with milk.|Tôi muốn cà phê có sữa.
 `},
-{g:'Đồ ăn: đếm được / không đếm được', h:'an egg, two eggs; water, rice (không thêm -s); some, a lot of', s:`
+{g:"Đồ ăn: đếm được / không đếm được", h:"an egg, two eggs; water, rice (không thêm -s); some, a lot of", s:`
 This soup is delicious.|Món súp này rất ngon.
 No sugar, please.|Đừng cho đường nhé.
 Is it spicy?|Món này có cay không?
@@ -1264,10 +1301,32 @@ I like fruit juice.|Tôi thích nước ép trái cây.
 This beef is too spicy.|Món bò này cay quá.
 Please put some sugar in my tea.|Làm ơn cho ít đường vào trà của tôi.
 We eat a lot of noodles.|Chúng tôi ăn nhiều mì.
+`},
+{g:"would like to / want to + động từ", h:"I'd like to + động từ (lịch sự) / I want to + động từ – Would you like to …?", s:`
+I'd like to order, please.|Tôi muốn gọi món.
+Would you like to try some?|Bạn có muốn ăn thử một chút không?
+I want to try pho.|Tôi muốn ăn thử phở.
+I'd like to pay now.|Tôi muốn thanh toán bây giờ.
+We'd like to see the menu.|Chúng tôi muốn xem thực đơn.
+Would you like to drink something?|Bạn có muốn uống gì không?
+I want to eat something sweet.|Tôi muốn ăn đồ ngọt.
+She wants to drink green tea.|Cô ấy muốn uống trà xanh.
+Would you like to have dinner with us?|Bạn có muốn ăn tối với chúng tôi không?
+I'd like to book a table for two.|Tôi muốn đặt một bàn cho hai người.
+They want to eat seafood.|Họ muốn ăn hải sản.
+I don't want to eat meat.|Tôi không muốn ăn thịt.
+Do you want to share a pizza?|Bạn có muốn ăn chung một cái pizza không?
+He wants to cook dinner tonight.|Tối nay anh ấy muốn nấu bữa tối.
+I'd like to try the chicken soup.|Tôi muốn thử món súp gà.
+Would you like to sit here?|Bạn có muốn ngồi đây không?
+We want to have lunch now.|Chúng tôi muốn ăn trưa bây giờ.
+What would you like to eat?|Bạn muốn ăn gì?
+I want to learn to cook.|Tôi muốn học nấu ăn.
+My son wants to eat ice cream.|Con trai tôi muốn ăn kem.
 `}];
 
 DS[14] = [
-{g:'Hỏi giá: How much is / are …?', h:'How much is + số ít? How much are + số nhiều?', s:`
+{g:"Hỏi giá: How much is / are …?", h:"How much is + số ít? How much are + số nhiều?", s:`
 How much is this shirt?|Cái áo sơ mi này bao nhiêu tiền?
 How much are these shoes?|Đôi giày này bao nhiêu tiền?
 How much is it?|Cái này bao nhiêu tiền?
@@ -1289,7 +1348,7 @@ Do you have a discount?|Có giảm giá không?
 I'll take it.|Tôi lấy cái này.
 Can I try it on?|Tôi mặc thử được không?
 `},
-{g:'some / any; Do you have …?', h:'some: câu khẳng định; any: câu phủ định và câu hỏi', s:`
+{g:"some / any; Do you have …?", h:"some: câu khẳng định; any: câu phủ định và câu hỏi", s:`
 Do you have any small sizes?|Bạn có cỡ nhỏ không?
 Do you have this in medium?|Cái này có cỡ vừa không?
 I want some new clothes.|Tôi muốn mua vài bộ quần áo mới.
@@ -1313,7 +1372,7 @@ Please give me some bags.|Làm ơn cho tôi vài cái túi.
 `}];
 
 DS[15] = [
-{g:'There is / There are', h:'There is + số ít. There are + số nhiều.', s:`
+{g:"There is / There are", h:"There is + số ít. There are + số nhiều.", s:`
 There is a sofa in the living room.|Có một cái ghế sofa trong phòng khách.
 There are two bedrooms.|Có hai phòng ngủ.
 There is a mirror in the bathroom.|Có một cái gương trong phòng tắm.
@@ -1381,7 +1440,7 @@ Can you take a photo of us?|Bạn chụp giúp chúng tôi một tấm ảnh đ�
 I can help you.|Tôi có thể giúp bạn.
 Can I sit here?|Tôi ngồi đây được không?
 `},
-{g:'like / love / hate + V-ing', h:'I like reading. She loves playing the guitar.', s:`
+{g:"like / love / hate + V-ing", h:"I like reading. She loves playing the guitar.", s:`
 I like listening to music.|Tôi thích nghe nhạc.
 I don't like running.|Tôi không thích chạy bộ.
 She loves playing the guitar.|Cô ấy rất thích chơi đàn ghi-ta.
@@ -1405,7 +1464,7 @@ We love singing together.|Chúng tôi rất thích hát cùng nhau.
 `}];
 
 DS[17] = [
-{g:'Hiện tại tiếp diễn: am / is / are + V-ing', h:"Việc ĐANG xảy ra: I'm eating. She is talking.", s:`
+{g:"Hiện tại tiếp diễn: am / is / are + V-ing", h:"Việc ĐANG xảy ra: I'm eating. She is talking.", s:`
 I'm waiting for the bus.|Tôi đang đợi xe buýt.
 She is talking on the phone.|Cô ấy đang nói chuyện điện thoại.
 It's raining now.|Trời đang mưa.
@@ -1427,7 +1486,7 @@ She is smiling at me.|Cô ấy đang mỉm cười với tôi.
 I'm reading a book right now.|Lúc này tôi đang đọc sách.
 Lan is calling her mother.|Lan đang gọi điện cho mẹ.
 `},
-{g:'Tiếp diễn: phủ định và câu hỏi', h:"What are you doing? / They aren't sleeping. / Is she working?", s:`
+{g:"Tiếp diễn: phủ định và câu hỏi", h:"What are you doing? / They aren't sleeping. / Is she working?", s:`
 What are you doing?|Bạn đang làm gì vậy?
 They aren't sleeping now.|Bây giờ họ không ngủ.
 Why are you laughing?|Sao bạn lại cười?
@@ -1451,7 +1510,7 @@ Is it raining outside?|Ngoài trời có đang mưa không?
 `}];
 
 DS[18] = [
-{g:'Giới từ nơi chốn', h:'in, on, under, next to, opposite, between, behind, in front of', s:`
+{g:"Giới từ nơi chốn", h:"in, on, under, next to, opposite, between, behind, in front of", s:`
 It's next to the supermarket.|Nó ở cạnh siêu thị.
 The bus stop is opposite the school.|Bến xe buýt ở đối diện trường học.
 The pharmacy is on the corner.|Hiệu thuốc ở góc phố.
@@ -1473,7 +1532,7 @@ The pharmacy is near the traffic light.|Hiệu thuốc ở gần đèn giao thô
 My house is between the bank and the school.|Nhà tôi ở giữa ngân hàng và trường học.
 Is the bank far from here?|Ngân hàng có xa đây không?
 `},
-{g:'Hỏi đường và chỉ đường', h:'Excuse me, where is …? / How can I get to …? / Turn left.', s:`
+{g:"Hỏi đường và chỉ đường", h:"Excuse me, where is …? / How can I get to …? / Turn left.", s:`
 Excuse me, where is the bank?|Xin lỗi, ngân hàng ở đâu?
 Go straight and turn left.|Đi thẳng rồi rẽ trái.
 Turn right at the traffic light.|Rẽ phải ở đèn giao thông.
@@ -1494,9 +1553,32 @@ Can you show me on the map?|Bạn chỉ cho tôi trên bản đồ được khô
 Excuse me, how can I get to the park?|Xin lỗi, tôi đến công viên bằng cách nào?
 Walk to the end of the street.|Đi bộ đến cuối con phố.
 Thank you for your help.|Cảm ơn bạn đã giúp đỡ.
+`},
+{g:"have to / should / must", h:"I have to work. You should rest. You must stop.", s:`
+I have to work on Saturday.|Thứ Bảy tôi phải đi làm.
+You should drink more water.|Bạn nên uống nhiều nước hơn.
+She has to go now.|Cô ấy phải đi bây giờ.
+You must stop here.|Bạn phải dừng ở đây.
+We have to get up early.|Chúng tôi phải dậy sớm.
+You should go to bed early.|Bạn nên đi ngủ sớm.
+He has to work overtime.|Anh ấy phải làm thêm giờ.
+You shouldn't eat too much sugar.|Bạn không nên ăn quá nhiều đường.
+I have to study for the exam.|Tôi phải ôn thi.
+Do I have to pay now?|Tôi có phải trả tiền bây giờ không?
+You should see a doctor.|Bạn nên đi khám bác sĩ.
+Students must be on time.|Học viên phải đến đúng giờ.
+She doesn't have to cook today.|Hôm nay cô ấy không phải nấu ăn.
+We should save money.|Chúng ta nên tiết kiệm tiền.
+You must not smoke here.|Bạn không được hút thuốc ở đây.
+I have to call my boss.|Tôi phải gọi cho sếp.
+What should I do?|Tôi nên làm gì?
+You should learn English every day.|Bạn nên học tiếng Anh mỗi ngày.
+They have to finish the report.|Họ phải hoàn thành bản báo cáo.
+You don't have to come.|Bạn không cần phải đến.
 `}];
+
 DS[19] = [
-{g:'Quá khứ của to be: was / were', h:'I / he / she / it + was; you / we / they + were', s:`
+{g:"Quá khứ của to be: was / were", h:"I / he / she / it + was; you / we / they + were", s:`
 I was at home yesterday.|Hôm qua tôi ở nhà.
 We were very tired.|Chúng tôi rất mệt.
 I was born in 1995.|Tôi sinh năm 1995.
@@ -1540,7 +1622,7 @@ Were you sick last week?|Tuần trước bạn bị ốm à?
 Who was at the meeting?|Ai đã có mặt ở cuộc họp?
 Why were you late?|Sao bạn lại đến muộn?
 `},
-{g:'Ngày tháng và số thứ tự', h:'on May fifth; the first / second / third …', s:`
+{g:"Ngày tháng và số thứ tự", h:"on May fifth; the first / second / third …", s:`
 When is your mother's birthday?|Sinh nhật mẹ bạn khi nào?
 It's on May fifth.|Vào ngày năm tháng Năm.
 I was born on March third, 1995.|Tôi sinh ngày ba tháng Ba năm 1995.
@@ -1564,7 +1646,7 @@ Is your birthday on the twelfth?|Sinh nhật bạn vào ngày mười hai à?
 `}];
 
 DS[20] = [
-{g:'Quá khứ đơn có quy tắc: V-ed', h:'walk → walked, arrive → arrived (mọi chủ ngữ giống nhau)', s:`
+{g:"Quá khứ đơn có quy tắc: V-ed", h:"walk → walked, arrive → arrived (mọi chủ ngữ giống nhau)", s:`
 I visited my grandparents last weekend.|Cuối tuần trước tôi đến thăm ông bà.
 She cleaned the house yesterday.|Hôm qua cô ấy dọn nhà.
 We enjoyed the party.|Chúng tôi rất thích bữa tiệc.
@@ -1607,10 +1689,32 @@ When did you start work?|Bạn bắt đầu làm việc khi nào?
 I didn't like the movie.|Tôi không thích bộ phim đó.
 Did you check your email?|Bạn đã kiểm tra email chưa?
 Why did you stop?|Sao bạn lại dừng?
+`},
+{g:"there was / there were", h:"There was + số ít, There were + số nhiều (quá khứ của there is / there are)", s:`
+There was a big party last Saturday.|Thứ Bảy tuần trước có một bữa tiệc lớn.
+There were many people at the beach.|Ở bãi biển có rất nhiều người.
+There was a lot of traffic this morning.|Sáng nay đường rất đông xe.
+There were two cats in the garden.|Có hai con mèo trong vườn.
+There wasn't any milk in the fridge.|Trong tủ lạnh không còn chút sữa nào.
+There weren't many students yesterday.|Hôm qua không có nhiều học viên.
+Was there a problem with the car?|Xe có vấn đề gì à?
+Were there many people at the concert?|Buổi hòa nhạc có đông người không?
+There was a good film on TV last night.|Tối qua trên TV có một bộ phim hay.
+There were three new students in class.|Lớp có ba học viên mới.
+There was a small shop near my old house.|Gần nhà cũ của tôi có một cửa hàng nhỏ.
+There wasn't a taxi at the station.|Ở nhà ga không có taxi.
+Was there a meeting yesterday?|Hôm qua có cuộc họp không?
+Yes, there was.|Vâng, có.
+No, there weren't.|Không, không có ai cả.
+There were a lot of cars on the road.|Trên đường có rất nhiều xe ô tô.
+There was a phone call for you.|Có một cuộc điện thoại gọi cho bạn.
+There were some eggs on the table.|Có vài quả trứng trên bàn.
+There was nobody at home.|Không có ai ở nhà.
+How many people were there?|Có bao nhiêu người ở đó?
 `}];
 
 DS[21] = [
-{g:'Quá khứ bất quy tắc', h:'go → went, eat → ate, buy → bought, see → saw …', s:`
+{g:"Quá khứ bất quy tắc", h:"go → went, eat → ate, buy → bought, see → saw …", s:`
 I went to Da Nang last summer.|Mùa hè năm ngoái tôi đi Đà Nẵng.
 We took a bus to the beach.|Chúng tôi đi xe buýt ra biển.
 I ate seafood.|Tôi ăn hải sản.
@@ -1653,10 +1757,32 @@ Did you have a good trip?|Chuyến đi của bạn có vui không?
 They didn't come to the party.|Họ không đến bữa tiệc.
 When did you get home?|Bạn về đến nhà lúc nào?
 Did she write to you?|Cô ấy có viết thư cho bạn không?
+`},
+{g:"Nối câu: because / but / so", h:"but = nhưng (trái ý), so = nên (kết quả), because = vì (lý do)", s:`
+It rained, so we stayed in the hotel.|Trời mưa nên chúng tôi ở trong khách sạn.
+The hotel was small but very clean.|Khách sạn nhỏ nhưng rất sạch.
+I was tired because I swam a lot.|Tôi mệt vì tôi bơi nhiều.
+The food was cheap but delicious.|Đồ ăn rẻ nhưng ngon.
+It was late, so we took a taxi.|Đã muộn nên chúng tôi đi taxi.
+We didn't go out because it was cold.|Chúng tôi không ra ngoài vì trời lạnh.
+I was hungry, so I ate a big lunch.|Tôi đói nên tôi ăn một bữa trưa thật no.
+The beach was beautiful but crowded.|Bãi biển đẹp nhưng đông người.
+She bought a hat because it was sunny.|Cô ấy mua một cái mũ vì trời nắng.
+I wanted to swim, but the sea was cold.|Tôi muốn bơi nhưng biển lạnh.
+We missed the bus, so we walked.|Chúng tôi lỡ xe buýt nên phải đi bộ.
+He didn't buy it because it was expensive.|Anh ấy không mua vì nó đắt.
+The trip was short but fun.|Chuyến đi ngắn nhưng vui.
+I'm learning English because I want a new job.|Tôi học tiếng Anh vì tôi muốn có công việc mới.
+I like coffee, but I don't like tea.|Tôi thích cà phê nhưng tôi không thích trà.
+She was sick, so she didn't go to work.|Cô ấy bị ốm nên không đi làm.
+We stayed home because it rained.|Chúng tôi ở nhà vì trời mưa.
+The room was nice, but the bed was hard.|Phòng đẹp nhưng giường cứng.
+I lost my phone, so I bought a new one.|Tôi làm mất điện thoại nên đã mua cái mới.
+I went home early because I was tired.|Tôi về sớm vì tôi mệt.
 `}];
 
 DS[22] = [
-{g:'be going to: kế hoạch', h:"I'm going to + động từ (việc đã định trước)", s:`
+{g:"be going to: kế hoạch", h:"I'm going to + động từ (việc đã định trước)", s:`
 I'm going to visit Hanoi next week.|Tuần sau tôi sẽ đi Hà Nội.
 What are you going to do tonight?|Tối nay bạn định làm gì?
 I'm going to buy a house next year.|Năm sau tôi sẽ mua nhà.
@@ -1700,53 +1826,31 @@ I'll carry your bag.|Tôi sẽ xách túi cho bạn.
 You will love this place.|Bạn sẽ thích nơi này.
 I think he will be a good teacher.|Tôi nghĩ anh ấy sẽ là một giáo viên tốt.
 `},
-{g:'have to / should / must', h:'I have to work. You should rest. You must stop.', s:`
-I have to work on Saturday.|Thứ Bảy tôi phải đi làm.
-You should drink more water.|Bạn nên uống nhiều nước hơn.
-She has to go now.|Cô ấy phải đi bây giờ.
-You must stop here.|Bạn phải dừng ở đây.
-We have to get up early.|Chúng tôi phải dậy sớm.
-You should go to bed early.|Bạn nên đi ngủ sớm.
-He has to work overtime.|Anh ấy phải làm thêm giờ.
-You shouldn't eat too much sugar.|Bạn không nên ăn quá nhiều đường.
-I have to study for the exam.|Tôi phải ôn thi.
-Do I have to pay now?|Tôi có phải trả tiền bây giờ không?
-You should see a doctor.|Bạn nên đi khám bác sĩ.
-Students must be on time.|Học viên phải đến đúng giờ.
-She doesn't have to cook today.|Hôm nay cô ấy không phải nấu ăn.
-We should save money.|Chúng ta nên tiết kiệm tiền.
-You must not smoke here.|Bạn không được hút thuốc ở đây.
-I have to call my boss.|Tôi phải gọi cho sếp.
-What should I do?|Tôi nên làm gì?
-You should learn English every day.|Bạn nên học tiếng Anh mỗi ngày.
-They have to finish the report.|Họ phải hoàn thành bản báo cáo.
-You don't have to come.|Bạn không cần phải đến.
-`},
-{g:'because: nói lý do', h:"I'm tired because I worked late.", s:`
-I'm learning English because I want a new job.|Tôi học tiếng Anh vì tôi muốn có công việc mới.
-I'm tired because I worked late.|Tôi mệt vì tôi làm việc muộn.
-She is happy because she passed the exam.|Cô ấy vui vì đã thi đỗ.
-We stayed home because it rained.|Chúng tôi ở nhà vì trời mưa.
-He is late because the bus was late.|Anh ấy đến muộn vì xe buýt đến muộn.
-I can't come because I'm sick.|Tôi không đến được vì tôi bị ốm.
-I like this café because it's quiet.|Tôi thích quán cà phê này vì nó yên tĩnh.
-She is studying because she has an exam.|Cô ấy đang học vì cô ấy có bài thi.
-I'm hungry because I didn't eat breakfast.|Tôi đói vì tôi không ăn sáng.
-They are going to Da Nang because they love the beach.|Họ sẽ đi Đà Nẵng vì họ yêu biển.
-Why are you sad?|Sao bạn buồn?
-I'm sad because my friend is leaving.|Tôi buồn vì bạn tôi sắp đi.
-Why do you learn English?|Sao bạn học tiếng Anh?
-I learn English because I want to travel.|Tôi học tiếng Anh vì tôi muốn đi du lịch.
-We took a taxi because it was late.|Chúng tôi đi taxi vì đã muộn.
-He didn't come because he was busy.|Anh ấy không đến vì anh ấy bận.
-I bought it because it was cheap.|Tôi mua nó vì nó rẻ.
-She is tired because she works a lot.|Cô ấy mệt vì cô ấy làm việc nhiều.
-I'm saving money because I want to buy a house.|Tôi đang tiết kiệm tiền vì tôi muốn mua nhà.
-I'm happy because you are here.|Tôi vui vì bạn ở đây.
+{g:"Rủ nhau: Let's + động từ", h:"Let's + động từ nguyên mẫu (Let's go!) – đồng ý: Good idea! / từ chối: Sorry, I can't.", s:`
+Let's go to the beach this weekend.|Cuối tuần này mình đi biển đi.
+Let's meet at seven.|Mình gặp nhau lúc bảy giờ nhé.
+That's a good idea!|Ý hay đấy!
+Let's have dinner together.|Mình ăn tối cùng nhau nhé.
+Let's watch a movie tonight.|Tối nay mình xem phim đi.
+Let's take a taxi.|Mình đi taxi đi.
+Let's go for a walk.|Mình đi dạo đi.
+Let's start the lesson.|Chúng ta bắt đầu bài học nhé.
+Let's practice English together.|Mình cùng luyện tiếng Anh nhé.
+Let's not go out today.|Hôm nay mình đừng ra ngoài nhé.
+Sorry, I can't. I'm busy.|Xin lỗi, mình không đi được. Mình bận.
+Let's ask the teacher.|Mình hỏi cô giáo đi.
+Let's play football after work.|Sau giờ làm mình chơi bóng đá đi.
+OK, let's do it.|Được, làm thôi.
+Let's buy a gift for Mom.|Mình mua quà cho mẹ đi.
+Let's drink some coffee.|Mình uống cà phê đi.
+Let's go home now.|Bây giờ mình về nhà thôi.
+Let's travel to Da Lat next summer.|Hè năm sau mình đi Đà Lạt đi.
+Let's try this restaurant.|Mình thử nhà hàng này đi.
+Great, let's go!|Tuyệt, đi thôi!
 `}];
 
 DS[23] = [
-{g:'So sánh hơn: -er than / more … than', h:'cold → colder than; expensive → more expensive than; good → better', s:`
+{g:"So sánh hơn: -er than / more … than", h:"cold → colder than; expensive → more expensive than; good → better", s:`
 Hanoi is colder than Saigon in winter.|Mùa đông Hà Nội lạnh hơn Sài Gòn.
 This phone is more expensive than that one.|Điện thoại này đắt hơn cái kia.
 My phone is cheaper than yours.|Điện thoại của tôi rẻ hơn của bạn.
@@ -1768,7 +1872,7 @@ Motorbikes are more popular than cars here.|Ở đây xe máy phổ biến hơn 
 This street is busier than my street.|Con phố này đông đúc hơn phố nhà tôi.
 I am younger than my sister.|Tôi trẻ hơn chị tôi.
 `},
-{g:'So sánh nhất: the -est / the most …', h:'the coldest, the most beautiful, the best, the worst', s:`
+{g:"So sánh nhất: the -est / the most …", h:"the coldest, the most beautiful, the best, the worst", s:`
 Fansipan is the highest mountain in Vietnam.|Fansipan là ngọn núi cao nhất Việt Nam.
 This is the best restaurant in town.|Đây là nhà hàng ngon nhất trong thị trấn.
 Summer is the hottest season.|Mùa hè là mùa nóng nhất.
@@ -1790,7 +1894,7 @@ Which season is the hottest?|Mùa nào nóng nhất?
 That was the best day of my life.|Đó là ngày tuyệt vời nhất trong đời tôi.
 My room is the smallest room in the house.|Phòng tôi là phòng nhỏ nhất trong nhà.
 `},
-{g:'Nói về thời tiết', h:"What's the weather like? – It's hot and sunny.", s:`
+{g:"Nói về thời tiết", h:"What's the weather like? – It's hot and sunny.", s:`
 It's hot and sunny today.|Hôm nay trời nóng và nắng.
 What's the weather like today?|Hôm nay thời tiết thế nào?
 It's thirty degrees.|Trời ba mươi độ.
@@ -1812,8 +1916,11 @@ I like sunny days.|Tôi thích những ngày nắng.
 Is it hot in Da Nang?|Ở Đà Nẵng có nóng không?
 It will be sunny tomorrow.|Ngày mai trời sẽ nắng.
 `}];
+
 const DRILL = {};
 Object.keys(DS).forEach(n => { DRILL[n] = DS[n].map(p => ({g:p.g, h:p.h, s:p.s.trim().split(/\r?\n/).map(x => x.trim()).filter(Boolean)})); });
+/* Hội thoại thay từ: mỗi điểm luyện mẫu câu 1 khung hội thoại, 3 lượt thay từ (nguồn drill/dlg1.txt) */
+const DLG = {"1":[{"k":"What's your name? – My name is + tên.","t":[{"w":"A","en":"What's your name?","vi":"Bạn tên là gì?"},{"w":"B","en":"My name is {0}.","vi":"Tôi tên là {0}."},{"w":"A","en":"Nice to meet you, {0}.","vi":"Rất vui được gặp bạn, {0}."}],"v":[[{"en":"Lan","vi":"Lan"}],[{"en":"Minh","vi":"Minh"}],[{"en":"Tom","vi":"Tom"}]]},{"k":"How do you spell + từ? – Đọc từng chữ cái.","t":[{"w":"A","en":"How do you spell your name?","vi":"Tên bạn đánh vần thế nào?"},{"w":"B","en":"{0}.","vi":"{0}."},{"w":"A","en":"Thank you, {1}.","vi":"Cảm ơn bạn, {1}."}],"v":[[{"en":"L-A-N","vi":"L-A-N"},{"en":"Lan","vi":"Lan"}],[{"en":"M-A-I","vi":"M-A-I"},{"en":"Mai","vi":"Mai"}],[{"en":"N-A-M","vi":"N-A-M"},{"en":"Nam","vi":"Nam"}]]},{"k":"Can you + việc cần nhờ + please?","t":[{"w":"A","en":"Can you {0}, please?","vi":"Bạn {0} được không?"},{"w":"B","en":"Sure. No problem.","vi":"Được chứ. Không vấn đề gì."}],"v":[[{"en":"repeat that","vi":"nhắc lại"}],[{"en":"say it again","vi":"nói lại"}],[{"en":"speak slowly","vi":"nói chậm lại"}]]}],"2":[{"k":"How old + are you / is he/she? – I'm / He's + số + years old.","t":[{"w":"A","en":"How old {0}?","vi":"{0} bao nhiêu tuổi?"},{"w":"B","en":"{1} {2} years old.","vi":"{1} {2} tuổi."}],"v":[[{"en":"are you","vi":"Bạn"},{"en":"I'm","vi":"Tôi"},{"en":"twenty-five","vi":"hai mươi lăm"}],[{"en":"is he","vi":"Anh ấy"},{"en":"He's","vi":"Anh ấy"},{"en":"thirty","vi":"ba mươi"}],[{"en":"is she","vi":"Cô ấy"},{"en":"She's","vi":"Cô ấy"},{"en":"nineteen","vi":"mười chín"}]]},{"k":"How many + danh từ số nhiều + do you have? – I have + số + danh từ.","t":[{"w":"A","en":"How many {0} do you have?","vi":"Bạn có bao nhiêu {0}?"},{"w":"B","en":"I have {1} {0}.","vi":"Tôi có {1} {0}."}],"v":[[{"en":"books","vi":"quyển sách"},{"en":"three","vi":"ba"}],[{"en":"pens","vi":"cây bút"},{"en":"two","vi":"hai"}],[{"en":"friends","vi":"người bạn"},{"en":"five","vi":"năm"}]]},{"k":"What's your phone number? – It's + từng số.","t":[{"w":"A","en":"What's your phone number?","vi":"Số điện thoại của bạn là gì?"},{"w":"B","en":"It's {0}.","vi":"Số của tôi là {0}."},{"w":"A","en":"OK, {0}. Thank you.","vi":"OK, {0}. Cảm ơn bạn."}],"v":[[{"en":"oh nine one two","vi":"0912"}],[{"en":"oh nine eight seven","vi":"0987"}],[{"en":"oh nine oh three","vi":"0903"}]]}],"3":[{"k":"Hello, I'm + tên. – Nice to meet you.","t":[{"w":"A","en":"Hello, I'm {0}.","vi":"Xin chào, tôi là {0}."},{"w":"B","en":"Hi, {0}. I'm {1}. Nice to meet you.","vi":"Chào {0}. Tôi là {1}. Rất vui được gặp bạn."},{"w":"A","en":"Nice to meet you too.","vi":"Tôi cũng rất vui được gặp bạn."}],"v":[[{"en":"Minh","vi":"Minh"},{"en":"Lan","vi":"Lan"}],[{"en":"Tom","vi":"Tom"},{"en":"Hoa","vi":"Hoa"}],[{"en":"Mai","vi":"Mai"},{"en":"David","vi":"David"}]]},{"k":"How are you? – I'm + tâm trạng, thanks. And you?","t":[{"w":"A","en":"How are you?","vi":"Bạn khỏe không?"},{"w":"B","en":"I'm {0}, thanks. And you?","vi":"Tôi {0}, cảm ơn. Còn bạn?"},{"w":"A","en":"I'm fine.","vi":"Tôi khỏe."}],"v":[[{"en":"fine","vi":"khỏe"}],[{"en":"great","vi":"rất khỏe"}],[{"en":"tired","vi":"mệt"}]]},{"k":"Good + buổi trong ngày. / See you + thời gian.","t":[{"w":"A","en":"Good {0}, {1}.","vi":"Chào buổi {0}, {1}."},{"w":"B","en":"Good {0}. See you {2}.","vi":"Chào buổi {0}. Hẹn gặp lại {2}."}],"v":[[{"en":"morning","vi":"sáng"},{"en":"Lan","vi":"Lan"},{"en":"tomorrow","vi":"ngày mai"}],[{"en":"afternoon","vi":"chiều"},{"en":"Minh","vi":"Minh"},{"en":"later","vi":"sau nhé"}],[{"en":"evening","vi":"tối"},{"en":"Mr. Nam","vi":"thầy Nam"},{"en":"next week","vi":"tuần sau"}]]}],"4":[{"k":"What's your job? – I'm + a/an + nghề.","t":[{"w":"A","en":"What's your job?","vi":"Bạn làm nghề gì?"},{"w":"B","en":"I'm {0}.","vi":"Tôi là {0}."}],"v":[[{"en":"a nurse","vi":"y tá"}],[{"en":"an engineer","vi":"kỹ sư"}],[{"en":"a driver","vi":"tài xế"}]]},{"k":"Where are you from? – I'm from + nước. I'm + quốc tịch.","t":[{"w":"A","en":"Where are you from?","vi":"Bạn đến từ đâu?"},{"w":"B","en":"I'm from {0}. I'm {1}.","vi":"Tôi đến từ {0}. Tôi là người {1}."}],"v":[[{"en":"Vietnam","vi":"Việt Nam"},{"en":"Vietnamese","vi":"Việt Nam"}],[{"en":"Japan","vi":"Nhật Bản"},{"en":"Japanese","vi":"Nhật"}],[{"en":"Korea","vi":"Hàn Quốc"},{"en":"Korean","vi":"Hàn Quốc"}]]}],"5":[{"k":"Are you / Is he + …? – Yes, I am. / No, he isn't.","t":[{"w":"A","en":"{0} {1}?","vi":"{0} {1} phải không?"},{"w":"B","en":"{2}","vi":"{2}"}],"v":[[{"en":"Are you","vi":"Bạn"},{"en":"a student","vi":"là học viên"},{"en":"Yes, I am.","vi":"Vâng, đúng vậy."}],[{"en":"Is he","vi":"Anh ấy"},{"en":"married","vi":"đã kết hôn"},{"en":"No, he isn't.","vi":"Không, anh ấy chưa."}],[{"en":"Is she","vi":"Cô ấy"},{"en":"from Japan","vi":"đến từ Nhật"},{"en":"Yes, she is.","vi":"Vâng, đúng vậy."}]]},{"k":"Chủ ngữ + am not / isn't / aren't + …","t":[{"w":"A","en":"Are you from {0}?","vi":"Bạn đến từ {0} phải không?"},{"w":"B","en":"No, I'm not from {0}. I'm from {1}.","vi":"Không, tôi không đến từ {0}. Tôi đến từ {1}."}],"v":[[{"en":"Hanoi","vi":"Hà Nội"},{"en":"Hue","vi":"Huế"}],[{"en":"Japan","vi":"Nhật Bản"},{"en":"Korea","vi":"Hàn Quốc"}],[{"en":"Da Nang","vi":"Đà Nẵng"},{"en":"Saigon","vi":"Sài Gòn"}]]},{"k":"What / Where / Who / When + is/are + …?","t":[{"w":"A","en":"{0}","vi":"{0}"},{"w":"B","en":"{1}","vi":"{1}"}],"v":[[{"en":"Where is your company?","vi":"Công ty bạn ở đâu?"},{"en":"It's near here.","vi":"Nó ở gần đây."}],[{"en":"Who is she?","vi":"Cô ấy là ai?"},{"en":"She's my teacher.","vi":"Cô ấy là giáo viên của tôi."}],[{"en":"When is your birthday?","vi":"Sinh nhật bạn khi nào?"},{"en":"It's in May.","vi":"Vào tháng Năm."}]]}],"6":[{"k":"What is this? – It's + a/an + đồ vật.","t":[{"w":"A","en":"What is this?","vi":"Đây là cái gì?"},{"w":"B","en":"It's {0}.","vi":"Đó là {0}."}],"v":[[{"en":"a key","vi":"một chiếc chìa khóa"}],[{"en":"an umbrella","vi":"một cái ô"}],[{"en":"an egg","vi":"một quả trứng"}]]},{"k":"This is / These are + đồ của tôi.","t":[{"w":"A","en":"Are {0} your {1}?","vi":"{0} có phải là {1} của bạn không?"},{"w":"B","en":"Yes, {0} are my {1}.","vi":"Vâng, {0} là {1} của tôi."}],"v":[[{"en":"these","vi":"những cái này"},{"en":"keys","vi":"chìa khóa"}],[{"en":"those","vi":"những cái kia"},{"en":"books","vi":"sách"}],[{"en":"these","vi":"những đôi này"},{"en":"shoes","vi":"giày"}]]}],"7":[{"k":"my / his / her / their + người thân","t":[{"w":"A","en":"Who is that?","vi":"Đó là ai?"},{"w":"B","en":"That's {0} {1}.","vi":"Đó là {1} {0}."}],"v":[[{"en":"my","vi":"của tôi"},{"en":"brother","vi":"anh trai"}],[{"en":"his","vi":"của anh ấy"},{"en":"wife","vi":"vợ"}],[{"en":"her","vi":"của cô ấy"},{"en":"mother","vi":"mẹ"}]]},{"k":"Tên + 's + danh từ = … của tên","t":[{"w":"A","en":"Is this {0}'s {1}?","vi":"Đây có phải là {1} của {0} không?"},{"w":"B","en":"Yes, it's {0}'s {1}.","vi":"Vâng, đó là {1} của {0}."}],"v":[[{"en":"Lan","vi":"Lan"},{"en":"phone","vi":"điện thoại"}],[{"en":"Minh","vi":"Minh"},{"en":"bag","vi":"túi"}],[{"en":"Tom","vi":"Tom"},{"en":"car","vi":"xe ô tô"}]]},{"k":"Động từ + me / him / her / us / them","t":[{"w":"A","en":"Do you know {0}?","vi":"Bạn có biết {0} không?"},{"w":"B","en":"Yes, I know {0}. Please call {0}.","vi":"Có, tôi biết {0}. Hãy gọi cho {0} nhé."}],"v":[[{"en":"him","vi":"anh ấy"}],[{"en":"her","vi":"cô ấy"}],[{"en":"them","vi":"họ"}]]}],"8":[{"k":"a/an + tính từ + danh từ","t":[{"w":"A","en":"What do you have?","vi":"Bạn có gì?"},{"w":"B","en":"I have {0}.","vi":"Tôi có {0}."}],"v":[[{"en":"a red car","vi":"một chiếc xe ô tô màu đỏ"}],[{"en":"a small house","vi":"một ngôi nhà nhỏ"}],[{"en":"a new phone","vi":"một chiếc điện thoại mới"}]]},{"k":"What color is …? – It's + màu.","t":[{"w":"A","en":"What color is your {0}?","vi":"{0} của bạn màu gì?"},{"w":"B","en":"It's {1}.","vi":"Nó màu {1}."}],"v":[[{"en":"bag","vi":"Túi"},{"en":"black","vi":"đen"}],[{"en":"car","vi":"Xe"},{"en":"white","vi":"trắng"}],[{"en":"phone","vi":"Điện thoại"},{"en":"blue","vi":"xanh dương"}]]}],"9":[{"k":"I / We / They + động từ + thời gian","t":[{"w":"A","en":"What do you do in the {0}?","vi":"Bạn làm gì vào buổi {0}?"},{"w":"B","en":"I {1}.","vi":"Tôi {1}."}],"v":[[{"en":"morning","vi":"sáng"},{"en":"have breakfast","vi":"ăn sáng"}],[{"en":"afternoon","vi":"chiều"},{"en":"go to work","vi":"đi làm"}],[{"en":"evening","vi":"tối"},{"en":"watch TV","vi":"xem TV"}]]},{"k":"I / They + don't + động từ","t":[{"w":"A","en":"Do you {0}?","vi":"Bạn có {0} không?"},{"w":"B","en":"No, I don't {0}.","vi":"Không, tôi không {0}."}],"v":[[{"en":"drink coffee","vi":"uống cà phê"}],[{"en":"cook at home","vi":"nấu ăn ở nhà"}],[{"en":"watch TV","vi":"xem TV"}]]},{"k":"What time do you + động từ? – At + giờ.","t":[{"w":"A","en":"What time do you {0}?","vi":"Bạn {0} lúc mấy giờ?"},{"w":"B","en":"At {1}.","vi":"Lúc {1}."}],"v":[[{"en":"get up","vi":"thức dậy"},{"en":"six","vi":"sáu giờ"}],[{"en":"go to work","vi":"đi làm"},{"en":"seven","vi":"bảy giờ"}],[{"en":"go to bed","vi":"đi ngủ"},{"en":"eleven","vi":"mười một giờ"}]]}],"10":[{"k":"He / She + động từ thêm -s","t":[{"w":"A","en":"What does your {0} do?","vi":"{0} của bạn làm nghề gì?"},{"w":"B","en":"{1} {2}.","vi":"{1} {2}."}],"v":[[{"en":"father","vi":"Bố"},{"en":"He","vi":"Bố"},{"en":"works in a hospital","vi":"làm việc ở bệnh viện"}],[{"en":"sister","vi":"Chị"},{"en":"She","vi":"Chị ấy"},{"en":"teaches English","vi":"dạy tiếng Anh"}],[{"en":"brother","vi":"Anh trai"},{"en":"He","vi":"Anh ấy"},{"en":"drives a taxi","vi":"lái taxi"}]]},{"k":"He / She + doesn't + động từ nguyên mẫu","t":[{"w":"A","en":"Does {0} {1}?","vi":"{0} có {1} không?"},{"w":"B","en":"No, {0} doesn't {1}.","vi":"Không, {0} không {1}."}],"v":[[{"en":"he","vi":"anh ấy"},{"en":"drink coffee","vi":"uống cà phê"}],[{"en":"she","vi":"cô ấy"},{"en":"eat meat","vi":"ăn thịt"}],[{"en":"he","vi":"anh ấy"},{"en":"speak English","vi":"nói tiếng Anh"}]]},{"k":"Does + he/she + động từ? – Yes, he does.","t":[{"w":"A","en":"Does your {0} {1}?","vi":"{0} của bạn có {1} không?"},{"w":"B","en":"Yes, {2} does.","vi":"Có."}],"v":[[{"en":"boss","vi":"Sếp"},{"en":"drive to work","vi":"lái xe đi làm"},{"en":"he","vi":"he"}],[{"en":"mother","vi":"Mẹ"},{"en":"cook dinner","vi":"nấu bữa tối"},{"en":"she","vi":"she"}],[{"en":"sister","vi":"Chị"},{"en":"work on Sunday","vi":"làm việc vào Chủ nhật"},{"en":"she","vi":"she"}]]}],"11":[{"k":"What time is it? – It's + giờ.","t":[{"w":"A","en":"What time is it?","vi":"Mấy giờ rồi?"},{"w":"B","en":"It's {0}.","vi":"{0}."}],"v":[[{"en":"seven o'clock","vi":"Bảy giờ đúng"}],[{"en":"half past eight","vi":"Tám giờ rưỡi"}],[{"en":"a quarter past six","vi":"Sáu giờ mười lăm"}]]},{"k":"at + giờ / on + thứ / in + tháng","t":[{"w":"A","en":"When is the {0}?","vi":"{0} khi nào?"},{"w":"B","en":"It's {1}.","vi":"Vào {1}."}],"v":[[{"en":"meeting","vi":"Cuộc họp"},{"en":"at nine","vi":"lúc chín giờ"}],[{"en":"party","vi":"Bữa tiệc"},{"en":"on Saturday","vi":"thứ Bảy"}],[{"en":"exam","vi":"Kỳ thi"},{"en":"in June","vi":"tháng Sáu"}]]},{"k":"Chủ ngữ + always / usually / sometimes / never + động từ","t":[{"w":"A","en":"Do you {0}?","vi":"Bạn có {0} không?"},{"w":"B","en":"Yes, I {1} {0}.","vi":"Có, tôi {1} {0}."}],"v":[[{"en":"get up early","vi":"dậy sớm"},{"en":"always","vi":"luôn"}],[{"en":"eat breakfast","vi":"ăn sáng"},{"en":"usually","vi":"thường"}],[{"en":"cook dinner","vi":"nấu bữa tối"},{"en":"sometimes","vi":"thỉnh thoảng"}]]},{"k":"How often do you + động từ? – once / twice a week.","t":[{"w":"A","en":"How often do you {0}?","vi":"Bạn {0} bao lâu một lần?"},{"w":"B","en":"{1}.","vi":"{1}."}],"v":[[{"en":"exercise","vi":"tập thể dục"},{"en":"Twice a week","vi":"Mỗi tuần hai lần"}],[{"en":"go shopping","vi":"đi mua sắm"},{"en":"Once a week","vi":"Mỗi tuần một lần"}],[{"en":"drink coffee","vi":"uống cà phê"},{"en":"Every day","vi":"Mỗi ngày"}]]}],"13":[{"k":"I'd like + món, please. / Can I have + món?","t":[{"w":"A","en":"What would you like?","vi":"Bạn muốn dùng gì?"},{"w":"B","en":"I'd like {0}, please.","vi":"Cho tôi {0}."}],"v":[[{"en":"a coffee","vi":"một ly cà phê"}],[{"en":"fried rice","vi":"cơm rang"}],[{"en":"a cup of tea","vi":"một tách trà"}]]},{"k":"some + danh từ không đếm được / số + danh từ số nhiều","t":[{"w":"A","en":"What do we need?","vi":"Chúng ta cần gì?"},{"w":"B","en":"We need {0}.","vi":"Chúng ta cần {0}."}],"v":[[{"en":"some water","vi":"ít nước"}],[{"en":"some rice","vi":"ít gạo"}],[{"en":"two eggs","vi":"hai quả trứng"}]]},{"k":"I'd like to / I want to + động từ","t":[{"w":"A","en":"Would you like to {0}?","vi":"Bạn có muốn {0} không?"},{"w":"B","en":"Yes, I'd like to {0}.","vi":"Có, tôi muốn {0}."}],"v":[[{"en":"try some","vi":"ăn thử một chút"}],[{"en":"order now","vi":"gọi món bây giờ"}],[{"en":"sit here","vi":"ngồi đây"}]]}],"14":[{"k":"How much is + số ít / are + số nhiều?","t":[{"w":"A","en":"How much {0} {1}?","vi":"{1} bao nhiêu tiền?"},{"w":"B","en":"{2} {3} dollars.","vi":"{2} giá {3} đô la."}],"v":[[{"en":"is","vi":"is"},{"en":"this shirt","vi":"Cái áo này"},{"en":"It's","vi":"Nó"},{"en":"ten","vi":"mười"}],[{"en":"are","vi":"are"},{"en":"these shoes","vi":"Đôi giày này"},{"en":"They're","vi":"Chúng"},{"en":"fifty","vi":"năm mươi"}],[{"en":"is","vi":"is"},{"en":"that hat","vi":"Cái mũ kia"},{"en":"It's","vi":"Nó"},{"en":"five","vi":"năm"}]]},{"k":"Do you have any …? – Yes, we have some.","t":[{"w":"A","en":"Do you have any {0}?","vi":"Bạn có {0} không?"},{"w":"B","en":"Yes, we have some {0}.","vi":"Có, chúng tôi có {0}."}],"v":[[{"en":"small sizes","vi":"cỡ nhỏ"}],[{"en":"red dresses","vi":"váy đỏ"}],[{"en":"eggs","vi":"trứng"}]]}],"15":[{"k":"There is + số ít / There are + số nhiều","t":[{"w":"A","en":"What's in your {0}?","vi":"Trong {0} của bạn có gì?"},{"w":"B","en":"There {1} {2}.","vi":"Có {2}."}],"v":[[{"en":"room","vi":"phòng"},{"en":"is","vi":"is"},{"en":"a bed","vi":"một cái giường"}],[{"en":"kitchen","vi":"bếp"},{"en":"are","vi":"are"},{"en":"three chairs","vi":"ba cái ghế"}],[{"en":"living room","vi":"phòng khách"},{"en":"is","vi":"is"},{"en":"a sofa","vi":"một cái ghế sofa"}]]},{"k":"Is there a …? / Are there any …?","t":[{"w":"A","en":"{0} {1}?","vi":"Có {1} không?"},{"w":"B","en":"{2}","vi":"{2}"}],"v":[[{"en":"Is there","vi":"Is there"},{"en":"a garden","vi":"vườn"},{"en":"No, there isn't.","vi":"Không, không có."}],[{"en":"Are there any","vi":"Are there any"},{"en":"shops near here","vi":"cửa hàng gần đây"},{"en":"Yes, there are.","vi":"Có."}],[{"en":"Is there","vi":"Is there"},{"en":"a park near here","vi":"công viên gần đây"},{"en":"Yes, there is.","vi":"Có."}]]}],"16":[{"k":"Can you + động từ? – Yes, I can. / No, I can't.","t":[{"w":"A","en":"Can you {0}?","vi":"Bạn có biết {0} không?"},{"w":"B","en":"{1}","vi":"{1}"}],"v":[[{"en":"swim","vi":"bơi"},{"en":"Yes, I can.","vi":"Có, tôi biết."}],[{"en":"drive a car","vi":"lái ô tô"},{"en":"No, I can't.","vi":"Không, tôi không biết."}],[{"en":"play the guitar","vi":"chơi ghi-ta"},{"en":"Yes, I can.","vi":"Có, tôi biết."}]]},{"k":"I like / love / hate + V-ing","t":[{"w":"A","en":"What do you do in your free time?","vi":"Lúc rảnh bạn làm gì?"},{"w":"B","en":"I like {0}.","vi":"Tôi thích {0}."}],"v":[[{"en":"reading books","vi":"đọc sách"}],[{"en":"listening to music","vi":"nghe nhạc"}],[{"en":"playing football","vi":"chơi bóng đá"}]]}],"17":[{"k":"Chủ ngữ + am / is / are + V-ing (đang làm)","t":[{"w":"A","en":"What {0} doing?","vi":"{0} đang làm gì?"},{"w":"B","en":"{1} {2}.","vi":"{1} đang {2}."}],"v":[[{"en":"are you","vi":"Bạn"},{"en":"I'm","vi":"Tôi"},{"en":"cooking dinner","vi":"nấu bữa tối"}],[{"en":"is she","vi":"Cô ấy"},{"en":"She's","vi":"Cô ấy"},{"en":"talking on the phone","vi":"nói chuyện điện thoại"}],[{"en":"are they","vi":"Họ"},{"en":"They're","vi":"Họ"},{"en":"playing football","vi":"chơi bóng đá"}]]},{"k":"Are you + V-ing? – No, I'm not. I'm + V-ing.","t":[{"w":"A","en":"Are you {0}?","vi":"Bạn đang {0} à?"},{"w":"B","en":"No, I'm not. I'm {1}.","vi":"Không. Tôi đang {1}."}],"v":[[{"en":"watching TV","vi":"xem TV"},{"en":"reading","vi":"đọc sách"}],[{"en":"sleeping","vi":"ngủ"},{"en":"working","vi":"làm việc"}],[{"en":"eating","vi":"ăn"},{"en":"studying","vi":"học"}]]}],"18":[{"k":"Where is …? – It's + giới từ + nơi chốn.","t":[{"w":"A","en":"Where is the {0}?","vi":"{0} ở đâu?"},{"w":"B","en":"It's {1} the {2}.","vi":"Nó ở {1} {2}."}],"v":[[{"en":"bank","vi":"Ngân hàng"},{"en":"next to","vi":"cạnh"},{"en":"supermarket","vi":"siêu thị"}],[{"en":"pharmacy","vi":"Hiệu thuốc"},{"en":"opposite","vi":"đối diện"},{"en":"school","vi":"trường học"}],[{"en":"bus stop","vi":"Bến xe buýt"},{"en":"behind","vi":"sau"},{"en":"hotel","vi":"khách sạn"}]]},{"k":"Excuse me, how can I get to …? – Go straight and turn …","t":[{"w":"A","en":"Excuse me, how can I get to the {0}?","vi":"Xin lỗi, tôi đến {0} bằng cách nào?"},{"w":"B","en":"Go straight and turn {1}.","vi":"Đi thẳng rồi rẽ {1}."}],"v":[[{"en":"market","vi":"chợ"},{"en":"left","vi":"trái"}],[{"en":"station","vi":"nhà ga"},{"en":"right","vi":"phải"}],[{"en":"park","vi":"công viên"},{"en":"left at the corner","vi":"trái ở góc phố"}]]},{"k":"You have to / should / must + động từ","t":[{"w":"A","en":"How can I get to the {0}?","vi":"Tôi đến {0} bằng cách nào?"},{"w":"B","en":"You {1} {2}.","vi":"Bạn {1} {2}."}],"v":[[{"en":"airport","vi":"sân bay"},{"en":"should","vi":"nên"},{"en":"take a taxi","vi":"đi taxi"}],[{"en":"museum","vi":"bảo tàng"},{"en":"have to","vi":"phải"},{"en":"take bus number five","vi":"đi xe buýt số năm"}],[{"en":"hospital","vi":"bệnh viện"},{"en":"must","vi":"phải"},{"en":"turn left here","vi":"rẽ trái ở đây"}]]}],"19":[{"k":"I / he / she + was … / we / they + were … (quá khứ)","t":[{"w":"A","en":"Where were you {0}?","vi":"{0} bạn ở đâu?"},{"w":"B","en":"I was {1}.","vi":"Tôi ở {1}."}],"v":[[{"en":"yesterday","vi":"Hôm qua"},{"en":"at home","vi":"nhà"}],[{"en":"last night","vi":"Tối qua"},{"en":"at a party","vi":"một bữa tiệc"}],[{"en":"last week","vi":"Tuần trước"},{"en":"in Hanoi","vi":"Hà Nội"}]]},{"k":"Was / Were + chủ ngữ + …? – wasn't / weren't","t":[{"w":"A","en":"Was {0} {1}?","vi":"{0} có {1} không?"},{"w":"B","en":"No, {2}.","vi":"Không."}],"v":[[{"en":"the party","vi":"Bữa tiệc"},{"en":"fun","vi":"vui"},{"en":"it wasn't","vi":"it wasn't"}],[{"en":"the film","vi":"Bộ phim"},{"en":"good","vi":"hay"},{"en":"it wasn't","vi":"it wasn't"}],[{"en":"your teacher","vi":"Giáo viên của bạn"},{"en":"angry","vi":"giận"},{"en":"she wasn't","vi":"she wasn't"}]]},{"k":"When is your birthday? – It's on + tháng + số thứ tự.","t":[{"w":"A","en":"When is your birthday?","vi":"Sinh nhật bạn khi nào?"},{"w":"B","en":"It's on {0}.","vi":"Vào ngày {0}."}],"v":[[{"en":"May fifth","vi":"năm tháng Năm"}],[{"en":"March third","vi":"ba tháng Ba"}],[{"en":"October tenth","vi":"mười tháng Mười"}]]}],"20":[{"k":"Chủ ngữ + động từ-ed (đã làm)","t":[{"w":"A","en":"What did you do last weekend?","vi":"Cuối tuần trước bạn làm gì?"},{"w":"B","en":"I {0}.","vi":"Tôi {0}."}],"v":[[{"en":"visited my grandparents","vi":"về thăm ông bà"}],[{"en":"cleaned the house","vi":"dọn nhà"}],[{"en":"watched a movie","vi":"xem một bộ phim"}]]},{"k":"Did you + động từ nguyên mẫu? – Yes, I did. / No, I didn't.","t":[{"w":"A","en":"Did you {0}?","vi":"Bạn có {0} không?"},{"w":"B","en":"No, I didn't. I {1}.","vi":"Không. Tôi {1}."}],"v":[[{"en":"walk to work","vi":"đi bộ đi làm"},{"en":"took a bus","vi":"đi xe buýt"}],[{"en":"watch TV","vi":"xem TV"},{"en":"read a book","vi":"đọc sách"}],[{"en":"cook dinner","vi":"nấu bữa tối"},{"en":"ordered a pizza","vi":"gọi pizza"}]]},{"k":"There was + số ít / There were + số nhiều (quá khứ)","t":[{"w":"A","en":"How was the {0}?","vi":"{0} thế nào?"},{"w":"B","en":"Great! There {1} {2}.","vi":"Tuyệt! Có {2}."}],"v":[[{"en":"party","vi":"Bữa tiệc"},{"en":"were","vi":"were"},{"en":"a lot of people","vi":"rất nhiều người"}],[{"en":"concert","vi":"Buổi hòa nhạc"},{"en":"was","vi":"was"},{"en":"a famous singer","vi":"một ca sĩ nổi tiếng"}],[{"en":"beach","vi":"Bãi biển"},{"en":"were","vi":"were"},{"en":"many tourists","vi":"nhiều khách du lịch"}]]}],"21":[{"k":"Động từ bất quy tắc ở quá khứ: went, ate, bought…","t":[{"w":"A","en":"What did you do in {0}?","vi":"Bạn đã làm gì ở {0}?"},{"w":"B","en":"I {1}.","vi":"Tôi {1}."}],"v":[[{"en":"Da Nang","vi":"Đà Nẵng"},{"en":"ate seafood","vi":"ăn hải sản"}],[{"en":"Hue","vi":"Huế"},{"en":"saw the old city","vi":"đi xem thành cổ"}],[{"en":"Hanoi","vi":"Hà Nội"},{"en":"bought some gifts","vi":"mua vài món quà"}]]},{"k":"Did you + nguyên mẫu? (didn't went ✗ → didn't go ✓)","t":[{"w":"A","en":"Did you {0}?","vi":"Bạn có {0} không?"},{"w":"B","en":"No, I didn't {0}.","vi":"Không, tôi không {0}."}],"v":[[{"en":"go to the beach","vi":"đi biển"}],[{"en":"buy any souvenirs","vi":"mua quà lưu niệm nào"}],[{"en":"see the bridge","vi":"thấy cây cầu"}]]},{"k":"Câu + so (nên) / but (nhưng) / because (vì) + câu","t":[{"w":"A","en":"How was your trip?","vi":"Chuyến đi của bạn thế nào?"},{"w":"B","en":"{0}","vi":"{0}"}],"v":[[{"en":"It rained, so we stayed in the hotel.","vi":"Trời mưa nên chúng tôi ở trong khách sạn."}],[{"en":"The hotel was small but very clean.","vi":"Khách sạn nhỏ nhưng rất sạch."}],[{"en":"I was tired because I swam a lot.","vi":"Tôi mệt vì tôi bơi nhiều."}]]}],"22":[{"k":"Chủ ngữ + am / is / are going to + động từ (kế hoạch)","t":[{"w":"A","en":"What are you going to do {0}?","vi":"{0} bạn định làm gì?"},{"w":"B","en":"I'm going to {1}.","vi":"Tôi sẽ {1}."}],"v":[[{"en":"tonight","vi":"Tối nay"},{"en":"watch a film","vi":"xem phim"}],[{"en":"this weekend","vi":"Cuối tuần này"},{"en":"visit my parents","vi":"về thăm bố mẹ"}],[{"en":"next year","vi":"Năm sau"},{"en":"buy a house","vi":"mua nhà"}]]},{"k":"I'll + động từ (quyết định ngay, lời hứa)","t":[{"w":"A","en":"{0}","vi":"{0}"},{"w":"B","en":"Don't worry. I'll {1}.","vi":"Đừng lo. Tôi sẽ {1}."}],"v":[[{"en":"My bag is heavy.","vi":"Túi của tôi nặng quá."},{"en":"carry it","vi":"xách giúp"}],[{"en":"I can't open the window.","vi":"Tôi không mở được cửa sổ."},{"en":"open it","vi":"mở giúp"}],[{"en":"I don't understand this.","vi":"Tôi không hiểu chỗ này."},{"en":"help you","vi":"giúp bạn"}]]},{"k":"Let's + động từ! – Good idea!","t":[{"w":"A","en":"Let's {0}.","vi":"Mình {0} đi."},{"w":"B","en":"Good idea!","vi":"Ý hay đấy!"}],"v":[[{"en":"go to the beach","vi":"đi biển"}],[{"en":"have dinner together","vi":"ăn tối cùng nhau"}],[{"en":"watch a movie","vi":"xem phim"}]]}],"23":[{"k":"A + is + tính từ-er / more + tính từ + than + B","t":[{"w":"A","en":"Which is {0}, {1} or {2}?","vi":"Cái nào {0} hơn, {1} hay {2}?"},{"w":"B","en":"{1} is {0} than {2}.","vi":"{1} {0} hơn {2}."}],"v":[[{"en":"bigger","vi":"lớn"},{"en":"this bag","vi":"túi này"},{"en":"that bag","vi":"túi kia"}],[{"en":"faster","vi":"nhanh"},{"en":"the train","vi":"tàu hỏa"},{"en":"the bus","vi":"xe buýt"}],[{"en":"more expensive","vi":"đắt"},{"en":"this phone","vi":"điện thoại này"},{"en":"that phone","vi":"điện thoại kia"}]]},{"k":"the + tính từ-est / the most + tính từ","t":[{"w":"A","en":"What's the {0} {1} in Vietnam?","vi":"{1} {0} nhất Việt Nam là gì?"},{"w":"B","en":"I think it's {2}.","vi":"Tôi nghĩ là {2}."}],"v":[[{"en":"highest","vi":"cao"},{"en":"mountain","vi":"Ngọn núi"},{"en":"Fansipan","vi":"Fansipan"}],[{"en":"biggest","vi":"lớn"},{"en":"city","vi":"Thành phố"},{"en":"Ho Chi Minh City","vi":"Thành phố Hồ Chí Minh"}],[{"en":"most beautiful","vi":"đẹp"},{"en":"beach","vi":"Bãi biển"},{"en":"My Khe Beach","vi":"bãi biển Mỹ Khê"}]]},{"k":"What's the weather like? – It's + thời tiết.","t":[{"w":"A","en":"What's the weather like in {0} today?","vi":"Hôm nay thời tiết ở {0} thế nào?"},{"w":"B","en":"It's {1}.","vi":"Trời {1}."}],"v":[[{"en":"Hanoi","vi":"Hà Nội"},{"en":"cold and windy","vi":"lạnh và nhiều gió"}],[{"en":"Da Nang","vi":"Đà Nẵng"},{"en":"hot and sunny","vi":"nóng và nắng"}],[{"en":"Hue","vi":"Huế"},{"en":"rainy","vi":"mưa"}]]}]};
 /* ================== Kết nối máy chủ ================== */
 const HAS_GAS = typeof google !== 'undefined' && google.script && google.script.run;
 const DEMO_PW = '1234';
@@ -2066,6 +2173,29 @@ function soundHelp(){
   S.soundHelped = true;
   S.msg = {title:'Không nghe được âm thanh?', html:soundHelpHtml()};
   render();
+}
+/* chấm câu tự gõ: 1 = đúng, 2 = gần đúng (sai 1–2 ký tự), 0 = sai */
+const WRITE_EXP = {"i'm":'i am',"you're":'you are',"we're":'we are',"they're":'they are',"he's":'he is',"she's":'she is',"it's":'it is',"that's":'that is',"what's":'what is',"where's":'where is',"who's":'who is',"there's":'there is',"isn't":'is not',"aren't":'are not',"wasn't":'was not',"weren't":'were not',"don't":'do not',"doesn't":'does not',"didn't":'did not',"can't":'cannot',"won't":'will not',"i'll":'i will',"you'll":'you will',"we'll":'we will',"they'll":'they will',"she'll":'she will',"he'll":'he will',"i'd":'i would',"we'd":'we would',"shouldn't":'should not',"mustn't":'must not',"haven't":'have not',"hasn't":'has not'};
+function writeNorm(t){
+  return String(t).toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”()–-]/g, ' ').replace(/\bcan not\b/g, 'cannot')
+    .split(/\s+/).filter(Boolean).map(w => WRITE_EXP[w] || w).join(' ');
+}
+function writeDist(a, b){
+  if (Math.abs(a.length - b.length) > 2) return 9;
+  let prev = Array.from({length: b.length + 1}, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) { const cur = [i]; for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+  return prev[b.length];
+}
+['im','youre','theyre','hes','shes','thats','whats','wheres','theres','isnt','arent','wasnt','werent','dont','doesnt','didnt','cant','wont','ill','youll','theyll','shouldnt','mustnt','havent','hasnt']
+  .forEach(k => { const full = Object.keys(WRITE_EXP).find(x => x.replace("'", '') === k); if (full) WRITE_EXP[k] = WRITE_EXP[full]; });
+function writeCheck(typed, target){
+  const a = writeNorm(typed), b = writeNorm(target);
+  if (a === b) return 1;
+  /* gần đúng: cùng số từ, chỉ 1 từ dài (≥ 4 chữ) sai 1 ký tự (gõ nhầm), không chấp nhận sai từ ngắn như he/she, is/are */
+  const wa = a.split(' '), wb = b.split(' ');
+  if (wa.length !== wb.length) return 0;
+  const diff = wb.map((w, i) => [wa[i], w]).filter(([x, y]) => x !== y);
+  return diff.length === 1 && diff[0][1].length >= 4 && writeDist(diff[0][0], diff[0][1]) === 1 ? 2 : 0;
 }
 let SEQ = 0;
 function playSeq(keys, onStep, gap){
@@ -2520,6 +2650,11 @@ function vQuiz(les){
       let c = ''; if (Q.checked) { if (o === q.answer) c = 'right'; else if (k === Q.picked) c = 'wrong'; }
       return `<button class="opt ${c}" data-act="pick" data-k="${k}" ${Q.checked ? 'disabled' : ''}>${esc(o)}</button>`;
     }).join('');
+  } else if (q.type === 'write') {
+    h += `<div class="qprompt">Viết câu tiếng Anh:<br><span class="mut" style="font-weight:500;font-size:17px">"${esc(q.vi)}"</span></div>
+      <p class="xs mut" style="margin:-6px 0 8px">Gợi ý: ${q.target.split(' ').length} từ, bắt đầu bằng "${esc(q.target.split(' ')[0])}…"</p>
+      <textarea id="wans" class="winput" rows="2" autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="Gõ câu tiếng Anh ở đây…" ${Q.checked ? 'disabled' : ''}>${esc(Q.typed || '')}</textarea>`;
+    if (!Q.checked) h += `<button class="btn full" style="margin-top:12px" data-act="check-write">Kiểm tra</button>`;
   } else {
     h += `<div class="qprompt">Sắp xếp thành câu:<br><span class="mut" style="font-weight:500;font-size:17px">"${esc(q.vi)}"</span></div>
       <div class="tokens answer-line">${Q.built.map((ti, k) => `<button class="tok" data-act="unbuild" data-k="${k}" ${Q.checked ? 'disabled' : ''}>${esc(q.tokens[ti].t)}</button>`).join('') || '<span class="sm mut" style="padding:12px 2px">Chạm các từ bên dưới theo đúng thứ tự</span>'}</div>
@@ -2528,8 +2663,8 @@ function vQuiz(les){
   }
   if (Q.checked) {
     const good = Q.lastRight;
-    h += `<div class="fb ${good ? 'ok' : 'bad'}">${good ? 'Chính xác!' : 'Chưa đúng.'} ${!good ? `<div class="mut">Đáp án: ${esc(q.type === 'order' ? q.target : q.answer)}</div>` : ''}</div>
-      <div class="row">${(q.say || q.type === 'order') && CAN_SPEAK ? `<button class="speak" data-act="say" data-t="${esc(q.type === 'order' ? q.target : q.say)}" data-w="${q.type === 'order' ? '' : (q.who || '')}" aria-label="Nghe">🔊</button>` : ''}
+    h += `<div class="fb ${good ? 'ok' : 'bad'}">${good ? (Q.close ? 'Gần đúng! Chỉ sai chút chính tả.' : 'Chính xác!') : 'Chưa đúng.'} ${!good || Q.close ? `<div class="mut">Đáp án: ${esc(q.type === 'order' || q.type === 'write' ? q.target : q.answer)}</div>` : ''}</div>
+      <div class="row">${(q.say || q.type === 'order' || q.type === 'write') && CAN_SPEAK ? `<button class="speak" data-act="say" data-t="${esc(q.type === 'order' || q.type === 'write' ? q.target : q.say)}" data-w="${q.type === 'order' || q.type === 'write' ? '' : (q.who || '')}" aria-label="Nghe">🔊</button>` : ''}
       <button class="btn grow" data-act="next">${Q.i + 1 < Q.qs.length ? 'Câu tiếp →' : 'Xem kết quả'}</button></div>`;
   }
   return h;
@@ -2781,6 +2916,16 @@ $app.addEventListener('click', e => {
     }
     case 'build': { const Q = S.quiz; Q.built.push(+d.k); render(); break; }
     case 'unbuild': { const Q = S.quiz; Q.built.splice(+d.k, 1); render(); break; }
+    case 'check-write': {
+      const Q = S.quiz, q = Q.qs[Q.i], el = document.getElementById('wans');
+      Q.typed = el ? el.value : '';
+      if (!Q.typed.trim()) { toast('Gõ câu trả lời trước nhé'); break; }
+      const r = writeCheck(Q.typed, q.target);
+      Q.checked = true; Q.lastRight = r > 0; Q.close = r === 2; if (Q.lastRight) Q.right++;
+      if (Q.wrong && !Q.lastRight) Q.wrong.push(Q.i);
+      render(); playClip(q.target);
+      break;
+    }
     case 'check-order': {
       const Q = S.quiz, q = Q.qs[Q.i];
       const ans = Q.built.map(k => q.tokens[k].t).join(' ');
@@ -2793,7 +2938,7 @@ $app.addEventListener('click', e => {
     case 'next': {
       const Q = S.quiz;
       if (Q.i + 1 < Q.qs.length) {
-        Q.i++; Q.checked = false; Q.picked = null; Q.built = []; render();
+        Q.i++; Q.checked = false; Q.picked = null; Q.built = []; Q.typed = ""; Q.close = false; render();
         const q = Q.qs[Q.i]; if (q.listen) { PAIR_MODE = !!q.pair; speak(q.say, q.who); PAIR_MODE = false; }
       } else {
         Q.done = true; render();
@@ -2859,11 +3004,13 @@ function vDrillList(les){
   const done = ps.filter((p, gi) => (drillBest(les.n, gi) ?? -1) >= DRILL_OK).length;
   return `<div class="sect">Luyện mẫu câu · ${done}/${ps.length} mẫu đã vững</div>
     <p class="sm mut" style="margin:-4px 0 10px">Mỗi mẫu 20 câu sắp xếp từ. Không tính vào điểm bài, làm lại bao nhiêu lần cũng được. Đúng từ ${DRILL_OK}/20 là vững.</p>
-    ${ps.map((p, gi) => { const b = drillBest(les.n, gi);
-      return `<div class="card row drill">
-        <div class="grow"><b>${esc(p.g)}</b><p class="xs mut" style="margin-top:2px">${esc(p.h)}</p>
+    ${ps.map((p, gi) => { const b = drillBest(les.n, gi), open = S.dlgOpen === les.n + '.' + gi;
+      return `<div class="card drill">
+        <div class="row"><div class="grow"><b>${esc(p.g)}</b><p class="xs mut" style="margin-top:2px">${esc(p.h)}</p>
           <p style="margin-top:6px">${b === null ? '<span class="chip">Chưa luyện</span>' : `<span class="chip ${b >= DRILL_OK ? 'ok' : 'acc'}">Tốt nhất ${b}/20</span>`}</p></div>
-        <button class="btn ${b !== null && b >= DRILL_OK ? 'ghost' : ''}" data-act="drill-start" data-g="${gi}">${b === null ? 'Luyện' : 'Làm lại'}</button></div>`; }).join('')}`;
+        <button class="btn ${b !== null && b >= DRILL_OK ? 'ghost' : ''}" data-act="drill-start" data-g="${gi}">${b === null ? 'Luyện' : 'Làm lại'}</button></div>
+        ${DLG[les.n] && DLG[les.n][gi] ? `<button class="linkbtn sm" style="margin-top:8px" data-act="drill-dlg" data-g="${gi}">${open ? '▾ Ẩn hội thoại mẫu' : '📖 Xem hội thoại mẫu (thay từ)'}</button>${open ? dlgHtml(les.n, gi) : ''}` : ''}
+      </div>`; }).join('')}`;
 }
 function drillBuild(n, gi, only){
   const p = DRILL[n][gi];
@@ -2911,6 +3058,30 @@ async function drillSave(Q){
   } catch(e){ toast('Chưa lưu được điểm luyện: ' + errMsg(e)); }
   render();
 }
+/* ---------- hội thoại thay từ: khung câu giữ nguyên, chỉ đổi từ (tô màu) ---------- */
+function dlgFill(tpl, vv, side, mark){
+  let out = '', last = 0;
+  tpl.replace(/\{(\d)\}/g, (m, i, at) => { out += esc(tpl.slice(last, at)); const w = vv[i] ? vv[i][side] : ''; out += mark ? `<mark class="slot">${esc(w)}</mark>` : w; last = at + m.length; return m; });
+  out += esc(tpl.slice(last));
+  if (mark) return out.replace(/^(<mark class="slot">)?([a-zà-ỹđ])/, (m, tag, ch) => (tag || '') + ch.toUpperCase());
+  return out.charAt(0).toUpperCase() + out.slice(1);
+}
+function dlgLines(n, gi){
+  const d = DLG[n][gi], keys = [];
+  d.v.forEach(vv => d.t.forEach(x => { const en = dlgFill(x.en, vv, 'en'); keys.push(x.w === 'B' ? 'B|' + en : en); }));
+  return keys;
+}
+function dlgHtml(n, gi){
+  const d = DLG[n][gi];
+  return `<div class="dlg">
+    <div class="dlgk">🔑 <b>${esc(d.k)}</b><br><span class="xs mut">Phần giữ nguyên là khung câu cần nhớ. Phần tô màu là chỗ thay từ.</span></div>
+    ${d.v.map((vv, k) => `<div class="dlgv"><p class="xs mut" style="margin-bottom:4px">Lượt ${k + 1}</p>
+      ${d.t.map(x => { const en = dlgFill(x.en, vv, 'en'); return `<div class="dlgl"><span class="who ${x.w}">${x.w}</span>
+        <div class="grow"><p class="en">${dlgFill(x.en, vv, 'en', true)}</p><p class="xs mut">${dlgFill(x.vi, vv, 'vi', true)}</p></div>
+        <button class="speak sm" data-act="say" data-t="${esc(en)}" ${x.w === 'B' ? 'data-who="B"' : ''} aria-label="Nghe">🔊</button></div>`; }).join('')}</div>`).join('')}
+    <button class="btn soft full" style="margin-top:10px" data-act="dlg-play" data-g="${gi}">▶ Nghe cả 3 lượt</button></div>`;
+}
+
 /* giáo viên: số mẫu đã vững của một học viên ở một buổi */
 function drillStat(code, n){
   const ps = DRILL[n]; if (!ps) return null;
@@ -2919,10 +3090,17 @@ function drillStat(code, n){
 }
 
 document.addEventListener('click', e => {
+  const pl = e.target.closest('[data-act="dlg-play"]');
+  if (pl) { const keys = dlgLines(S.n, +pl.dataset.g), rows = () => [...pl.parentElement.querySelectorAll('.dlgl')];
+    const go2 = () => playSeq(keys, i => rows().forEach((r, j) => r.classList.toggle('live-hl', j === i)), 350);
+    if (AUD['d' + S.n]) go2(); else loadAudio('d' + S.n).then(go2, go2);
+    return; }
   const el = e.target.closest('[data-act^="drill-"]'); if (!el || el.disabled) return;
   const a = el.dataset.act;
   if (a === 'drill-start') drillStart(S.n, +el.dataset.g);
   else if (a === 'drill-exit') go({quiz:null});
+  else if (a === 'drill-dlg') { const k = S.n + '.' + el.dataset.g; S.dlgOpen = S.dlgOpen === k ? null : k; render();
+    if (S.dlgOpen && !AUD['d' + S.n]) loadAudio('d' + S.n).then(() => {}, () => {}); }
   else if (a === 'drill-wrong') { const Q = S.quiz; if (!Q || !Q.wrong.length) return;
     const p = DRILL[Q.n][Q.drill], idx = Q.wrong.map(i => p.s.findIndex(s => P(s).en === Q.qs[i].target)).filter(i => i >= 0);
     const Q2 = drillBuild(Q.n, Q.drill, idx); Q2.only = true; go({quiz:Q2}); }
@@ -2931,8 +3109,8 @@ document.addEventListener('click', e => {
 /* ================== Bài tập về nhà mỗi ngày (50 câu) ==================
    Đề đi theo tiến độ lớp: buổi mới nhất đã mở + ôn các buổi trước. Cả lớp cùng một đề trong ngày
    (chọn câu bằng số ngẫu nhiên gieo theo ngày + buổi), sang ngày mới đổi đề.
-   20 sắp xếp câu · 15 điền từ (tự tạo từ ngân hàng câu luyện) · 10 từ vựng · 5 ngữ pháp. */
-const HW_N = {order: 20, blank: 15, vocab: 10, gram: 5};
+   15 sắp xếp câu · 5 tự gõ câu từ tiếng Việt · 15 điền từ (tự tạo từ ngân hàng câu luyện) · 10 từ vựng · 5 ngữ pháp. */
+const HW_N = {order: 15, write: 5, blank: 15, vocab: 10, gram: 5};
 const HW_PASS = 80;
 function hwDay(d){ d = d || new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function hwDayLabel(k){ const [y, m, dd] = k.split('-').map(Number); const t = new Date(y, m - 1, dd); return ['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][t.getDay()] + ' ' + dd + '/' + m; }
@@ -2963,14 +3141,14 @@ const HW_GROUPS = [
   [['this','that','these','those'], [6]], [['my','your','his','our','their'], [7]], [['me','him','us','them'], [7]],
   [['some','any'], [13,14,15]], [['much','many'], [2,13,14,15]], [['always','sometimes','never','usually','often'], [11]],
   [['in','on','at'], [11,19]], [['can',"can't"], [16]], [['will',"won't"], [22]], [['should','must'], [22]],
-  [['more','most'], [23]]
+  [['more','most'], [23]], [['but','so','because'], [21]]
 ];
 /* từ được đục lỗ phải "đọc ra" được từ câu tiếng Việt, để chỉ có một đáp án đúng */
 const HW_VI = {my:/tôi/, your:/bạn/, his:/anh ấy|ông ấy|cậu ấy|anh trai/, our:/chúng tôi|chúng ta/, their:/họ/,
   me:/tôi/, him:/anh ấy|ông ấy|cậu ấy/, us:/chúng tôi|chúng ta/, them:/họ/,
   this:/này|[Đđ]ây/, these:/này|[Đđ]ây/, that:/kia|[Đđ]ó/, those:/kia|[Đđ]ó/,
   always:/luôn|lúc nào cũng/, usually:/thường/, often:/thường/, sometimes:/thỉnh thoảng/, never:/không bao giờ/,
-  should:/nên/, must:/phải|không được/};
+  should:/nên/, must:/phải|không được/, but:/nhưng/, so:/nên/, because:/vì/};
 function hwBlankOk(lw, en, vi){
   if (HW_VI[lw] && !HW_VI[lw].test(vi)) return false;
   if (['can',"can't",'will',"won't",'some','any'].includes(lw) && /\?$/.test(en)) return false;   /* câu hỏi: cả hai đều có thể đúng */
@@ -3022,6 +3200,13 @@ function hwOrderQs(n, rnd, want){
   for (let i = all.length - 1; i > 0; i--) { const j = rnd() * (i + 1) | 0; [all[i], all[j]] = [all[j], all[i]]; }
   return all.slice(0, want).map(x => ({type:'order', vi:x.vi, target:x.en, tokens:shuffle(x.en.split(' ').map((t, i) => ({t, i}))), src:'d' + n}));
 }
+/* tự gõ câu tiếng Anh từ câu tiếng Việt: chọn câu ngắn (≤ 7 từ), không có số đọc bằng chữ dài */
+function hwWriteQs(n, rnd, want, skip){
+  const all = [];
+  (DRILL[n] || []).forEach(p => p.s.forEach(s => { const x = P(s); const k = x.en.split(' ').length; if (k >= 3 && k <= 7 && !/\d|"/.test(x.en) && !skip.has(x.en)) all.push(x); }));
+  for (let i = all.length - 1; i > 0; i--) { const j = rnd() * (i + 1) | 0; [all[i], all[j]] = [all[j], all[i]]; }
+  return all.slice(0, want).map(x => ({type:'write', vi:x.vi, target:x.en, answer:x.en, say:x.en, src:'d' + n}));
+}
 /* chia số câu: phần lớn cho buổi mới nhất, phần còn lại rải đều các buổi cũ (ưu tiên buổi gần) */
 function hwSplit(total, cur, old, rnd, share){
   const plan = new Map(); const inc = (x, k) => plan.set(x, (plan.get(x) || 0) + k);
@@ -3043,6 +3228,8 @@ function hwBuild(day){
   try {
     let qs = [];
     for (const [les, k] of hwSplit(HW_N.order, cur, old, rnd, 0.6)) qs.push(...hwOrderQs(les.n, rnd, k));
+    const usedEn = new Set(qs.map(q => q.target));
+    for (const [les, k] of hwSplit(HW_N.write, cur, old, rnd, 0.6)) qs.push(...hwWriteQs(les.n, rnd, k, usedEn));
     let blanks = [];
     for (const [les, k] of hwSplit(HW_N.blank, cur, old, rnd, 0.6)) blanks.push(...hwBlankQs(les.n, rnd, k));
     if (blanks.length < HW_N.blank) for (const les of [cur, ...old].reverse()) { if (blanks.length >= HW_N.blank) break;
@@ -3092,7 +3279,7 @@ function vHw(){
     const sc = hwScore(day), {cur, old} = hwLessons();
     return top + `<div class="card" style="text-align:center;padding:26px 18px">
       <div style="font-size:42px">📚</div><h2 style="margin:8px 0 6px">50 câu hôm nay</h2>
-      <p class="mut sm">Buổi ${cur.n}: ${esc(cur.t)}${old.length ? ' + ôn các buổi trước' : ''}.<br>20 câu sắp xếp · 15 câu điền từ · 10 câu từ vựng · 5 câu ngữ pháp.</p>
+      <p class="mut sm">Buổi ${cur.n}: ${esc(cur.t)}${old.length ? ' + ôn các buổi trước' : ''}.<br>15 câu sắp xếp · 5 câu tự viết · 15 câu điền từ · 10 câu từ vựng · 5 câu ngữ pháp.</p>
       ${sc !== null ? `<p style="margin-top:12px"><span class="chip ${sc >= HW_PASS ? 'ok' : 'acc'}">Điểm cao nhất hôm nay: ${sc}%</span></p>` : ''}
       ${S.mode === 'teacher' ? '<p class="xs mut" style="margin-top:10px">Bạn đang xem đúng đề học viên làm hôm nay. Điểm của giáo viên không được lưu.</p>' : ''}
       <button class="btn full" style="margin-top:18px" data-act="hw-start">${S.mode === 'teacher' ? 'Làm thử đề' : sc === null ? 'Bắt đầu' : 'Làm lại'}</button>
@@ -3113,10 +3300,10 @@ function vHw(){
   return top + vQuiz({n:'hw', t:'BTVN'});
 }
 function hwItemHtml(q){
-  const ans = q.type === 'order' ? q.target : q.answer;
-  const full = q.type === 'order' ? q.target : (q.blank ? q.say : null);
+  const ans = q.type === 'order' || q.type === 'write' ? q.target : q.answer;
+  const full = q.type === 'order' || q.type === 'write' ? q.target : (q.blank ? q.say : null);
   return `<div class="card pat">${full ? `<button class="speak" data-act="say" data-t="${esc(full)}" aria-label="Nghe">🔊</button>` : ''}
-    <div class="grow"><p class="sm mut">${esc(q.type === 'order' ? 'Sắp xếp: ' + q.vi : q.listen ? 'Nghe: ' + q.say : q.prompt)}</p>
+    <div class="grow"><p class="sm mut">${esc(q.type === 'order' ? 'Sắp xếp: ' + q.vi : q.type === 'write' ? 'Tự viết: ' + q.vi : q.listen ? 'Nghe: ' + q.say : q.prompt)}</p>
     ${q.blank ? `<p class="xs mut">${esc(q.vi)}</p>` : ''}<p class="en" style="margin-top:4px">→ ${esc(ans)}</p></div></div>`;
 }
 function hwListHtml(){
